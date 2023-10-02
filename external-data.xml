@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<data>
+  <object-set>
+    <database path="EagleDefender">
+      <view name="virtual_view_name" query="C:\Users\Isaac\AppData\Local\Temp\~vsC6E1.sql"/>
+    </database>
+  </object-set>
+</data>
