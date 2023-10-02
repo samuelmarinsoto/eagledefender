@@ -31,41 +31,61 @@ class Registro(customtkinter.CTk):
         self.tabview.tab("Datos").grid_columnconfigure(0, weight=1)  # configure grid of individual tabs
         self.tabview.tab("Juego").grid_columnconfigure(0, weight=1)
 
-        self.optionmenu_1 = customtkinter.CTkOptionMenu(self.tabview.tab("Datos"), dynamic_resizing=False,values=["Value 1", "Value 2", "Value Long Long Long"])
-        self.optionmenu_1.place(relx=0.5, rely=0.5, anchor=customtkinter.CENTER)
+
 
         self.logo_label = customtkinter.CTkLabel(self.tabview.tab("Datos"), text="Registro", font=customtkinter.CTkFont(size=20, weight="bold"))
-        self.logo_label.place(relx=0.5, rely=0.2, anchor=customtkinter.CENTER)
+        self.logo_label.place(relx=0.5, rely=0.1, anchor=customtkinter.CENTER)
 
 
-        self.username = customtkinter.CTkLabel(self.tabview.tab("Datos"), text="Username", anchor="w")
-        self.username.place(relx=0.5, rely=0.3, anchor=customtkinter.CENTER)
-        self.entry_Username = customtkinter.CTkEntry(self.tabview.tab("Datos"))
-        self.entry_Username.place(relx=0.5, rely=0.4, anchor=customtkinter.CENTER)
+        self.nombre = customtkinter.CTkLabel(self.tabview.tab("Datos"), text="Nombre", anchor="w")
+        self.nombre.place(relx=0.5, rely=0.2, anchor=customtkinter.CENTER)
 
-        self.contra = customtkinter.CTkLabel(self.tabview.tab("Datos"), text="Contraseña", anchor="w")
-        self.contra.place(relx=0.5, rely=0.5, anchor=customtkinter.CENTER)
+        self.entry_Nombre = customtkinter.CTkEntry(self.tabview.tab("Datos"))
+        self.entry_Nombre.place(relx=0.5, rely=0.3, anchor=customtkinter.CENTER)
 
-        self.entry_Contra = customtkinter.CTkEntry(self.tabview.tab("Datos"), show = "◊")
-        self.entry_Contra.place(relx=0.5, rely=0.6, anchor=customtkinter.CENTER)
-
-
-        self.nombre = customtkinter.CTkEntry(self.tabview.tab("Datos"))
-        self.nombre.place(relx=0.5, rely=0.4, anchor=customtkinter.CENTER)
-
-        self.apellido = customtkinter.CTkEntry(self.tabview.tab("Datos"))
+        self.apellido = customtkinter.CTkLabel(self.tabview.tab("Datos"), text="Apellido", anchor="w")
         self.apellido.place(relx=0.5, rely=0.4, anchor=customtkinter.CENTER)
 
-        self.cancion_Favorita = customtkinter.CTkEntry(self.tabview.tab("Datos"))
-        self.cancion_Favorita.place(relx=0.5, rely=0.4, anchor=customtkinter.CENTER)
+        self.entry_Apellido = customtkinter.CTkEntry(self.tabview.tab("Datos"))
+        self.entry_Apellido.place(relx=0.5, rely=0.5, anchor=customtkinter.CENTER)
+
+
+        self.correo = customtkinter.CTkLabel(self.tabview.tab("Datos"), text="Correo", anchor="w")
+        self.correo.place(relx=0.5, rely=0.6, anchor=customtkinter.CENTER)
+
+        self.entry_Correo = customtkinter.CTkEntry(self.tabview.tab("Datos"))
+        self.entry_Correo.place(relx=0.5, rely=0.7, anchor=customtkinter.CENTER)
+
+
+        self.edad_label = customtkinter.CTkLabel(self.tabview.tab("Datos"), text="Edad: 0")
+        self.edad_label.place(relx=0.5, rely=0.8, anchor=customtkinter.CENTER)
+
+        self.edad_slider = customtkinter.CTkSlider(self.tabview.tab("Datos"), command=self.update_edad_label, from_=0, to=100)
+        self.edad_slider.place(relx=0.5, rely=0.9, anchor=customtkinter.CENTER)
 
 
 
 
 
-        self.sidebar_button_3 = customtkinter.CTkButton(self.tabview.tab("Datos"),fg_color=green_light,hover_color=green)
-        self.sidebar_button_3.place(relx=0.5, rely=0.8, anchor=customtkinter.CENTER)
 
+
+
+
+        #-------------------------------------------------------------------------------
+
+        self.username = customtkinter.CTkLabel(self.tabview.tab("Juego"), text="Username", anchor="w")
+        self.username.place(relx=0.5, rely=0.2, anchor=customtkinter.CENTER)
+        self.entry_Username = customtkinter.CTkEntry(self.tabview.tab("Juego"))
+        self.entry_Username.place(relx=0.5, rely=0.3, anchor=customtkinter.CENTER)
+
+        self.contra = customtkinter.CTkLabel(self.tabview.tab("Juego"), text="Contraseña", anchor="w")
+        self.contra.place(relx=0.5, rely=0.4, anchor=customtkinter.CENTER)
+
+        self.entry_Contra = customtkinter.CTkEntry(self.tabview.tab("Juego"), show="◊")
+        self.entry_Contra.place(relx=0.5, rely=0.5, anchor=customtkinter.CENTER)
+
+    def update_edad_label(self, value):
+        self.edad_label.configure(text=f"Edad: {round(value)}")
 
 
 

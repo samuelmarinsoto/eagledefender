@@ -51,7 +51,7 @@ class Menu_principal(customtkinter.CTk):
         self.scaling_label = customtkinter.CTkLabel(self, text="UI Scaling:", anchor="w")
         self.scaling_label.place(relx=0.5, rely=0.7, anchor=customtkinter.CENTER)
 
-        self.scaling_optionemenu = customtkinter.CTkOptionMenu(self, values=["80%", "90%", "100%", "110%", "120%"],
+        self.scaling_optionemenu = customtkinter.CTkOptionMenu(self, values=["100%", "90%", "80%", "110%", "120%"],
                                                                command=self.change_scaling_event,fg_color=green_light, button_color=green)
         self.scaling_optionemenu.place(relx=0.5, rely=0.8, anchor=customtkinter.CENTER)
 
