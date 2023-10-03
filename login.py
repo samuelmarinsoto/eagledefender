@@ -15,38 +15,38 @@ from DataBase import validate_user
 
 class Login(customtkinter.CTk):
     """
-       Clase que representa una ventana de inicio de sesión de una aplicación.
+    A class representing a login window of an application.
 
-       Esta ventana permite a los usuarios ingresar su nombre de usuario y contraseña,
-       así como realizar un inicio de sesión facial si lo desean.
+    This window allows users to enter their username and password,
+    and also perform facial login if they wish.
 
-       Args:
-           None
+    Args:
+        None
 
-       Attributes:
-           - title (str): Título de la ventana.
-           - geometry (str): Geometría de la ventana.
-           - logo_label (customtkinter.CTkLabel): Etiqueta para el título de la aplicación.
-           - username (customtkinter.CTkLabel): Etiqueta para el nombre de usuario.
-           - entry_Username (customtkinter.CTkEntry): Campo de entrada para el nombre de usuario.
-           - contra (customtkinter.CTkLabel): Etiqueta para la contraseña.
-           - entry_Contra (customtkinter.CTkEntry): Campo de entrada para la contraseña.
-           - sidebar_button_1 (customtkinter.CTkButton): Botón para iniciar sesión.
-           - sidebar_button_3 (customtkinter.CTkButton): Botón para abrir la ventana de registro.
-           - inicio_facial (customtkinter.CTkButton): Botón para realizar el inicio de sesión facial.
+    Attributes:
+        title (str): Window title.
+        geometry (str): Window geometry.
+        logo_label (customtkinter.CTkLabel): Label for the application title.
+        username (customtkinter.CTkLabel): Label for the username.
+        entry_Username (customtkinter.CTkEntry): Entry field for the username.
+        contra (customtkinter.CTkLabel): Label for the password.
+        entry_Contra (customtkinter.CTkEntry): Entry field for the password.
+        sidebar_button_1 (customtkinter.CTkButton): Button to login.
+        sidebar_button_3 (customtkinter.CTkButton): Button to open the registration window.
+        inicio_facial (customtkinter.CTkButton): Button for facial login.
 
-       Methods:
-           - verificacion_login(): Verifica el inicio de sesión utilizando nombre de usuario y contraseña.
-           - login_facial(): Realiza el inicio de sesión facial.
-           - ejecutar_Ventana(): Abre la ventana de registro.
-           - change_appearance_mode_event(new_appearance_mode: str): Cambia el modo de apariencia de la ventana.
-           - change_scaling_event(new_scaling: str): Cambia la escala de los widgets de la ventana.
-       """
+    Methods:
+        verificacion_login(): Verifies login using username and password.
+        facial_login(): Performs facial login.
+        open_window(): Opens the registration window.
+        change_appearance_mode_event(new_appearance_mode: str): Changes the appearance mode of the window.
+        change_scaling_event(new_scaling: str): Changes the scaling of the window widgets.
+    """
+
     def __init__(self):
-
         """
-               Inicializa una ventana de inicio de sesión.
-               """
+		Initializes a login window.
+		"""
         green = "#245953"
         green_light = "#408E91"
         pink = "#E49393"
@@ -82,32 +82,31 @@ class Login(customtkinter.CTk):
         self.entry_Contra.place(relx=0.5, rely=0.6, anchor=customtkinter.CENTER)
 
         self.sidebar_button_1 = customtkinter.CTkButton(self, text=dic.Login2[dic.language], fg_color=green_light,
-                                                        hover_color=green, command=self.verificacion_login)
+                                                        hover_color=green, command=self.verify_login)
         self.sidebar_button_1.place(relx=0.5, rely=0.8, anchor=customtkinter.CENTER)
 
         self.sidebar_button_3 = customtkinter.CTkButton(self,  text=dic.Register[dic.language],fg_color=green_light,hover_color=green, command= self.ejecutar_Ventana)
         self.sidebar_button_3.place(relx=0.5, rely=0.9, anchor=customtkinter.CENTER)
 
         self.incio_facial = customtkinter.CTkButton(self, text="Inicio facial", fg_color=green_light,
-                                                        hover_color=green, command=self.login_facial)
+                                                        hover_color=green, command=self.log_face)
         self.incio_facial.place(relx=0.5, rely=0.7, anchor=customtkinter.CENTER)
 
 
 
-    def login_facial(self):
-
+    def facial_login(self):
         """
-               Realiza el inicio de sesión facial.
+        Performs facial login.
 
-               Captura el rostro del usuario utilizando la cámara, lo compara con una foto registrada
-               y verifica si son similares para iniciar sesión.
+        Captures the user's face using the camera, compares it with a registered photo,
+        and verifies if they are similar to log in.
 
-               Args:
-                   None
+        Args:
+            None
 
-               Returns:
-                   None
-               """
+        Returns:
+            None
+        """
         # ------------------------------Vamos a capturar el rostro-----------------------------------------------------
         cap = cv2.VideoCapture(0)  # Elegimos la camara con la que vamos a hacer la deteccion
         while (True):
@@ -117,15 +116,14 @@ class Login(customtkinter.CTk):
             if cv2.waitKey(1) == 27:  # Cuando oprimamos "Escape" rompe el video
                 break
         usuario_login = self.entry_Username.get()  # Con esta variable vamos a guardar la foto pero con otro nombre para no sobreescribir
-        cv2.imwrite(usuario_login + "LOG.jpg",
-                    frame)  # Guardamos la ultima caputra del video como imagen y asignamos el nombre del usuario
+        cv2.imwrite("ProfilePics/" + usuario_login + ".jpg", frame)
         cap.release()  # Cerramos
         cv2.destroyAllWindows()
 
 
         # ----------------- Funcion para guardar el rostro --------------------------
 
-        def log_rostro(img, lista_resultados):
+        def log_face(img, lista_resultados):
             data = pyplot.imread(img)
             for i in range(len(lista_resultados)):
                 x1, y1, ancho, alto = lista_resultados[i]['box']
@@ -135,7 +133,7 @@ class Login(customtkinter.CTk):
                 cara_reg = data[y1:y2, x1:x2]
                 cara_reg = cv2.resize(cara_reg, (150, 200),
                                       interpolation=cv2.INTER_CUBIC)  # Guardamos la imagen 150x200
-                cv2.imwrite(usuario_login + "LOG.jpg", cara_reg)
+                cv2.imwrite("ProfilePics/" + usuario_login + "LOG.jpg", cara_reg)
                 return pyplot.imshow(data[y1:y2, x1:x2])
             pyplot.show()
 
@@ -145,10 +143,10 @@ class Login(customtkinter.CTk):
         pixeles = pyplot.imread(img)
         detector = MTCNN()
         caras = detector.detect_faces(pixeles)
-        log_rostro(img, caras)
+        log_face(img, caras)
 
         # -------------------------- Funcion para comparar los rostros --------------------------------------------
-        def orb_sim(img1, img2):
+        def orb_similarity(img1, img2):
             global pantalla
             orb = cv2.ORB_create()  # Creamos el objeto de comparacion
 
@@ -168,10 +166,10 @@ class Login(customtkinter.CTk):
         # ---------------------------- Importamos las imagenes y llamamos la funcion de comparacion ---------------------------------
 
         im_archivos = os.listdir()  # Vamos a importar la lista de archivos con la libreria os
-        if usuario_login + ".jpg" in im_archivos:  # Comparamos los archivos con el que nos interesa
-            rostro_reg = cv2.imread(usuario_login + ".jpg", 0)  # Importamos el rostro del registro
-            rostro_log = cv2.imread(usuario_login + "LOG.jpg", 0)  # Importamos el rostro del inicio de sesion
-            similitud = orb_sim(rostro_reg, rostro_log)
+        if usuario_login + ".jpg" in os.listdir('ProfilePics'):
+            rostro_reg = cv2.imread("ProfilePics/" + usuario_login + ".jpg", 0)
+            rostro_log = cv2.imread("ProfilePics/" + usuario_login + "LOG.jpg", 0)
+            similitud = orb_similarity(rostro_reg, rostro_log)
             if similitud >= 0.98:
 
                 print("Bienvenido al sistema usuario: ", usuario_login)
@@ -183,25 +181,35 @@ class Login(customtkinter.CTk):
         else:
             print("Usuario no encontrado")
 
+
     def verificacion_login(self):
+        """
+		Verifies login using username and password.
+
+		Args:
+			None
+
+		Returns:
+			None
+		"""
         log_usuario = self.entry_Username.get()
         log_contra = self.entry_Contra.get()
 
         if validate_user(log_usuario, log_contra):
-            tkinter.messagebox.showinfo("Inicio de sesión exitoso")
+            tkinter.messagebox.showinfo("Éxito", "Inicio de sesión exitoso")
         else:
-            tkinter.messagebox.showinfo("Usuario o contraseña incorrectos")
+            tkinter.messagebox.showinfo("Error", "Usuario o contraseña incorrectos")
 
     def ejecutar_Ventana(self):
         """
-                Abre la ventana de registro.
+        Opens the registration window.
 
-                Args:
-                    None
+        Args:
+            None
 
-                Returns:
-                    None
-                """
+        Returns:
+            None
+        """
         self.destroy()
         nuevo =Registro()
         nuevo.mainloop()
@@ -209,26 +217,26 @@ class Login(customtkinter.CTk):
 
     def change_appearance_mode_event(self, new_appearance_mode: str):
         """
-              Cambia el modo de apariencia de la ventana.
-z
-              Args:
-                  new_appearance_mode (str): Nuevo modo de apariencia.
+        Changes the appearance mode of the window.
 
-              Returns:
-                  None
-              """
+        Args:
+            new_appearance_mode (str): New appearance mode.
+
+        Returns:
+            None
+        """
         customtkinter.set_appearance_mode(new_appearance_mode)
 
     def change_scaling_event(self, new_scaling: str):
         """
-               Cambia la escala de los widgets de la ventana.
+        Changes the scaling of the window widgets.
 
-               Args:
-                   new_scaling (str): Nueva escala en formato de porcentaje.
+        Args:
+            new_scaling (str): New scaling in percentage format.
 
-               Returns:
-                   None
-               """
+        Returns:
+            None
+        """
         new_scaling_float = int(new_scaling.replace("%", "")) / 100
         customtkinter.set_widget_scaling(new_scaling_float)
 

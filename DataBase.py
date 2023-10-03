@@ -29,45 +29,63 @@ CREDENTIALS_FILE = 'token.json'
 
 
 def get_credentials():
-	"""Retorna las credenciales para autenticarse con la API de Gmail."""
-	creds = None
-	if os.path.exists(CREDENTIALS_FILE):
-		creds = Credentials.from_authorized_user_file(CREDENTIALS_FILE)
-	if not creds or not creds.valid:
-		if creds and creds.expired and creds.refresh_token:
-			creds.refresh(Request())
-		else:
-			flow = InstalledAppFlow.from_client_secrets_file(CLIENT_SECRET_FILE, SCOPES)
-			creds = flow.run_local_server(port=0)
-			with open(CREDENTIALS_FILE, 'w') as token:
-				token.write(creds.to_json())
-	return creds
+    """
+    Retrieves credentials to authenticate with the Gmail API.
+
+    Returns:
+        Credentials: Object containing user credentials.
+    """
+    creds = None
+    if os.path.exists(CREDENTIALS_FILE):
+        creds = Credentials.from_authorized_user_file(CREDENTIALS_FILE)
+    if not creds or not creds.valid:
+        if creds and creds.expired and creds.refresh_token:
+            creds.refresh(Request())
+        else:
+            flow = InstalledAppFlow.from_client_secrets_file(CLIENT_SECRET_FILE, SCOPES)
+            creds = flow.run_local_server(port=0)
+            with open(CREDENTIALS_FILE, 'w') as token:
+                token.write(creds.to_json())
+    return creds
 
 
 def send_email(sender, to, subject, message_text):
-	"""Envía un correo electrónico utilizando la API de Gmail."""
-	creds = get_credentials()
-	service = build('gmail', 'v1', credentials=creds)
+    """
+    Sends an email using the Gmail API.
 
-	raw_msg = base64.urlsafe_b64encode(f"Subject: {subject}\nTo: {to}\n\n{message_text}".encode('utf-8')).decode(
-		'utf-8')
-	message = {'raw': raw_msg}
-	send_message = service.users().messages().send(userId=sender, body=message).execute()
-	print(f"Message sent. Id: {send_message['id']}")
+    Args:
+        sender (str): Email address of the sender.
+        to (str): Email address of the recipient.
+        subject (str): Subject of the email.
+        message_text (str): Body of the email.
+    """
+    creds = get_credentials()
+    service = build('gmail', 'v1', credentials=creds)
 
+    raw_msg = base64.urlsafe_b64encode(f"Subject: {subject}\nTo: {to}\n\n{message_text}".encode('utf-8')).decode(
+        'utf-8')
+    message = {'raw': raw_msg}
+    sent_message = service.users().messages().send(userId=sender, body=message).execute()
+    print(f"Message sent. Id: {sent_message['id']}")
 
 def connect():
-	"""Establishes and returns a connection with the database. If an error occurs, prints the message and returns None."""
-	try:
-		server = '.\EAGLEDEFENDER'
-		database = 'EagleDefender'
-		driver = '{ODBC Driver 17 for SQL Server}'
-		conn = pyodbc.connect(f'DRIVER={driver};SERVER={server};DATABASE={database};Trusted_Connection=yes')
-		print(f"Connected to database {database}")
-		return conn
-	except Exception as e:
-		print(f"An error occurred connecting to the database: {e}")
-		return None
+    """
+    Establishes and returns a connection with the database.
+    If an error occurs, prints the message and returns None.
+
+    Returns:
+        pyodbc.Connection: Connection object to the database, or None if an error occurred.
+    """
+    try:
+        server = '.\EAGLEDEFENDER'
+        database = 'EagleDefender'
+        driver = '{ODBC Driver 17 for SQL Server}'
+        conn = pyodbc.connect(f'DRIVER={driver};SERVER={server};DATABASE={database};Trusted_Connection=yes')
+        print(f"Connected to database {database}")
+        return conn
+    except Exception as e:
+        print(f"An error occurred connecting to the database: {e}")
+        return None
 
 
 def create_users_table():
@@ -95,59 +113,97 @@ def create_users_table():
 
 
 def hash_password(password):
-	"""Retorna la contraseña encriptada usando bcrypt."""
+	"""Encrypts a password using bcrypt.
+
+	Args:
+		password (str): The password to be hashed.
+
+	Returns:
+		bytes: The hashed password.
+	"""
 	salt = bcrypt.gensalt()
 	hashed = bcrypt.hashpw(password.encode('utf-8'), salt)
 	return hashed
 
 
-def verificar_contrasena(contrasena, hashed_from_db):
-	"""Verifica si una contraseña coincide con su versión encriptada."""
+def verify_password(password, hashed_from_db):
+	"""Verifies if a password matches its encrypted version.
+
+	Args:
+		password (str): The plain-text password entered by the user.
+		hashed_from_db (bytes): The hashed password retrieved from the database.
+
+	Returns:
+		bool: True if the passwords match, False otherwise.
+	"""
 	if not hashed_from_db:
-		print("No se encontró un hash para este usuario.")
+		print("No hash found for this user.")
 		return False
-	return bcrypt.checkpw(contrasena.encode('utf-8'), hashed_from_db)
+	return bcrypt.checkpw(password.encode('utf-8'), hashed_from_db)
 
 
 def insert_user(username, password, first_name, last_name, email, age, photo, code):
-    if age < 13:
-        tkinter.messagebox.showerror("Error", "El usuario debe tener al menos 13 años para registrarse.")
-        return False
+	"""Inserts a new user into the database with the provided information.
 
-    if username_ya_registrado(username):
-        tkinter.messagebox.showerror("Error", "Este nombre de usuario ya está registrado.")
-        return False
+	Args:
+		username (str): Desired username.
+		password (str): Desired password.
+		first_name (str): User's first name.
+		last_name (str): User's last name.
+		email (str): User's email address.
+		age (int): User's age.
+		photo (str): Link or path to user's photo.
+		code (str): Generated verification code.
 
-    if correo_ya_registrado(email):
-        tkinter.messagebox.showerror("Error", "Este correo ya está registrado.")
-        return False
+	Returns:
+		bool: True if the user was inserted successfully, False otherwise.
+	"""
+	if age < 13:
+		tkinter.messagebox.showerror("Error", "The user must be at least 13 years old to register.")
+		return False
 
+	if is_username_registered(username):
+		tkinter.messagebox.showerror("Error", "This username is already registered.")
+		return False
 
-    hashed_pass = hash_password(password)
+	if is_email_registered(email):
+		tkinter.messagebox.showerror("Error", "This email is already registered.")
+		return False
 
-    try:
-        conn = connect()
-        print("Connecting to database...")
-        cursor = conn.cursor()
-        print("Debug: Preparing to insert user")  # Debug Message
-        cursor.execute("""
+	hashed_pass = hash_password(password)
+
+	try:
+		conn = connect()
+		print("Connecting to database...")
+		cursor = conn.cursor()
+		print("Debug: Preparing to insert user")  # Debug Message
+		cursor.execute("""
             INSERT INTO Users (Username, Password, FirstName, LastName, Email, Age, Photo, Code, DateCode)
             VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
         """, (username, hashed_pass, first_name, last_name, email, age, photo, code, datetime.now()))
-        conn.commit()
-        print("Debug: User inserted successfully")  # Debug Message
-        return True
-    except pyodbc.IntegrityError:
-        print("El correo ya está registrado.")
-    except Exception as e:
-        print(f"Ocurrió un error al insertar el usuario: {e}")
-    finally:
-        cursor.close()
-        conn.close()
-    return False
+		conn.commit()
+		print("Debug: User inserted successfully")  # Debug Message
+		return True
+	except pyodbc.IntegrityError:
+		print("The email is already registered.")
+	except Exception as e:
+		print(f"An error occurred while inserting the user: {e}")
+	finally:
+		cursor.close()
+		conn.close()
+	return False
 
 
 def validate_user(username, password):
+	"""Validates user credentials against the database.
+
+	   Args:
+	       username (str): The username to validate.
+	       password (str): The password to validate.
+
+	   Returns:
+	       bool: True if validation is successful, False otherwise.
+	   """
 	connection = connect()
 	cursor = connection.cursor()
 
@@ -157,7 +213,7 @@ def validate_user(username, password):
 		if row:
 			hashed_password_from_db = row[2]
 			print("Hashed password from DB:", hashed_password_from_db.hex())
-			if verificar_contrasena(password, hashed_password_from_db):
+			if verify_password(password, hashed_password_from_db):
 				return True  # Usuario y contraseña válidos
 			else:
 				return False  # Contraseña incorrecta
@@ -170,8 +226,16 @@ def validate_user(username, password):
 		connection.close()
 
 
-def username_ya_registrado(username):
-    """Verifica si un username ya está registrado en la base de datos."""
+def is_username_registered(username):
+    """Checks if a username is already registered in the database.
+
+    Args:
+        username (str): The username to check.
+
+    Returns:
+        bool: True if the username is registered, False otherwise.
+    """
+
     try:
         conn = connect()
         cursor = conn.cursor()
@@ -182,36 +246,49 @@ def username_ya_registrado(username):
         print(f"Ocurrió un error al verificar el username: {e}")
         return False
 
-def guardar_codigo_confirmacion(correo, codigo_confirmacion):
-	"""Guarda o actualiza el código de confirmación para un usuario en la base de datos."""
+def save_confirmation_code(email, confirmation_code):
+	"""Saves or updates the confirmation code for a user in the database.
+
+    Args:
+        email (str): The user's email address.
+        confirmation_code (str): The confirmation code to save.
+    """
 	timestamp = datetime.now()
 	try:
 		conn = connect()
 		cursor = conn.cursor()
 		cursor.execute("UPDATE Users SET Code = ?, DateCode = ? WHERE Email = ?",
-		               (codigo_confirmacion, timestamp, correo))
+		               (confirmation_code, timestamp, email))
 		conn.commit()
 	except Exception as e:
 		print(f"Ocurrió un error al guardar el código de confirmación: {e}")
 
 
-def confirmar_correo(correo, codigo_ingresado):
-	"""Confirma el correo del usuario comparando el código ingresado con el almacenado en la base de datos."""
-	usuario = obtener_usuario(correo)
+def confirm_email(email, entered_code):
+	"""Confirms the user's email by comparing the entered code with the stored one.
 
-	if not usuario:
+	    Args:
+	        email (str): The user's email address.
+	        entered_code (str): The confirmation code entered by the user.
+
+	    Returns:
+	        bool: True if the email is confirmed, False otherwise.
+	    """
+	user = get_user(email)
+
+	if not user:
 		print("No existe un usuario con ese correo.")
 		return False
 
-	codigo_almacenado = usuario[8]  # Asumiendo que CodigoConfirmacion es la 9na columna
+	codigo_almacenado = user[8]  # Asumiendo que CodigoConfirmacion es la 9na columna
 	print(f"Código almacenado: {codigo_almacenado}")
-	print(f"Código ingresado: {codigo_ingresado}")
+	print(f"Código ingresado: {entered_code}")
 
-	if str(codigo_almacenado) != str(codigo_ingresado):
+	if str(codigo_almacenado) != str(entered_code):
 		print("Los códigos no coinciden.")
 		return False
 
-	fecha_codigo_str = usuario[9]  # Asumiendo que FechaCodigo es la 10ma columna
+	fecha_codigo_str = user[9]  # Asumiendo que FechaCodigo es la 10ma columna
 	if not fecha_codigo_str:
 		print("No hay un código de confirmación válido para este correo.")
 		return False
@@ -233,8 +310,9 @@ def confirmar_correo(correo, codigo_ingresado):
 	return True
 
 
-def limpiar_codigos_antiguos():
-	"""Elimina códigos de confirmación antiguos (mayores a 10 minutos) de la base de datos."""
+def clear_old_codes():
+	"""Deletes old confirmation codes (older than 10 minutes) from the database.
+	    """
 	try:
 		conn = connect()
 		cursor = conn.cursor()
@@ -245,8 +323,15 @@ def limpiar_codigos_antiguos():
 		print(f"Ocurrió un error al limpiar códigos antiguos: {e}")
 
 
-def obtener_usuario(email):
-	"""Retorna los detalles de un usuario basado en su correo electrónico."""
+def get_user(email):
+	"""Returns the details of a user based on their email address.
+
+	    Args:
+	        email (str): The email address of the user.
+
+	    Returns:
+	        tuple: User details retrieved from the database, or None if an error occurred.
+	    """
 	try:
 		conn = connect()
 		cursor = conn.cursor()
@@ -261,14 +346,22 @@ def obtener_usuario(email):
 
 
 
-def correo_ya_registrado(correo):
+def is_email_registered(email):
 	"""Verifica si un correo ya está registrado en la base de datos."""
-	usuario = obtener_usuario(correo)
-	return usuario is not None
+	user = get_user(email)
+	return user is not None
 
 
-def obtener_codigo_confirmacion(Email):
-	"""Obtiene el código de confirmación para un correo específico."""
+def get_confirmation_code(Email):
+	"""Gets the confirmation code for a specific email.
+
+	   Args:
+	       Email (str): The email to get the confirmation code for.
+
+	   Returns:
+	       str: The confirmation code, or None if not found.
+	   """
+
 	try:
 		conn = connect()
 		cursor = conn.cursor()
@@ -283,18 +376,28 @@ def obtener_codigo_confirmacion(Email):
 		return None
 
 
-def enviar_correo_confirmacion(correo, codigo_confirmacion):
-	"""Envía un correo electrónico con un código de confirmación."""
+def send_confirmation_email(email, confirmation_code):
+	"""Sends an email with a confirmation code.
+
+	   Args:
+	       email (str): The recipient's email address.
+	       confirmation_code (str): The confirmation code to send.
+	   """
 	subject = 'Confirmación de Correo'
-	message_text = f'Por favor, confirma tu correo utilizando el siguiente código: {codigo_confirmacion}'
-	send_email('jifs.enterprises@gmail.com', correo, subject, message_text)
-	# Después de enviar el correo de verificación en tu script
+	message_text = f'Por favor, confirma tu correo utilizando el siguiente código: {confirmation_code}'
+	send_email('jifs.enterprises@gmail.com', email, subject, message_text)
 
+def generate_and_save_code(email):
+	"""Generates a new confirmation code, saves it in the database, and returns it.
 
+	   Args:
+	       email (str): The email address to generate and save the code for.
 
-def generar_y_guardar_codigo(correo):
-	"""Genera un nuevo código de confirmación, lo guarda en la base de datos y lo retorna."""
-	codigo_confirmacion = generar_codigo_confirmacion()
+	   Returns:
+	       str: The generated confirmation code.
+	   """
+
+	codigo_confirmacion = generate_confirmation_code()
 	try:
 		conn = connect()
 		cursor = conn.cursor()
@@ -307,14 +410,14 @@ def generar_y_guardar_codigo(correo):
 		return None
 
 
-def generar_codigo_confirmacion():
+def generate_confirmation_code():
 	"""Genera un código de confirmación aleatorio de 6 dígitos y lo retorna."""
 	return str(random.randint(100000, 999999))
 
-
-
 def main():
-    """Main function. Manages interaction with the user, allowing them to register, login, or confirm their email."""
+    """
+    Main function. Manages interaction with the user, allowing them to register, login, or confirm their email.
+    """
     create_users_table()
     option = input("Do you want to register (R), login (L), or confirm your email (C)? ").upper()
 
@@ -326,24 +429,24 @@ def main():
         password = input("Enter your password: ")
 
         # Check if the email is already registered
-        if correo_ya_registrado(email):
+        if is_email_registered(email):
             print("This email is already registered.")
             return
 
         # Generate and save the confirmation code
-        confirmation_code = generar_codigo_confirmacion()
+        confirmation_code = generate_confirmation_code()
         insert_user(name, password, None, None, email, age, None, confirmation_code)
         # Send the confirmation code via email
-        enviar_correo_confirmacion(email, confirmation_code)
+        send_confirmation_email(email, confirmation_code)
         print("User successfully registered. Please check your email and confirm here.")
 
     # Login
     elif option == "L":
         email = input("Enter your email: ")
         password = input("Enter your password: ")
-        user = obtener_usuario(email)
+        user = get_user(email)
 
-        if user and verificar_contrasena(password, user[2]):
+        if user and verify_password(password, user[2]):
             print("Login successful.")
         else:
             print("Incorrect email or password.")
@@ -352,15 +455,15 @@ def main():
     elif option == "C":
         email = input("Enter the email you registered with: ")
         # Generate and save a new confirmation code
-        confirmation_code = generar_y_guardar_codigo(email)
+        confirmation_code = generate_and_save_code(email)
         if confirmation_code:
-            enviar_correo_confirmacion(email, confirmation_code)
+            send_confirmation_email(email, confirmation_code)
             print("A new confirmation code has been sent to your email.")
         else:
             print("There was a problem generating a new confirmation code.")
         # Verify the code entered by the user
         entered_code = input("Enter the confirmation code you received by email: ")
-        if confirmar_correo(email, entered_code):
+        if confirm_email(email, entered_code):
             print("Thank you for confirming your email!")
         else:
             print("There was a problem confirming your email. Make sure the code is correct.")

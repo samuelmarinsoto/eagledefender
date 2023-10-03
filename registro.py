@@ -220,13 +220,19 @@ class Registro(customtkinter.CTk):
         return True  # Retornamos True para indicar que el registro fue exitoso
 
     def on_register_button_click(self):
-            # Intentamos registrar al usuario.
+        print("Botón de registro clickeado")
+
+        # Intentamos registrar al usuario.
         if self.registrar_usuario():
-                contrasena = self.entry_Contra.get()
-        if not self.validar_contrasena(contrasena):
-            tkinter.messagebox.showerror("Error", "La contraseña no cumple con los requisitos. - Mínimo 8 caracteres- Máximo 16 caracteres- Al menos una letra mayúscula- Al menos una letra minúscula- Al menos un número- Al menos un carácter especial: @#$%^&+=")
-            return
-    # Si el registro del usuario no fue exitoso, no hacemos nada adicional (la función registrar_usuario ya maneja mostrar el mensaje de error).
+            contrasena = self.entry_Contra.get()
+            if not self.validar_contrasena(contrasena):
+                tkinter.messagebox.showerror("Error",
+                                             "La contraseña no cumple con los requisitos. - Mínimo 8 caracteres- Máximo 16 caracteres- Al menos una letra mayúscula- Al menos una letra minúscula- Al menos un número- Al menos un carácter especial: @#$%^&+=")
+                return
+
+            # Ahora solicitamos la verificación
+            self.solicitar_verificacion()
+
     def solicitar_verificacion(self):
         # Aquí puedes abrir una nueva ventana o usar la actual para solicitar el código al usuario.
         codigo_ingresado = simpledialog.askstring("Verificación",
@@ -315,21 +321,24 @@ class Registro(customtkinter.CTk):
         customtkinter.set_widget_scaling(new_scaling_float)
 
     def registro_facial(self):
-            # Vamos a capturar el rostro
-        cap = cv2.VideoCapture(0)  # Elegimos la camara con la que vamos a hacer la deteccion
-        while (True):
-            ret, frame = cap.read()  # Leemos el video
-            frame = np.flip(frame, axis=1)
-            cv2.imshow(dic.FacialRegistration[dic.language], frame)  # Mostramos el video en pantalla
-            if cv2.waitKey(1) == 27:  # Cuando oprimamos "Escape" rompe el video
-                break
-        usuario_img = self.entry_Username.get()
-        cv2.imwrite(usuario_img + ".jpg",frame)  # Guardamos la ultima caputra del video como imagen y asignamos el nombre del usuario
+        try:
+                # Vamos a capturar el rostro
+            cap = cv2.VideoCapture(0)  # Elegimos la camara con la que vamos a hacer la deteccion
+            while (True):
+                ret, frame = cap.read()  # Leemos el video
+                frame = np.flip(frame, axis=1)
+                cv2.imshow(dic.FacialRegistration[dic.language], frame)  # Mostramos el video en pantalla
+                if cv2.waitKey(1) == 27:  # Cuando oprimamos "Escape" rompe el video
+                    break
+            usuario_img = self.entry_Username.get()
+            cv2.imwrite(usuario_img + ".jpg",frame)  # Guardamos la ultima caputra del video como imagen y asignamos el nombre del usuario
 
-        cap.release()  # Cerramos
-        cv2.destroyAllWindows()
-        tkinter.messagebox.showinfo("Éxito", "Usuario registrado con éxito.")
-        self.iniciar()
+            cap.release()  # Cerramos
+            cv2.destroyAllWindows()
+            tkinter.messagebox.showinfo("Éxito", "Usuario registrado con éxito.")
+            self.iniciar()
+        except Exception as e:
+            print(f"Error en registro facial: {e}")
 
         def reg_rostro(img, lista_resultados):
             data = pyplot.imread(img)
