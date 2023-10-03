@@ -20,7 +20,8 @@ from google.oauth2.credentials import Credentials
 from google_auth_oauthlib.flow import InstalledAppFlow
 from googleapiclient.discovery import build
 from google.auth.transport.requests import Request
-
+import tkinter.messagebox
+import VerificationCode
 # Configuración inicial para la API de Gmail
 SCOPES = ['https://www.googleapis.com/auth/gmail.send']
 CLIENT_SECRET_FILE = 'credentials.json'
@@ -62,7 +63,7 @@ def connect():
 		database = 'EagleDefender'
 		driver = '{ODBC Driver 17 for SQL Server}'
 		conn = pyodbc.connect(f'DRIVER={driver};SERVER={server};DATABASE={database};Trusted_Connection=yes')
-
+		print(f"Connected to database {database}")
 		return conn
 	except Exception as e:
 		print(f"An error occurred connecting to the database: {e}")
@@ -78,10 +79,9 @@ def create_users_table():
             CREATE TABLE Users (
                 UserID INT PRIMARY KEY IDENTITY(1,1),
                 Username NVARCHAR(255),
-                Password NVARCHAR(255),
+                Password VARBINARY(255),
                 FirstName NVARCHAR(255),
                 LastName NVARCHAR(255),
-                Song NVARCHAR(255),
                 Email NVARCHAR(255),
                 Age INT,
                 Photo NVARCHAR(255),
@@ -109,19 +109,34 @@ def verificar_contrasena(contrasena, hashed_from_db):
 	return bcrypt.checkpw(contrasena.encode('utf-8'), hashed_from_db)
 
 
-def insert_user(username, password, first_name, last_name, song, email, age, photo, code):
+def insert_user(username, password, first_name, last_name, email, age, photo, code):
+    if age < 13:
+        tkinter.messagebox.showerror("Error", "El usuario debe tener al menos 13 años para registrarse.")
+        return False
+
+    if username_ya_registrado(username):
+        tkinter.messagebox.showerror("Error", "Este nombre de usuario ya está registrado.")
+        return False
+
+    if correo_ya_registrado(email):
+        tkinter.messagebox.showerror("Error", "Este correo ya está registrado.")
+        return False
+
+
     hashed_pass = hash_password(password)
 
     try:
         conn = connect()
+        print("Connecting to database...")
         cursor = conn.cursor()
         print("Debug: Preparing to insert user")  # Debug Message
         cursor.execute("""
-            INSERT INTO Users (Username, Password, FirstName, LastName, Song, Email, Age, Photo, Code, DateCode)
-            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
-        """, (username, hashed_pass, first_name, last_name, song, email, age, photo, code, datetime.now()))
+            INSERT INTO Users (Username, Password, FirstName, LastName, Email, Age, Photo, Code, DateCode)
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
+        """, (username, hashed_pass, first_name, last_name, email, age, photo, code, datetime.now()))
         conn.commit()
         print("Debug: User inserted successfully")  # Debug Message
+        return True
     except pyodbc.IntegrityError:
         print("El correo ya está registrado.")
     except Exception as e:
@@ -129,11 +144,47 @@ def insert_user(username, password, first_name, last_name, song, email, age, pho
     finally:
         cursor.close()
         conn.close()
+    return False
 
+
+def validate_user(username, password):
+	connection = connect()
+	cursor = connection.cursor()
+
+	try:
+		cursor.execute("SELECT * FROM Users WHERE Username = ?", (username,))
+		row = cursor.fetchone()
+		if row:
+			hashed_password_from_db = row[2]
+			print("Hashed password from DB:", hashed_password_from_db.hex())
+			if verificar_contrasena(password, hashed_password_from_db):
+				return True  # Usuario y contraseña válidos
+			else:
+				return False  # Contraseña incorrecta
+		else:
+			return False  # Usuario no encontrado
+	except pyodbc.Error as ex:
+		print("SQL Error: ", ex)
+	finally:
+		cursor.close()
+		connection.close()
+
+
+def username_ya_registrado(username):
+    """Verifica si un username ya está registrado en la base de datos."""
+    try:
+        conn = connect()
+        cursor = conn.cursor()
+        cursor.execute('SELECT Username FROM Users WHERE Username = ?', (username,))
+        usuario = cursor.fetchone()
+        return usuario is not None
+    except Exception as e:
+        print(f"Ocurrió un error al verificar el username: {e}")
+        return False
 
 def guardar_codigo_confirmacion(correo, codigo_confirmacion):
 	"""Guarda o actualiza el código de confirmación para un usuario en la base de datos."""
-	timestamp = datetime.datetime.now()
+	timestamp = datetime.now()
 	try:
 		conn = connect()
 		cursor = conn.cursor()
@@ -147,11 +198,12 @@ def guardar_codigo_confirmacion(correo, codigo_confirmacion):
 def confirmar_correo(correo, codigo_ingresado):
 	"""Confirma el correo del usuario comparando el código ingresado con el almacenado en la base de datos."""
 	usuario = obtener_usuario(correo)
+
 	if not usuario:
 		print("No existe un usuario con ese correo.")
 		return False
 
-	codigo_almacenado = usuario[4]  # Asumiendo que CodigoConfirmacion es la 5ta columna
+	codigo_almacenado = usuario[8]  # Asumiendo que CodigoConfirmacion es la 9na columna
 	print(f"Código almacenado: {codigo_almacenado}")
 	print(f"Código ingresado: {codigo_ingresado}")
 
@@ -159,12 +211,20 @@ def confirmar_correo(correo, codigo_ingresado):
 		print("Los códigos no coinciden.")
 		return False
 
-	fecha_codigo_str = usuario[5]  # Asumiendo que FechaCodigo es la 6ta columna
+	fecha_codigo_str = usuario[9]  # Asumiendo que FechaCodigo es la 10ma columna
 	if not fecha_codigo_str:
 		print("No hay un código de confirmación válido para este correo.")
 		return False
-	# Convertir la cadena fecha_codigo_str a un objeto datetime
-	fecha_codigo = datetime.strptime(fecha_codigo_str, '%Y-%m-%d %H:%M:%S.%f')
+
+	# Verifica si fecha_codigo_str es una instancia de datetime, si es así, úsala directamente
+	if isinstance(fecha_codigo_str, datetime):
+		fecha_codigo = fecha_codigo_str
+	else:  # Si no es un datetime, trata de convertirla (esto maneja casos donde la fecha pueda ser una cadena)
+		try:
+			fecha_codigo = datetime.strptime(fecha_codigo_str, '%Y-%m-%d %H:%M:%S.%f')
+		except ValueError as e:
+			print(f"Error: No se pudo convertir fecha_codigo_str a datetime: {e}")
+			return False
 
 	if datetime.now() - fecha_codigo > timedelta(minutes=10):
 		print("El código ha expirado.")
@@ -179,7 +239,7 @@ def limpiar_codigos_antiguos():
 		conn = connect()
 		cursor = conn.cursor()
 		cursor.execute("UPDATE Users SET Code = NULL WHERE DateCode < ?",
-		               (datetime.datetime.now() - datetime.timedelta(minutes=10),))
+		               (datetime.now() - timedelta(minutes=10),))
 		conn.commit()
 	except Exception as e:
 		print(f"Ocurrió un error al limpiar códigos antiguos: {e}")
@@ -191,13 +251,14 @@ def obtener_usuario(email):
 		conn = connect()
 		cursor = conn.cursor()
 		cursor.execute(
-			'SELECT UserID, Username, Password, FirstName, LastName, Song, Email, Age, Photo, Code, DateCode FROM '
+			'SELECT UserID, Username, Password, FirstName, LastName, Email, Age, Photo, Code, DateCode FROM '
 			'Users WHERE Email = ?', (email,))
 		usuario = cursor.fetchone()
 		return usuario
 	except Exception as e:
 		print(f"Ocurrió un error al obtener el usuario: {e}")
 		return None
+
 
 
 def correo_ya_registrado(correo):
@@ -227,6 +288,8 @@ def enviar_correo_confirmacion(correo, codigo_confirmacion):
 	subject = 'Confirmación de Correo'
 	message_text = f'Por favor, confirma tu correo utilizando el siguiente código: {codigo_confirmacion}'
 	send_email('jifs.enterprises@gmail.com', correo, subject, message_text)
+	# Después de enviar el correo de verificación en tu script
+
 
 
 def generar_y_guardar_codigo(correo):
@@ -269,7 +332,7 @@ def main():
 
         # Generate and save the confirmation code
         confirmation_code = generar_codigo_confirmacion()
-        insert_user(name, password, None, None, None, email, age, None, confirmation_code)
+        insert_user(name, password, None, None, email, age, None, confirmation_code)
         # Send the confirmation code via email
         enviar_correo_confirmacion(email, confirmation_code)
         print("User successfully registered. Please check your email and confirm here.")

@@ -1,5 +1,8 @@
+import datetime
 import tkinter
 import tkinter.messagebox
+from tkinter import simpledialog
+
 import customtkinter
 import tkinter.filedialog as filedialog
 from PIL import Image, ImageTk
@@ -9,8 +12,9 @@ import cv2
 from matplotlib import pyplot
 from mtcnn.mtcnn import MTCNN
 import numpy as np
-
+import DataBase
 import menu
+import re
 
 
 # customtkinter.set_appearance_mode("System")  # Modes: "System" (standard), "Dark", "Light"
@@ -159,23 +163,85 @@ class Registro(customtkinter.CTk):
         self.cancion3 = customtkinter.CTkEntry(self.tabview.tab(dic.Personalization[dic.language]))
         self.cancion3.place(relx=0.5, rely=0.7, anchor=customtkinter.CENTER)
 
-        self.sidebar_button_1 = customtkinter.CTkButton(self.tabview.tab(dic.Personalization[dic.language]), text=dic.Register[dic.language],
-                                                    fg_color=green_light, hover_color=green, command=lambda :[self.registrar_usuario(),self.registro_facial()])
+        self.sidebar_button_1 = customtkinter.CTkButton(self.tabview.tab(dic.Personalization[dic.language]),
+                                                        text=dic.Register[dic.language],
+                                                        fg_color=green_light, hover_color=green,
+                                                        command=self.on_register_button_click)
         self.sidebar_button_1.place(relx=0.5, rely=0.9, anchor=customtkinter.CENTER)
+    def verificar_contraseñas(self):
+        if self.entry_Contra.get() == self.entry_Contra_check.get():
+            return self.entry_Contra_check.get()
 
     def registrar_usuario(self):
-        usuario_info = self.entry_Username.get()  # Obetnemos la informacion alamcenada en usuario
-        contra_info = self.entry_Contra.get()  # Obtenemos la informacion almacenada en contra
+        # Recoge la información del usuario desde la GUI
+        usuario = self.entry_Username.get()
+        contra = self.verificar_contraseñas()
+        if contra is None:
+            print("Error", "Las contraseñas no coinciden.")
+            return
+        nombre = self.entry_Nombre.get()
+        apellido = self.entry_Apellido.get()
+        correo = self.entry_Correo.get()
+        edad = self.edad_slider.get()
+        # cancion = self.cancion1.get()
+        usuario_img = self.entry_Username.get()
+        imagen_ruta = 'ProfilePics/' + usuario_img + ".jpg"  # Ruta de la imagen guardada
 
-        archivo = open(usuario_info, "w")  # Abriremos la informacion en modo escritura
-        archivo.write(usuario_info + "\n")  # escribimos la info
-        archivo.write(contra_info)
-        archivo.close()
+        # Genera un nuevo código de confirmación
+        codigo = DataBase.generar_codigo_confirmacion()
 
-        # Limpiaremos los text variable
+        # Guarda el código de confirmación en la base de datos
+        DataBase.guardar_codigo_confirmacion(correo, codigo)
 
+        # Enviar código de confirmación por correo electrónico
+        DataBase.enviar_correo_confirmacion(correo, codigo)
 
-        # Ahora le diremos al usuario que su registro ha sido exitoso
+        # Validaciones antes de insertar el usuario
+        if edad < 13:
+            tkinter.messagebox.showerror("Error", "El usuario debe tener al menos 13 años para registrarse.")
+            return
+
+        if DataBase.username_ya_registrado(usuario):
+            tkinter.messagebox.showerror("Error", "Este nombre de usuario ya está registrado.")
+            return
+
+        if DataBase.correo_ya_registrado(correo):
+            tkinter.messagebox.showerror("Error", "Este correo ya está registrado.")
+            return
+        # Llama a la función para insertar los datos en la base de datos
+        try:
+            print(f"Debug: Código generado: {codigo}")
+            DataBase.insert_user(usuario, contra, nombre, apellido, correo, edad, imagen_ruta, codigo)
+            # Nota: No mostramos el mensaje de éxito aquí.
+        except Exception as e:
+            print("Error", f"Ocurrió un error al registrar al usuario: {e}")
+            return False  # Retornamos False para indicar que el registro no fue exitoso
+
+        return True  # Retornamos True para indicar que el registro fue exitoso
+
+    def on_register_button_click(self):
+            # Intentamos registrar al usuario.
+        if self.registrar_usuario():
+                contrasena = self.entry_Contra.get()
+        if not self.validar_contrasena(contrasena):
+            tkinter.messagebox.showerror("Error", "La contraseña no cumple con los requisitos. - Mínimo 8 caracteres- Máximo 16 caracteres- Al menos una letra mayúscula- Al menos una letra minúscula- Al menos un número- Al menos un carácter especial: @#$%^&+=")
+            return
+    # Si el registro del usuario no fue exitoso, no hacemos nada adicional (la función registrar_usuario ya maneja mostrar el mensaje de error).
+    def solicitar_verificacion(self):
+        # Aquí puedes abrir una nueva ventana o usar la actual para solicitar el código al usuario.
+        codigo_ingresado = simpledialog.askstring("Verificación",
+                                                  "Por favor, ingresa el código de verificación enviado a tu correo:",
+                                                  parent=self)
+
+        correo = self.entry_Correo.get()  # Obtenemos el correo desde la GUI
+
+        if DataBase.confirmar_correo(correo, codigo_ingresado):
+            tkinter.messagebox.showinfo("Éxito", "Correo verificado con éxito.")
+            # Aquí puedes proceder con el siguiente paso, por ejemplo, registro facial.
+            self.registro_facial()
+        else:
+            tkinter.messagebox.showerror("Error", "El código de verificación es incorrecto o ha expirado.")
+            # Opcionalmente, puedes permitir que el usuario lo intente de nuevo o cancelar el registro.
 
     def update_edad_label(self, value):
         self.edad_label.configure(text=dic.Age[dic.language]+f" :{round(value)}")
@@ -194,6 +260,49 @@ class Registro(customtkinter.CTk):
             self.foto_label.configure(text="")
             self.foto_label.image = imagen_tk  # ¡Importante! Debes mantener una referencia a la imagen para que no se elimine de la memoria
 
+    def cargar_imagen_usuario(self, usuario_img):
+        try:
+            # Carga la imagen
+            imagen = Image.open(usuario_img)
+            # Redimensiona la imagen (opcional)
+            imagen = imagen.resize((80, 80), Image.ANTIALIAS)
+            # Convierte la imagen para usarla en Tkinter
+            imagen_tk = ImageTk.PhotoImage(imagen)
+            # Muestra la imagen (asumiendo que `foto_label` es tu widget para mostrar la imagen)
+            self.foto_label.configure(image=imagen_tk)
+            self.foto_label.image = imagen_tk
+        except Exception as e:
+            print(f"No se pudo cargar la imagen: {e}")
+
+    def validar_usuario(usuario):
+        """
+        Valida que el nombre de usuario no contenga obscenidades.
+        """
+        palabras_prohibidas = ["palabra1", "palabra2", "palabra3"]  # Añade las palabras que desees prohibir
+
+        for palabra in palabras_prohibidas:
+            if palabra.lower() in usuario.lower():
+                return False
+        return True
+
+    @staticmethod
+    def validar_contrasena(contrasena):
+        """
+		Valida que la contraseña cumpla con los siguientes requisitos:
+		- Mínimo 8 caracteres
+		- Máximo 16 caracteres
+		- Al menos una letra mayúscula
+		- Al menos una letra minúscula
+		- Al menos un número
+		- Al menos un carácter especial
+		"""
+        if (8 <= len(contrasena) <= 16 and
+                re.search("[a-z]", contrasena) and
+                re.search("[A-Z]", contrasena) and
+                re.search("[0-9]", contrasena) and
+                re.search("[@#$%^&+=]", contrasena)):
+            return True
+        return False
     def iniciar(self):
         self.destroy()
         menu.Menu_principal().mainloop()
@@ -216,8 +325,11 @@ class Registro(customtkinter.CTk):
                 break
         usuario_img = self.entry_Username.get()
         cv2.imwrite(usuario_img + ".jpg",frame)  # Guardamos la ultima caputra del video como imagen y asignamos el nombre del usuario
+
         cap.release()  # Cerramos
         cv2.destroyAllWindows()
+        tkinter.messagebox.showinfo("Éxito", "Usuario registrado con éxito.")
+        self.iniciar()
 
         def reg_rostro(img, lista_resultados):
             data = pyplot.imread(img)
