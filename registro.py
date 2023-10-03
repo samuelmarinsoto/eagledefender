@@ -100,19 +100,15 @@ class Registro(customtkinter.CTk):
         self.entry_Contra = customtkinter.CTkEntry(self.tabview.tab(dic.Game[dic.language]), show="◊")
         self.entry_Contra.place(relx=0.5, rely=0.5, anchor=customtkinter.CENTER)
 
-        self.contra_check = customtkinter.CTkLabel(self.tabview.tab(dic.Game[dic.language]), text="Confirmar Contraseña",
-                                             anchor="w")
-        self.contra_check.place(relx=0.5, rely=0.6, anchor=customtkinter.CENTER)
-
-        self.entry_Contra_check = customtkinter.CTkEntry(self.tabview.tab(dic.Game[dic.language]), show="◊")
-        self.entry_Contra_check.place(relx=0.5, rely=0.7, anchor=customtkinter.CENTER)
-
         self.foto_label = customtkinter.CTkLabel(self.tabview.tab(dic.Game[dic.language]), corner_radius=60, text=dic.Photo[dic.language])
-        self.foto_label.place(relx=0.5, rely=0.8, anchor=customtkinter.CENTER)
+        self.foto_label.place(relx=0.5, rely=0.7, anchor=customtkinter.CENTER)
 
 
+        # self.foto = customtkinter.CTkFrame(self.tabview.tab("Juego"), fg_color=grey, corner_radius=100, height=80,width=80)
+        # self.foto.place(relx=0.5, rely=0.7, anchor=customtkinter.CENTER)
 
-        self.subir_Foto = customtkinter.CTkButton(self.tabview.tab(dic.Game[dic.language]), text="✚",fg_color=green_light, hover_color=green, corner_radius=80, width=10, command=self.abrir_archivo)
+        self.subir_Foto = customtkinter.CTkButton(self.tabview.tab(dic.Game[dic.language]), text="✚",
+                                                        fg_color=green_light, hover_color=green, corner_radius=80, width=10, command=self.abrir_archivo)
         self.subir_Foto.place(relx=0.5, rely=0.9, anchor=customtkinter.CENTER)
 
 
@@ -139,22 +135,10 @@ class Registro(customtkinter.CTk):
         self.cancion3.place(relx=0.5, rely=0.7, anchor=customtkinter.CENTER)
 
         self.sidebar_button_1 = customtkinter.CTkButton(self.tabview.tab(dic.Personalization[dic.language]), text=dic.Register[dic.language],
-                                                    fg_color=green_light, hover_color=green, command=lambda :[self.registrar_usuario(),self.registro_facial()])
+                                                    fg_color=green_light, hover_color=green, command=self.registro_facial)
         self.sidebar_button_1.place(relx=0.5, rely=0.9, anchor=customtkinter.CENTER)
 
-    def registrar_usuario(self):
-        usuario_info = self.entry_Username.get()  # Obetnemos la informacion alamcenada en usuario
-        contra_info = self.entry_Contra.get()  # Obtenemos la informacion almacenada en contra
 
-        archivo = open(usuario_info, "w")  # Abriremos la informacion en modo escritura
-        archivo.write(usuario_info + "\n")  # escribimos la info
-        archivo.write(contra_info)
-        archivo.close()
-
-        # Limpiaremos los text variable
-
-
-        # Ahora le diremos al usuario que su registro ha sido exitoso
 
     def update_edad_label(self, value):
         self.edad_label.configure(text=dic.Age[dic.language]+f" :{round(value)}")

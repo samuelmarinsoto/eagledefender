@@ -11,8 +11,33 @@ from tarjeta import Transaccion
 # customtkinter.set_default_color_theme("green")  # Themes: "blue" (standard), "green", "dark-blue"
 
 
+"""A Python script that creates a graphical user interface (GUI) using the Tkinter library.
+
+This GUI includes buttons, labels, and options for appearance settings.
+
+Attributes:
+    green (str): A green color code.
+    green_light (str): A lighter green color code.
+    pink (str): A pink color code.
+    grey (str): A grey color code.
+"""
+
 class Menu_principal(customtkinter.CTk):
+    """Main GUI class for the application."""
+
     def __init__(self):
+        """Initialize the Menu_principal class.
+
+               This method sets up the GUI window, widgets, and appearance settings.
+
+               Args:
+                   None
+
+               Returns:
+                   None
+               """
+
+
         green = "#245953"
         green_light = "#408E91"
         pink = "#E49393"
@@ -72,29 +97,100 @@ class Menu_principal(customtkinter.CTk):
         self.sidebar_button_1.place(relx=0.5, rely=0.9, anchor=customtkinter.CENTER)
 
     def ejecutar_Ventana(self):
+        """Handle the 'Login' button click event.
+
+               This method is called when the 'Login' button is clicked.
+
+               Args:
+                   None
+
+               Returns:
+                   None
+               """
+
         self.destroy()
         nuevo =Login()
         nuevo.mainloop()
 
     def ejecutar_principal(self):
+        """Handle the 'Ejecutar Principal' button click event.
+
+                This method is called when the 'Ejecutar Principal' button is clicked.
+
+                Args:
+                    None
+
+                Returns:
+                    None
+                """
+
+
         self.destroy()
         menu = Menu_principal()
         menu.mainloop()
 
 
     def ejecutar_pago(self):
+        """Handle the 'Ejecutar Pago' button click event.
+
+                This method is called when the 'Ejecutar Pago' button is clicked.
+
+                Args:
+                    None
+
+                Returns:
+                    None
+                """
+
+
+
         self.destroy()
         menu = Transaccion()
         menu.mainloop()
 
     def change_appearance_mode_event(self, new_appearance_mode: str):
+        """Change the appearance mode of the GUI.
+
+               This method is called to change the appearance mode of the GUI.
+
+               Args:
+                   new_appearance_mode (str): The new appearance mode to set.
+
+               Returns:
+                   None
+               """
+
+
         customtkinter.set_appearance_mode(new_appearance_mode)
 
     def change_scaling_event(self, new_scaling: str):
+        """Change the scaling of widgets in the GUI.
+
+               This method is called to change the scaling of widgets in the GUI.
+
+               Args:
+                   new_scaling (str): The new scaling factor to set.
+
+               Returns:
+                   None
+               """
+
         new_scaling_float = int(new_scaling.replace("%", "")) / 100
         customtkinter.set_widget_scaling(new_scaling_float)
 
     def sidebar_button_event(self):
+        """Handle the sidebar button click event.
+
+               This method is called when a sidebar button is clicked.
+
+               Args:
+                   None
+
+               Returns:
+                   None
+               """
+
+
         print("sidebar_button click")
 
 
