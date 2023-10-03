@@ -10,6 +10,8 @@ from matplotlib import pyplot
 from mtcnn.mtcnn import MTCNN
 import numpy as np
 
+import menu
+
 
 # customtkinter.set_appearance_mode("System")  # Modes: "System" (standard), "Dark", "Light"
 # customtkinter.set_default_color_theme("green")  # Themes: "blue" (standard), "green", "dark-blue"
@@ -155,6 +157,9 @@ class Registro(customtkinter.CTk):
             self.foto_label.configure(text="")
             self.foto_label.image = imagen_tk  # ¡Importante! Debes mantener una referencia a la imagen para que no se elimine de la memoria
 
+    def iniciar(self):
+        self.destroy()
+        menu.Menu_principal().mainloop()
 
     def change_appearance_mode_event(self, new_appearance_mode: str):
         customtkinter.set_appearance_mode(new_appearance_mode)
@@ -173,12 +178,9 @@ class Registro(customtkinter.CTk):
             if cv2.waitKey(1) == 27:  # Cuando oprimamos "Escape" rompe el video
                 break
         usuario_img = self.entry_Username.get()
-        cv2.imwrite(usuario_img + ".jpg",
-                        frame)  # Guardamos la ultima caputra del video como imagen y asignamos el nombre del usuario
+        cv2.imwrite(usuario_img + ".jpg",frame)  # Guardamos la ultima caputra del video como imagen y asignamos el nombre del usuario
         cap.release()  # Cerramos
         cv2.destroyAllWindows()
-
-
 
         def reg_rostro(img, lista_resultados):
             data = pyplot.imread(img)
@@ -192,10 +194,12 @@ class Registro(customtkinter.CTk):
                                         interpolation=cv2.INTER_CUBIC)  # Guardamos la imagen con un tamaño de 150x200
                 cv2.imwrite(usuario_img + ".jpg", cara_reg)
                 pyplot.imshow(data[y1:y2, x1:x2])
-            pyplot.show()
 
         img = usuario_img + ".jpg"
         pixeles = pyplot.imread(img)
         detector = MTCNN()
         caras = detector.detect_faces(pixeles)
         reg_rostro(img, caras)
+        self.iniciar()
+
+

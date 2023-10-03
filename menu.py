@@ -27,6 +27,8 @@ class Menu_principal(customtkinter.CTk):
 
         # create sidebar frame with widgets
 
+
+
         self.logo_label = customtkinter.CTkLabel(self, text="EAGLE DEFENDER", font=customtkinter.CTkFont(size=20, weight="bold"))
         self.logo_label.place(relx=0.5, rely=0.2, anchor=customtkinter.CENTER)
 
@@ -38,9 +40,9 @@ class Menu_principal(customtkinter.CTk):
         En_btn = PhotoImage(file=r"assets\flags\Flag_of_En.png").subsample(20, 25)
         Fr_btn = PhotoImage(file=r"assets\flags\Flag_of_Fr.png").subsample(10, 15)
 
-        self.idiomaEs = customtkinter.CTkButton(self, text=".", image=Es_btn, command=lambda: [dic.changeLanguage(0), self.ejecutar_principal()])
-        self.idiomaEn = customtkinter.CTkButton(self, text=".", image=En_btn, command=lambda: [dic.changeLanguage(1), self.ejecutar_principal()])
-        self.idiomaFr= customtkinter.CTkButton(self, text=".", image=Fr_btn,command=lambda: [dic.changeLanguage(2), self.ejecutar_principal()])
+        self.idiomaEs = customtkinter.CTkButton(self, text="", image=Es_btn, command=lambda: [dic.changeLanguage(0), self.ejecutar_principal()], width=5,fg_color=green)
+        self.idiomaEn = customtkinter.CTkButton(self, text="", image=En_btn, command=lambda: [dic.changeLanguage(1), self.ejecutar_principal()],width=5,fg_color=green)
+        self.idiomaFr= customtkinter.CTkButton(self, text="", image=Fr_btn,command=lambda: [dic.changeLanguage(2), self.ejecutar_principal()],width=5,fg_color=green)
 
         self.idiomaEn.place(relx=0.02, rely=0.05)#, anchor=customtkinter.CENTER)
         self.idiomaEs.place(relx=0.02, rely=0.12)#, anchor=customtkinter.CENTER)
