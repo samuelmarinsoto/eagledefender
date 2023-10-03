@@ -10,6 +10,8 @@ import cv2
 from matplotlib import pyplot
 from mtcnn.mtcnn import MTCNN
 import numpy as np
+from DataBase import validate_user
+
 
 class Login(customtkinter.CTk):
     """
@@ -79,13 +81,9 @@ class Login(customtkinter.CTk):
         self.entry_Contra = customtkinter.CTkEntry(self, show = "◊")
         self.entry_Contra.place(relx=0.5, rely=0.6, anchor=customtkinter.CENTER)
 
-
-
-        self.sidebar_button_1 = customtkinter.CTkButton(self, text=dic.Login2[dic.language],fg_color=green_light,hover_color=green)
+        self.sidebar_button_1 = customtkinter.CTkButton(self, text=dic.Login2[dic.language], fg_color=green_light,
+                                                        hover_color=green, command=self.verificacion_login)
         self.sidebar_button_1.place(relx=0.5, rely=0.8, anchor=customtkinter.CENTER)
-
-
-
 
         self.sidebar_button_3 = customtkinter.CTkButton(self,  text=dic.Register[dic.language],fg_color=green_light,hover_color=green, command= self.ejecutar_Ventana)
         self.sidebar_button_3.place(relx=0.5, rely=0.9, anchor=customtkinter.CENTER)
@@ -94,34 +92,6 @@ class Login(customtkinter.CTk):
                                                         hover_color=green, command=self.login_facial)
         self.incio_facial.place(relx=0.5, rely=0.7, anchor=customtkinter.CENTER)
 
-    def verificacion_login(self):
-
-        """
-              Verifica el inicio de sesión utilizando nombre de usuario y contraseña.
-
-              Args:
-                  None
-
-              Returns:
-                  None
-              """
-        global pantalla
-        log_usuario = self.entry_Username.get()
-        log_contra = self.entry_Contra.get()
-
-
-
-        lista_archivos = os.listdir()  # Vamos a importar la lista de archivos con la libreria os
-        if log_usuario in lista_archivos:  # Comparamos los archivos con el que nos interesa
-            archivo2 = open(log_usuario, "r")  # Abrimos el archivo en modo lectura
-            verificacion = archivo2.read().splitlines()  # leera las lineas dentro del archivo ignorando el resto
-            if log_contra in verificacion:
-                print("Inicio de sesion exitoso")
-
-            else:
-                print("Contraseña incorrecta, ingrese de nuevo")
-        else:
-            print("Usuario no encontrado")
 
 
     def login_facial(self):
@@ -213,9 +183,14 @@ class Login(customtkinter.CTk):
         else:
             print("Usuario no encontrado")
 
+    def verificacion_login(self):
+        log_usuario = self.entry_Username.get()
+        log_contra = self.entry_Contra.get()
 
-
-
+        if validate_user(log_usuario, log_contra):
+            tkinter.messagebox.showinfo("Inicio de sesión exitoso")
+        else:
+            tkinter.messagebox.showinfo("Usuario o contraseña incorrectos")
 
     def ejecutar_Ventana(self):
         """
@@ -235,7 +210,7 @@ class Login(customtkinter.CTk):
     def change_appearance_mode_event(self, new_appearance_mode: str):
         """
               Cambia el modo de apariencia de la ventana.
-
+z
               Args:
                   new_appearance_mode (str): Nuevo modo de apariencia.
 
