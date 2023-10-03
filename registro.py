@@ -100,15 +100,19 @@ class Registro(customtkinter.CTk):
         self.entry_Contra = customtkinter.CTkEntry(self.tabview.tab(dic.Game[dic.language]), show="◊")
         self.entry_Contra.place(relx=0.5, rely=0.5, anchor=customtkinter.CENTER)
 
+        self.contra_check = customtkinter.CTkLabel(self.tabview.tab(dic.Game[dic.language]), text="Confirmar Contraseña",
+                                             anchor="w")
+        self.contra_check.place(relx=0.5, rely=0.6, anchor=customtkinter.CENTER)
+
+        self.entry_Contra_check = customtkinter.CTkEntry(self.tabview.tab(dic.Game[dic.language]), show="◊")
+        self.entry_Contra_check.place(relx=0.5, rely=0.7, anchor=customtkinter.CENTER)
+
         self.foto_label = customtkinter.CTkLabel(self.tabview.tab(dic.Game[dic.language]), corner_radius=60, text=dic.Photo[dic.language])
-        self.foto_label.place(relx=0.5, rely=0.7, anchor=customtkinter.CENTER)
+        self.foto_label.place(relx=0.5, rely=0.8, anchor=customtkinter.CENTER)
 
 
-        # self.foto = customtkinter.CTkFrame(self.tabview.tab("Juego"), fg_color=grey, corner_radius=100, height=80,width=80)
-        # self.foto.place(relx=0.5, rely=0.7, anchor=customtkinter.CENTER)
 
-        self.subir_Foto = customtkinter.CTkButton(self.tabview.tab(dic.Game[dic.language]), text="✚",
-                                                        fg_color=green_light, hover_color=green, corner_radius=80, width=10, command=self.abrir_archivo)
+        self.subir_Foto = customtkinter.CTkButton(self.tabview.tab(dic.Game[dic.language]), text="✚",fg_color=green_light, hover_color=green, corner_radius=80, width=10, command=self.abrir_archivo)
         self.subir_Foto.place(relx=0.5, rely=0.9, anchor=customtkinter.CENTER)
 
 
