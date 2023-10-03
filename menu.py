@@ -4,6 +4,8 @@ import customtkinter
 from tkinter import PhotoImage
 from login import Login
 import language_dictionary as dic
+from tarjeta import Transaccion
+
 
 # customtkinter.set_appearance_mode("System")  # Modes: "System" (standard), "Dark", "Light"
 # customtkinter.set_default_color_theme("green")  # Themes: "blue" (standard), "green", "dark-blue"
@@ -66,6 +68,9 @@ class Menu_principal(customtkinter.CTk):
         self.scaling_optionemenu = customtkinter.CTkOptionMenu(self, values=["100%", "90%", "80%", "110%", "120%"],command=self.change_scaling_event,fg_color=green_light, button_color=green)
         self.scaling_optionemenu.place(relx=0.5, rely=0.8, anchor=customtkinter.CENTER)
 
+        self.sidebar_button_1 = customtkinter.CTkButton(self,text="💳", fg_color=green_light,hover_color=green, command=self.ejecutar_pago)
+        self.sidebar_button_1.place(relx=0.5, rely=0.9, anchor=customtkinter.CENTER)
+
     def ejecutar_Ventana(self):
         self.destroy()
         nuevo =Login()
@@ -74,6 +79,12 @@ class Menu_principal(customtkinter.CTk):
     def ejecutar_principal(self):
         self.destroy()
         menu = Menu_principal()
+        menu.mainloop()
+
+
+    def ejecutar_pago(self):
+        self.destroy()
+        menu = Transaccion()
         menu.mainloop()
 
     def change_appearance_mode_event(self, new_appearance_mode: str):

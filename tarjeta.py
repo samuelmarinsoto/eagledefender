@@ -1,14 +1,8 @@
-import tkinter
 import tkinter.messagebox
 import customtkinter
-import tkinter.filedialog as filedialog
-from PIL import Image, ImageTk
+
 import language_dictionary as dic
-import os
-import cv2
-from matplotlib import pyplot
-from mtcnn.mtcnn import MTCNN
-import numpy as np
+
 
 import menu
 
@@ -17,7 +11,7 @@ import menu
 # customtkinter.set_default_color_theme("green")  # Themes: "blue" (standard), "green", "dark-blue"
 
 
-class Registro(customtkinter.CTk):
+class Transaccion(customtkinter.CTk):
     def __init__(self):
         green = "#245953"
         green_light = "#408E91"
@@ -138,14 +132,7 @@ class Registro(customtkinter.CTk):
                                                     fg_color=green_light, hover_color=green, command=lambda :[self.registrar_usuario(),self.registro_facial()])
         self.sidebar_button_1.place(relx=0.5, rely=0.9, anchor=customtkinter.CENTER)
 
-    def registrar_usuario(self):
-        usuario_info = self.entry_Username.get()  # Obetnemos la informacion alamcenada en usuario
-        contra_info = self.entry_Contra.get()  # Obtenemos la informacion almacenada en contra
 
-        archivo = open(usuario_info, "w")  # Abriremos la informacion en modo escritura
-        archivo.write(usuario_info + "\n")  # escribimos la info
-        archivo.write(contra_info)
-        archivo.close()
 
         # Limpiaremos los text variable
 
@@ -155,63 +142,9 @@ class Registro(customtkinter.CTk):
     def update_edad_label(self, value):
         self.edad_label.configure(text=dic.Age[dic.language]+f" :{round(value)}")
 
-    def abrir_archivo(self):
-        archivo = filedialog.askopenfilename(filetypes=[(dic.Photo[dic.language], "*.png *.jpg *.jpeg *.gif *.bmp")])
-        if archivo:
-            # Cargar la imagen
-            imagen = Image.open(archivo)
-            # Redimensionar la imagen según el tamaño deseado (ajusta según tus necesidades)
-            imagen = imagen.resize((80, 80), Image.ANTIALIAS)
-            # Convertir la imagen en un formato compatible con Tkinter
-            imagen_tk = ImageTk.PhotoImage(imagen)
-            # Mostrar la imagen en el CTkLabel
-            self.foto_label.configure(image=imagen_tk)
-            self.foto_label.configure(text="")
-            self.foto_label.image = imagen_tk  # ¡Importante! Debes mantener una referencia a la imagen para que no se elimine de la memoria
 
     def iniciar(self):
         self.destroy()
         menu.Menu_principal().mainloop()
-
-    def change_appearance_mode_event(self, new_appearance_mode: str):
-        customtkinter.set_appearance_mode(new_appearance_mode)
-
-    def change_scaling_event(self, new_scaling: str):
-        new_scaling_float = int(new_scaling.replace("%", "")) / 100
-        customtkinter.set_widget_scaling(new_scaling_float)
-
-    def registro_facial(self):
-            # Vamos a capturar el rostro
-        cap = cv2.VideoCapture(0)  # Elegimos la camara con la que vamos a hacer la deteccion
-        while (True):
-            ret, frame = cap.read()  # Leemos el video
-            frame = np.flip(frame, axis=1)
-            cv2.imshow(dic.FacialRegistration[dic.language], frame)  # Mostramos el video en pantalla
-            if cv2.waitKey(1) == 27:  # Cuando oprimamos "Escape" rompe el video
-                break
-        usuario_img = self.entry_Username.get()
-        cv2.imwrite(usuario_img + ".jpg",frame)  # Guardamos la ultima caputra del video como imagen y asignamos el nombre del usuario
-        cap.release()  # Cerramos
-        cv2.destroyAllWindows()
-
-        def reg_rostro(img, lista_resultados):
-            data = pyplot.imread(img)
-            for i in range(len(lista_resultados)):
-                x1, y1, ancho, alto = lista_resultados[i]['box']
-                x2, y2 = x1 + ancho, y1 + alto
-                pyplot.subplot(1, len(lista_resultados), i + 1)
-                pyplot.axis('off')
-                cara_reg = data[y1:y2, x1:x2]
-                cara_reg = cv2.resize(cara_reg, (150, 200),
-                                        interpolation=cv2.INTER_CUBIC)  # Guardamos la imagen con un tamaño de 150x200
-                cv2.imwrite(usuario_img + ".jpg", cara_reg)
-                pyplot.imshow(data[y1:y2, x1:x2])
-
-        img = usuario_img + ".jpg"
-        pixeles = pyplot.imread(img)
-        detector = MTCNN()
-        caras = detector.detect_faces(pixeles)
-        reg_rostro(img, caras)
-        self.iniciar()
 
 

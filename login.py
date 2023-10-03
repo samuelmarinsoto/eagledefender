@@ -50,17 +50,37 @@ class Login(customtkinter.CTk):
 
 
         self.sidebar_button_1 = customtkinter.CTkButton(self, text=dic.Login2[dic.language],fg_color=green_light,hover_color=green)
-        self.sidebar_button_1.place(relx=0.5, rely=0.7, anchor=customtkinter.CENTER)
+        self.sidebar_button_1.place(relx=0.5, rely=0.8, anchor=customtkinter.CENTER)
 
 
 
 
         self.sidebar_button_3 = customtkinter.CTkButton(self,  text=dic.Register[dic.language],fg_color=green_light,hover_color=green, command= self.ejecutar_Ventana)
-        self.sidebar_button_3.place(relx=0.5, rely=0.8, anchor=customtkinter.CENTER)
+        self.sidebar_button_3.place(relx=0.5, rely=0.9, anchor=customtkinter.CENTER)
 
-        self.incio_facial = customtkinter.CTkButton(self, text="registro facial", fg_color=green_light,
+        self.incio_facial = customtkinter.CTkButton(self, text="Inicio facial", fg_color=green_light,
                                                         hover_color=green, command=self.login_facial)
-        self.incio_facial.place(relx=0.5, rely=0.9, anchor=customtkinter.CENTER)
+        self.incio_facial.place(relx=0.5, rely=0.7, anchor=customtkinter.CENTER)
+
+    def verificacion_login(self):
+        global pantalla
+        log_usuario = self.entry_Username.get()
+        log_contra = self.entry_Contra.get()
+
+
+
+        lista_archivos = os.listdir()  # Vamos a importar la lista de archivos con la libreria os
+        if log_usuario in lista_archivos:  # Comparamos los archivos con el que nos interesa
+            archivo2 = open(log_usuario, "r")  # Abrimos el archivo en modo lectura
+            verificacion = archivo2.read().splitlines()  # leera las lineas dentro del archivo ignorando el resto
+            if log_contra in verificacion:
+                print("Inicio de sesion exitoso")
+
+            else:
+                print("Contraseña incorrecta, ingrese de nuevo")
+        else:
+            print("Usuario no encontrado")
+
 
     def login_facial(self):
         # ------------------------------Vamos a capturar el rostro-----------------------------------------------------
