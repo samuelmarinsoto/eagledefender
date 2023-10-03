@@ -18,7 +18,28 @@ import menu
 
 
 class Registro(customtkinter.CTk):
+    """
+       Clase que representa la ventana de registro de la aplicación.
+
+       Esta clase crea una ventana de registro con tres pestañas: Datos, Juego y Personalización. Cada pestaña tiene campos
+       para ingresar información de usuario y opciones de personalización.
+
+       Args:
+           Ninguno
+
+       Attributes:
+           Ninguno
+
+       """
     def __init__(self):
+
+        """
+               Inicializa una instancia de la clase Registro.
+
+               Crea una ventana de registro con pestañas para Datos, Juego y Personalización. Dentro de cada pestaña, se
+               proporcionan campos para ingresar información de usuario y opciones de personalización.
+
+               """
         green = "#245953"
         green_light = "#408E91"
         pink = "#E49393"

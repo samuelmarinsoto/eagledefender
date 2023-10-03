@@ -12,7 +12,39 @@ from mtcnn.mtcnn import MTCNN
 import numpy as np
 
 class Login(customtkinter.CTk):
+    """
+       Clase que representa una ventana de inicio de sesión de una aplicación.
+
+       Esta ventana permite a los usuarios ingresar su nombre de usuario y contraseña,
+       así como realizar un inicio de sesión facial si lo desean.
+
+       Args:
+           None
+
+       Attributes:
+           - title (str): Título de la ventana.
+           - geometry (str): Geometría de la ventana.
+           - logo_label (customtkinter.CTkLabel): Etiqueta para el título de la aplicación.
+           - username (customtkinter.CTkLabel): Etiqueta para el nombre de usuario.
+           - entry_Username (customtkinter.CTkEntry): Campo de entrada para el nombre de usuario.
+           - contra (customtkinter.CTkLabel): Etiqueta para la contraseña.
+           - entry_Contra (customtkinter.CTkEntry): Campo de entrada para la contraseña.
+           - sidebar_button_1 (customtkinter.CTkButton): Botón para iniciar sesión.
+           - sidebar_button_3 (customtkinter.CTkButton): Botón para abrir la ventana de registro.
+           - inicio_facial (customtkinter.CTkButton): Botón para realizar el inicio de sesión facial.
+
+       Methods:
+           - verificacion_login(): Verifica el inicio de sesión utilizando nombre de usuario y contraseña.
+           - login_facial(): Realiza el inicio de sesión facial.
+           - ejecutar_Ventana(): Abre la ventana de registro.
+           - change_appearance_mode_event(new_appearance_mode: str): Cambia el modo de apariencia de la ventana.
+           - change_scaling_event(new_scaling: str): Cambia la escala de los widgets de la ventana.
+       """
     def __init__(self):
+
+        """
+               Inicializa una ventana de inicio de sesión.
+               """
         green = "#245953"
         green_light = "#408E91"
         pink = "#E49393"
@@ -63,6 +95,16 @@ class Login(customtkinter.CTk):
         self.incio_facial.place(relx=0.5, rely=0.7, anchor=customtkinter.CENTER)
 
     def verificacion_login(self):
+
+        """
+              Verifica el inicio de sesión utilizando nombre de usuario y contraseña.
+
+              Args:
+                  None
+
+              Returns:
+                  None
+              """
         global pantalla
         log_usuario = self.entry_Username.get()
         log_contra = self.entry_Contra.get()
@@ -83,6 +125,19 @@ class Login(customtkinter.CTk):
 
 
     def login_facial(self):
+
+        """
+               Realiza el inicio de sesión facial.
+
+               Captura el rostro del usuario utilizando la cámara, lo compara con una foto registrada
+               y verifica si son similares para iniciar sesión.
+
+               Args:
+                   None
+
+               Returns:
+                   None
+               """
         # ------------------------------Vamos a capturar el rostro-----------------------------------------------------
         cap = cv2.VideoCapture(0)  # Elegimos la camara con la que vamos a hacer la deteccion
         while (True):
@@ -163,15 +218,42 @@ class Login(customtkinter.CTk):
 
 
     def ejecutar_Ventana(self):
+        """
+                Abre la ventana de registro.
+
+                Args:
+                    None
+
+                Returns:
+                    None
+                """
         self.destroy()
         nuevo =Registro()
         nuevo.mainloop()
 
 
     def change_appearance_mode_event(self, new_appearance_mode: str):
+        """
+              Cambia el modo de apariencia de la ventana.
+
+              Args:
+                  new_appearance_mode (str): Nuevo modo de apariencia.
+
+              Returns:
+                  None
+              """
         customtkinter.set_appearance_mode(new_appearance_mode)
 
     def change_scaling_event(self, new_scaling: str):
+        """
+               Cambia la escala de los widgets de la ventana.
+
+               Args:
+                   new_scaling (str): Nueva escala en formato de porcentaje.
+
+               Returns:
+                   None
+               """
         new_scaling_float = int(new_scaling.replace("%", "")) / 100
         customtkinter.set_widget_scaling(new_scaling_float)
 

@@ -12,7 +12,25 @@ from tarjeta import Transaccion
 
 
 class Menu_principal(customtkinter.CTk):
+    """
+       Clase que representa el menú principal de la aplicación.
+
+       Esta clase crea una ventana de menú principal con opciones para jugar, cambiar el idioma, iniciar sesión y configurar la apariencia y escala de la interfaz.
+
+       Args:
+           Ninguno
+
+       Attributes:
+           Ninguno
+
+       """
     def __init__(self):
+        """
+                Inicializa una instancia de la clase Menu_principal.
+
+                Crea una ventana de menú principal con opciones y botones interactivos.
+
+                """
         green = "#245953"
         green_light = "#408E91"
         pink = "#E49393"
@@ -72,29 +90,55 @@ class Menu_principal(customtkinter.CTk):
         self.sidebar_button_1.place(relx=0.5, rely=0.9, anchor=customtkinter.CENTER)
 
     def ejecutar_Ventana(self):
+        """
+         Abre la ventana de inicio de sesión al hacer clic en el botón "Login".
+
+         Args:
+             Ninguno
+
+         Returns:
+             Ninguno
+
+         """
         self.destroy()
         nuevo =Login()
         nuevo.mainloop()
 
     def ejecutar_principal(self):
+
+        """
+        Abre la ventana del menú principal al cambiar el idioma.
+
+        Args:
+            Ninguno
+
+        Returns:
+            Ninguno
+
+        """
+
         self.destroy()
         menu = Menu_principal()
         menu.mainloop()
 
 
     def ejecutar_pago(self):
+        """
+                Abre la ventana de transacciones al hacer clic en el botón "💳".
+
+                Args:
+                    Ninguno
+
+                Returns:
+                    Ninguno
+
+                """
         self.destroy()
         menu = Transaccion()
         menu.mainloop()
 
-    def change_appearance_mode_event(self, new_appearance_mode: str):
-        customtkinter.set_appearance_mode(new_appearance_mode)
 
-    def change_scaling_event(self, new_scaling: str):
-        new_scaling_float = int(new_scaling.replace("%", "")) / 100
-        customtkinter.set_widget_scaling(new_scaling_float)
 
-    def sidebar_button_event(self):
-        print("sidebar_button click")
+
 
 

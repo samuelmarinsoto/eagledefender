@@ -12,7 +12,25 @@ import menu
 
 
 class Transaccion(customtkinter.CTk):
+    """
+       Clase que representa la ventana de transacción de la aplicación.
+
+       Esta clase crea una ventana de transacción con campos para ingresar el número de tarjeta, la fecha de vencimiento y el número de seguridad.
+
+       Args:
+           Ninguno
+
+       Attributes:
+           Ninguno
+
+       """
     def __init__(self):
+        """
+                Inicializa una instancia de la clase Transaccion.
+
+                Crea una ventana de transacción con campos de entrada para la tarjeta de crédito, la fecha de vencimiento y el número de seguridad.
+
+                """
         green = "#245953"
         green_light = "#408E91"
         pink = "#E49393"
@@ -74,10 +92,30 @@ class Transaccion(customtkinter.CTk):
 
 
     def update_edad_label(self, value):
+        """
+                Actualiza una etiqueta de edad en la ventana.
+
+                Args:
+                    value (float): El nuevo valor de la edad a mostrar.
+
+                Returns:
+                    Ninguno
+
+                """
         self.edad_label.configure(text=dic.Age[dic.language]+f" :{round(value)}")
 
 
     def iniciar(self):
+        """
+                Cierra la ventana de transacción y abre la ventana principal del menú.
+
+                Args:
+                    Ninguno
+
+                Returns:
+                    Ninguno
+
+                """
         self.destroy()
         menu.Menu_principal().mainloop()
 
