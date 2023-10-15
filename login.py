@@ -3,6 +3,8 @@ import tkinter.messagebox
 import customtkinter
 from registro import Registro
 import language_dictionary as dic
+import menu
+import members
 # customtkinter.set_appearance_mode("System")  # Modes: "System" (standard), "Dark", "Light"
 # customtkinter.set_default_color_theme("green")  # Themes: "blue" (standard), "green", "dark-blue"
 import os
@@ -22,6 +24,7 @@ class Login(customtkinter.CTk):
 
         # configure window
         self.title(dic.Login3[dic.language])
+        self.attributes("-fullscreen", True)
         self.geometry(f"{500}x{500}")
 
         # configure grid layout (4x4)
@@ -47,12 +50,11 @@ class Login(customtkinter.CTk):
         self.entry_Contra = customtkinter.CTkEntry(self, show = "◊")
         self.entry_Contra.place(relx=0.5, rely=0.6, anchor=customtkinter.CENTER)
 
-
+        self.back = customtkinter.CTkButton(self, text="Vuelta", fg_color=green_light, hover_color=green, command=self.back_menu)
+        self.back.place(relx=0.02, rely=0.05, anchor=customtkinter.NW)
 
         self.sidebar_button_1 = customtkinter.CTkButton(self, text=dic.Login2[dic.language],fg_color=green_light,hover_color=green)
         self.sidebar_button_1.place(relx=0.5, rely=0.8, anchor=customtkinter.CENTER)
-
-
 
 
         self.sidebar_button_3 = customtkinter.CTkButton(self,  text=dic.Register[dic.language],fg_color=green_light,hover_color=green, command= self.ejecutar_Ventana)
@@ -62,6 +64,17 @@ class Login(customtkinter.CTk):
                                                         hover_color=green, command=self.login_facial)
         self.incio_facial.place(relx=0.5, rely=0.7, anchor=customtkinter.CENTER)
 
+
+
+    def back_menu(self):
+        self.destroy()
+        men = menu.Menu_principal()
+        men.mainloop()
+
+    def ejecutar_Ventana(self):
+        self.destroy()
+        nuevo = members.Membership()
+        nuevo.mainloop()
     def verificacion_login(self):
         global pantalla
         log_usuario = self.entry_Username.get()
@@ -162,10 +175,7 @@ class Login(customtkinter.CTk):
 
 
 
-    def ejecutar_Ventana(self):
-        self.destroy()
-        nuevo =Registro()
-        nuevo.mainloop()
+
 
 
     def change_appearance_mode_event(self, new_appearance_mode: str):

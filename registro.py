@@ -9,7 +9,6 @@ import cv2
 from matplotlib import pyplot
 from mtcnn.mtcnn import MTCNN
 import numpy as np
-
 import menu
 
 
@@ -18,6 +17,8 @@ import menu
 
 
 class Registro(customtkinter.CTk):
+
+    print("Member:",dic.Member)
     def __init__(self):
         green = "#245953"
         green_light = "#408E91"
@@ -28,6 +29,7 @@ class Registro(customtkinter.CTk):
         super().__init__()
 
         # configure window
+        self.attributes("-fullscreen", True)
         self.title(dic.Registration[dic.language])
         self.geometry(f"{500}x{500}")
 

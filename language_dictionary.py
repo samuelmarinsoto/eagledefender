@@ -2,7 +2,7 @@ from collections import namedtuple
 language = 0
 Word = namedtuple('Word',['es','en','fr'])
 Phrase = namedtuple('Phrase',['es','en','fr'])
-
+Member = 0
 def changeLanguage(lang):
     """
         Cambia la variable global de idioma

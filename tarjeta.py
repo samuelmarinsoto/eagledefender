@@ -2,7 +2,8 @@ import tkinter.messagebox
 import customtkinter
 
 import language_dictionary as dic
-
+import registro as register
+import members as member
 
 import menu
 
@@ -22,6 +23,7 @@ class Transaccion(customtkinter.CTk):
         super().__init__()
 
         # configure window
+        self.attributes("-fullscreen", True)
         self.title(dic.Registration[dic.language])
         self.geometry(f"{500}x{500}")
 
@@ -59,6 +61,9 @@ class Transaccion(customtkinter.CTk):
                                                         hover_color=green, command=self.iniciar)
         self.sidebar_button_3.place(relx=0.5, rely=0.8, anchor=customtkinter.CENTER)
 
+        self.back = customtkinter.CTkButton(self, text="Vuelta", fg_color=green_light, hover_color=green,
+                                            command=self.back_to_login)
+        self.back.place(relx=0.02, rely=0.05, anchor=customtkinter.NW)
 
 
 
@@ -79,6 +84,11 @@ class Transaccion(customtkinter.CTk):
 
     def iniciar(self):
         self.destroy()
-        menu.Menu_principal().mainloop()
+        register.Registro().mainloop()
+
+
+    def back_to_login(self):
+        self.destroy()
+        member.Membership().mainloop()
 
 
