@@ -191,8 +191,6 @@ class Registro(customtkinter.CTk):
 
     def iniciar(self):
         self.destroy()
-        print(self.entry_Correo.get())
-        print(self.entry_Username.get())
         menu.Menu_principal().mainloop()
 
     def change_appearance_mode_event(self, new_appearance_mode: str):
