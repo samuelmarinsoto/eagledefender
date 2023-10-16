@@ -47,7 +47,6 @@ class Membership(customtkinter.CTk):
 
     def go_transaction(self):
         self.destroy()
-        dic.MEMBER = 1
         men = Transaccion()
         men.mainloop()
 

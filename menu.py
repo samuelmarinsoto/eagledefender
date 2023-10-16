@@ -9,6 +9,7 @@ from login import Login
 import language_dictionary as dic
 from tarjeta import Transaccion
 from members import Membership
+import datauser as user
 
 
 
@@ -71,11 +72,13 @@ class Menu_principal(customtkinter.CTk):
 
         self.sidebar_button_1 = customtkinter.CTkButton(self, command=self.sidebar_button_event, text=dic.Play[dic.language],fg_color=green_light,hover_color=green)
         self.sidebar_button_1.place(relx=0.25, rely=0.3, anchor=customtkinter.CENTER)
+        imagen = Image.open(user.picture)
+        imagen.thumbnail((100, 100))
+        imagen_tk = ImageTk.PhotoImage(imagen)
 
-        Es_btn = PhotoImage(file=r"assets\flags\Flag_of_Es.png").subsample(23, 28)
-        En_btn = PhotoImage(file=r"assets\flags\Flag_of_En.png").subsample(20, 25)
-        Fr_btn = PhotoImage(file=r"assets\flags\Flag_of_Fr.png").subsample(10, 15)
-        imagen_tk = PhotoImage(file=r"assets\flags\Avatar-Profile.png").subsample(10, 10)
+        Es_btn = PhotoImage(file="assets/flags/Flag_of_Es.png").subsample(23, 28)
+        En_btn = PhotoImage(file="assets/flags/Flag_of_En.png").subsample(20, 25)
+        Fr_btn = PhotoImage(file="assets/flags/Flag_of_Fr.png").subsample(10, 15)
 
         self.idiomaEs = customtkinter.CTkButton(self, text="", image=Es_btn, command=lambda: [dic.changeLanguage(0), self.ejecutar_principal()], width=5,fg_color=green)
         self.idiomaEn = customtkinter.CTkButton(self, text="", image=En_btn, command=lambda: [dic.changeLanguage(1), self.ejecutar_principal()],width=5,fg_color=green)
@@ -90,7 +93,7 @@ class Menu_principal(customtkinter.CTk):
 
         self.sidebar_button_4 = customtkinter.CTkButton(self, text="QUIT", fg_color=green_light,
                                                         hover_color=green, command=self.quitGame)
-        self.sidebar_button_4.place(relx=0.98, rely=0.05, anchor=customtkinter.NE)
+        self.sidebar_button_4.place(relx=1, rely=0, anchor=customtkinter.NE)
 
 
         self.appearance_mode_label = customtkinter.CTkLabel(self, text=dic.AppearanceMode[dic.language], anchor="w")
@@ -111,9 +114,9 @@ class Menu_principal(customtkinter.CTk):
         self.sidebar_button_1 = customtkinter.CTkButton(self,text="💳", fg_color=green_light,hover_color=green, command=self.ejecutar_pago)
         self.sidebar_button_1.place(relx=0.25, rely=0.9, anchor=customtkinter.CENTER)"""
         self.foto_label = customtkinter.CTkLabel(self, corner_radius=60, text=None)
-        self.foto_label.place(relx=0.75, rely=0.28, anchor=customtkinter.CENTER)
+        self.foto_label.place(relx=1, rely=0.065, anchor=customtkinter.NE)
         self.foto_label.configure(image=imagen_tk)
-
+        self.foto_label.configure()
 
     def ejecutar_Ventana(self):
         """Handle the 'Login' button click event.
