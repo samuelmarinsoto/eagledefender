@@ -23,7 +23,7 @@ class Transaccion(customtkinter.CTk):
         super().__init__()
 
         # configure window
-        self.attributes("-fullscreen", True)
+        # self.attributes("-fullscreen", True)
         self.title(dic.Registration[dic.language])
         self.geometry(f"{500}x{500}")
 

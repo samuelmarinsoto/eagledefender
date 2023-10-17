@@ -24,7 +24,7 @@ class Login(customtkinter.CTk):
 
         # configure window
         self.title(dic.Login3[dic.language])
-        self.attributes("-fullscreen", True)
+        # self.attributes("-fullscreen", True)
         self.geometry(f"{500}x{500}")
 
         # configure grid layout (4x4)

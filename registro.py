@@ -33,15 +33,15 @@ class Registro(customtkinter.CTk):
         super().__init__()
 
         # configure window
-        self.attributes("-fullscreen", True)
+        # self.attributes("-fullscreen", True)
         self.title(dic.Registration[dic.language])
-        self.geometry(f"{500}x{500}")
+        self.geometry(f"{600}x{600}")
 
         # configure grid layout (4x4)
 
         # create sidebar frame with widgets
 
-        self.tabview = customtkinter.CTkTabview(self, width=1920, height=1080, fg_color=grey,
+        self.tabview = customtkinter.CTkTabview(self, width=500, height=500, fg_color=grey,
                                                 segmented_button_selected_color=green,
                                                 segmented_button_selected_hover_color=pink)
         self.tabview.place(relx=0.5, rely=0.5, anchor=customtkinter.CENTER)
@@ -155,6 +155,12 @@ class Registro(customtkinter.CTk):
                                                         command=self.registro_facial)
         self.sidebar_button_1.place(relx=0.5, rely=0.9, anchor=customtkinter.CENTER)
 
+        self.calendario_button = customtkinter.CTkButton(self.tabview.tab(dic.Data[dic.language]),
+                                                         text="Show/Hide Calendar",
+                                                         fg_color=green_light, hover_color=green,
+                                                         command=self.toggle_calendar)
+        self.calendario_button.place(relx=0.5, rely=0.8, anchor=customtkinter.CENTER)
+
     def DateSelect(self):
         datese = self.calendario.get_date()
         date_part = datese.split("/")
@@ -192,6 +198,14 @@ class Registro(customtkinter.CTk):
     def iniciar(self):
         self.destroy()
         menu.Menu_principal().mainloop()
+
+    def toggle_calendar(self):
+        if self.calendario.winfo_ismapped():
+            self.calendario.place_forget()
+            self.edad_button.place_forget()
+        else:
+            self.calendario.place(relx=0.5, rely=0.9, anchor=customtkinter.CENTER)
+            self.edad_button.place(relx=0.5, rely=0.79, anchor=customtkinter.CENTER)
 
     def change_appearance_mode_event(self, new_appearance_mode: str):
         customtkinter.set_appearance_mode(new_appearance_mode)

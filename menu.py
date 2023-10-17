@@ -53,9 +53,9 @@ class Menu_principal(customtkinter.CTk):
 
 
         # configure window
-        self.attributes("-fullscreen",True)
+        # self.attributes("-fullscreen",True)
         self.title("CustomTkinter complex_example.py")
-        self.geometry(f"{500}x{500}")
+        self.geometry(f"{900}x{500}")
         self.current_screen = None
 
         # configure grid layout (4x4)
@@ -65,13 +65,20 @@ class Menu_principal(customtkinter.CTk):
 
 
 
+        self.foto_logo = customtkinter.CTkLabel(self, corner_radius=60, text=None)
+        self.foto_logo.place(relx=0.5, rely=0.2, anchor=customtkinter.CENTER)
+        self.foto_logo.configure(image= PhotoImage(file="logo agle_sinfondo.png"))
 
-        self.logo_label = customtkinter.CTkLabel(self, text="EAGLE DEFENDER", font=customtkinter.CTkFont(size=25, weight="bold"))
-        self.logo_label.place(relx=0.5, rely=0.1, anchor=customtkinter.CENTER)
 
 
-        self.sidebar_button_1 = customtkinter.CTkButton(self, command=self.sidebar_button_event, text=dic.Play[dic.language],fg_color=green_light,hover_color=green)
-        self.sidebar_button_1.place(relx=0.25, rely=0.3, anchor=customtkinter.CENTER)
+
+        # self.logo_label = customtkinter.CTkLabel(self, text="EAGLE DEFENDER", font=customtkinter.CTkFont(size=25, weight="bold"))
+        # self.logo_label.place(relx=0.5, rely=0.1, anchor=customtkinter.CENTER)
+
+
+        self.sidebar_button_1 = customtkinter.CTkButton(self, command=self.sidebar_button_event, text=dic.Play[dic.language],fg_color=green_light,hover_color=green, width=250, height=50)
+        self.sidebar_button_1.place(relx=0.25, rely=0.5, anchor=customtkinter.CENTER)
+
         imagen = Image.open(user.picture)
         imagen.thumbnail((100, 100))
         imagen_tk = ImageTk.PhotoImage(imagen)
@@ -88,33 +95,33 @@ class Menu_principal(customtkinter.CTk):
         self.idiomaEs.place(relx=0.02, rely=0.12)#, anchor=customtkinter.CENTER)
         self.idiomaFr.place(relx=0.02, rely=0.19)#, anchor=customtkinter.CENTER)
 
-        self.sidebar_button_3 = customtkinter.CTkButton(self, text=dic.Login[dic.language],fg_color=green_light,hover_color=green, command= self.ejecutar_Ventana)
-        self.sidebar_button_3.place(relx=0.25, rely=0.4, anchor=customtkinter.CENTER)
+        self.sidebar_button_3 = customtkinter.CTkButton(self, text=dic.Login[dic.language],fg_color=green_light,hover_color=green, command= self.ejecutar_Ventana, width=250, height=50)
+        self.sidebar_button_3.place(relx=0.25, rely=0.7, anchor=customtkinter.CENTER)
 
-        self.sidebar_button_4 = customtkinter.CTkButton(self, text="QUIT", fg_color=green_light,
-                                                        hover_color=green, command=self.quitGame)
-        self.sidebar_button_4.place(relx=1, rely=0, anchor=customtkinter.NE)
-
-
-        self.appearance_mode_label = customtkinter.CTkLabel(self, text=dic.AppearanceMode[dic.language], anchor="w")
-        self.appearance_mode_label.place(relx=0.25, rely=0.5, anchor=customtkinter.CENTER)
+        # self.sidebar_button_4 = customtkinter.CTkButton(self, text="QUIT", fg_color=green_light,
+        #                                                 hover_color=green, command=self.quitGame)
+        # self.sidebar_button_4.place(relx=0.8, rely=0, anchor=customtkinter.NE)
 
 
-        self.appearance_mode_optionemenu = customtkinter.CTkOptionMenu(self, values=[dic.Light[dic.language], dic.Dark[dic.language], dic.System[dic.language]],command=self.change_appearance_mode_event,fg_color=green_light, button_color=green)
-        self.appearance_mode_optionemenu.place(relx=0.25, rely=0.6, anchor=customtkinter.CENTER)
+        # self.appearance_mode_label = customtkinter.CTkLabel(self, text=dic.AppearanceMode[dic.language], anchor="w")
+        # self.appearance_mode_label.place(relx=0.25, rely=0.5, anchor=customtkinter.CENTER)
 
 
-        self.scaling_label = customtkinter.CTkLabel(self, text=dic.UI_Cof[dic.language]+":", anchor="w")
-        self.scaling_label.place(relx=0.25, rely=0.7, anchor=customtkinter.CENTER)
+        # self.appearance_mode_optionemenu = customtkinter.CTkOptionMenu(self, values=[dic.Light[dic.language], dic.Dark[dic.language], dic.System[dic.language]],command=self.change_appearance_mode_event,fg_color=green_light, button_color=green)
+        # self.appearance_mode_optionemenu.place(relx=0.25, rely=0.6, anchor=customtkinter.CENTER)
 
-        self.scaling_optionemenu = customtkinter.CTkOptionMenu(self, values=["100%", "90%", "80%", "110%", "120%"],command=self.change_scaling_event,fg_color=green_light, button_color=green)
-        self.scaling_optionemenu.place(relx=0.25, rely=0.8, anchor=customtkinter.CENTER)
+
+        # self.scaling_label = customtkinter.CTkLabel(self, text=dic.UI_Cof[dic.language]+":", anchor="w")
+        # self.scaling_label.place(relx=0.25, rely=0.7, anchor=customtkinter.CENTER)
+
+        # self.scaling_optionemenu = customtkinter.CTkOptionMenu(self, values=["100%", "90%", "80%", "110%", "120%"],command=self.change_scaling_event,fg_color=green_light, button_color=green)
+        # self.scaling_optionemenu.place(relx=0.25, rely=0.8, anchor=customtkinter.CENTER)
 
         """
         self.sidebar_button_1 = customtkinter.CTkButton(self,text="💳", fg_color=green_light,hover_color=green, command=self.ejecutar_pago)
         self.sidebar_button_1.place(relx=0.25, rely=0.9, anchor=customtkinter.CENTER)"""
         self.foto_label = customtkinter.CTkLabel(self, corner_radius=60, text=None)
-        self.foto_label.place(relx=1, rely=0.065, anchor=customtkinter.NE)
+        self.foto_label.place(relx=1, rely=0.009, anchor=customtkinter.NE)
         self.foto_label.configure(image=imagen_tk)
         self.foto_label.configure()
 
