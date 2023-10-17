@@ -80,15 +80,15 @@ class Registro(customtkinter.CTk):
 
         self.edad_label = customtkinter.CTkLabel(self.tabview.tab(dic.Data[dic.language]),
                                                  text=dic.Age[dic.language] + ": 0")
-        self.edad_label.place(relx=0.5, rely=0.75, anchor=customtkinter.CENTER)
+        self.edad_label.place(relx=0.5, rely=0.8, anchor=customtkinter.CENTER)
 
 
-        self.calendario = Calendar(self.tabview.tab(dic.Data[dic.language]),mindate=date(1930,1,1),maxdate=date.today())
-        self.calendario.place(relx=0.5, rely=0.9, anchor=customtkinter.CENTER)
+        self.calendario = Calendar(self,mindate=date(1930,1,1),maxdate=date.today())
+        self.calendario.place_forget()
 
         self.edad_button = customtkinter.CTkButton(self.tabview.tab(dic.Data[dic.language]), text = "Confirmar fecha",fg_color=green_light,
-                                                        hover_color=green, command= self.DateSelect)
-        self.edad_button.place(relx=0.5, rely=0.79, anchor=customtkinter.CENTER)
+                                                        hover_color=green, command= lambda: [self.DateSelect(),self.toggle_calendar()])
+        self.edad_button.place_forget()
         # -------------------------------------------------------------------------------
 
         self.logo_label = customtkinter.CTkLabel(self.tabview.tab(dic.Game[dic.language]),
@@ -159,7 +159,7 @@ class Registro(customtkinter.CTk):
                                                          text="Show/Hide Calendar",
                                                          fg_color=green_light, hover_color=green,
                                                          command=self.toggle_calendar)
-        self.calendario_button.place(relx=0.5, rely=0.8, anchor=customtkinter.CENTER)
+        self.calendario_button.place(relx=0.5, rely=0.9, anchor=customtkinter.CENTER)
 
     def DateSelect(self):
         datese = self.calendario.get_date()
@@ -204,7 +204,7 @@ class Registro(customtkinter.CTk):
             self.calendario.place_forget()
             self.edad_button.place_forget()
         else:
-            self.calendario.place(relx=0.5, rely=0.9, anchor=customtkinter.CENTER)
+            self.calendario.place(relx=0.8, rely=0.7, anchor=customtkinter.CENTER)
             self.edad_button.place(relx=0.5, rely=0.79, anchor=customtkinter.CENTER)
 
     def change_appearance_mode_event(self, new_appearance_mode: str):
