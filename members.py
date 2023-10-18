@@ -30,19 +30,19 @@ class Membership(customtkinter.CTk):
 
         self.logo_label = customtkinter.CTkLabel(self, text="Seleccion de membresia",
                                                  font=customtkinter.CTkFont(size=20, weight="bold"))
-        self.logo_label.place(relx=0.5, rely=0.1, anchor=customtkinter.CENTER)
+        self.logo_label.place(relx=0.5, rely=0.2, anchor=customtkinter.CENTER)
 
         self.sidebar_button_3 = customtkinter.CTkButton(self, text="Miembro Gold", fg_color=green_light,
                                                         hover_color=green,
-                                                        command=  self.go_transaction)
-        self.sidebar_button_3.place(relx=0.5, rely=0.4, anchor=customtkinter.E)
+                                                        command= self.go_transaction)
+        self.sidebar_button_3.place(relx=0.5, rely=0.5, anchor=customtkinter.CENTER)
 
         self.sidebar_button_3 = customtkinter.CTkButton(self, text="Miembro Invitado", fg_color=green_light,
                                                         hover_color=green, command=self.change_member_guest)
-        self.sidebar_button_3.place(relx=0.5, rely=0.4, anchor=customtkinter.W)
+        self.sidebar_button_3.place(relx=0.5, rely=0.6, anchor=customtkinter.CENTER)
 
-        self.sidebar_button_3 = customtkinter.CTkButton(self, text="Vuelta", fg_color=green_light,
-                                                        hover_color=green, command=self.back_menu)
+        self.sidebar_button_3 = customtkinter.CTkButton(self, text="X", fg_color=green_light,
+                                                        hover_color=green, command=self.back_menu,width=50)
         self.sidebar_button_3.place(relx=0.02, rely=0.05, anchor=customtkinter.NW)
 
     def go_transaction(self):

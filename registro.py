@@ -16,6 +16,7 @@ from tkcalendar import Calendar
 from datetime import date
 
 
+
 # customtkinter.set_appearance_mode("System")  # Modes: "System" (standard), "Dark", "Light"
 # customtkinter.set_default_color_theme("green")  # Themes: "blue" (standard), "green", "dark-blue"
 
@@ -48,6 +49,7 @@ class Registro(customtkinter.CTk):
         self.tabview.add(dic.Data[dic.language])
         self.tabview.add(dic.Game[dic.language])
         self.tabview.add(dic.Personalization[dic.language])
+        self.tabview.add("texturas")
         self.tabview.tab(dic.Data[dic.language]).grid_columnconfigure(0, weight=1)  # configure grid of individual tabs
         self.tabview.tab(dic.Game[dic.language]).grid_columnconfigure(0, weight=1)
 
