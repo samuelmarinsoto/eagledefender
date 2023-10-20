@@ -17,6 +17,8 @@ username = "NONE"
 picture = "assets/flags/Avatar-Profile.png"
 picpassword = "NONE"
 
+Songs1 = ["","",""]
+
 def LoggedComprobation():
     global LOGGED,Member, PLAY, name, password, username, picture, picpassword
     if LOGGED and Member:

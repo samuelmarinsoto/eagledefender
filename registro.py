@@ -14,7 +14,9 @@ import menu
 import datauser as user
 from tkcalendar import Calendar
 from datetime import date
+import spot
 
+Userspotify = spot.userSpot
 
 
 # customtkinter.set_appearance_mode("System")  # Modes: "System" (standard), "Dark", "Light"
@@ -42,7 +44,7 @@ class Registro(customtkinter.CTk):
 
         # create sidebar frame with widgets
 
-        self.tabview = customtkinter.CTkTabview(self, width=500, height=500, fg_color=grey,
+        self.tabview = customtkinter.CTkTabview(self, width=800, height=800, fg_color=grey,
                                                 segmented_button_selected_color=green,
                                                 segmented_button_selected_hover_color=pink)
         self.tabview.place(relx=0.5, rely=0.5, anchor=customtkinter.CENTER)
@@ -143,14 +145,39 @@ class Registro(customtkinter.CTk):
         self.username = customtkinter.CTkLabel(self.tabview.tab(dic.Personalization[dic.language]),
                                                text=dic.FavoriteSongs[dic.language], anchor="w")
         self.username.place(relx=0.5, rely=0.4, anchor=customtkinter.CENTER)
+        #---------------------------------------------------------------------------------------------
+        self.userSpot = customtkinter.CTkEntry(self.tabview.tab(dic.Personalization[dic.language]))
+        self.userSpot.place(relx=0.5, rely=0.4, anchor=customtkinter.CENTER)
+        self.SaveuserSpot = customtkinter.CTkButton(self.tabview.tab(dic.Personalization[dic.language]),
+                                                     text="Save Spotify User",
+                                                     fg_color=green_light, hover_color=green,
+                                                     command=self.UserSpotSelect)
+        self.SaveuserSpot.place(relx=0.75, rely=0.4, anchor=customtkinter.CENTER)
 
         self.cancion1 = customtkinter.CTkEntry(self.tabview.tab(dic.Personalization[dic.language]))
         self.cancion1.place(relx=0.5, rely=0.5, anchor=customtkinter.CENTER)
+        self.song_button_1 = customtkinter.CTkButton(self.tabview.tab(dic.Personalization[dic.language]),
+                                                        text="Search",
+                                                        fg_color=green_light, hover_color=green,
+                                                        command=self.SongSelect1)
+        self.song_button_1.place(relx=0.75, rely=0.5, anchor=customtkinter.CENTER)
+
         self.cancion2 = customtkinter.CTkEntry(self.tabview.tab(dic.Personalization[dic.language]))
         self.cancion2.place(relx=0.5, rely=0.6, anchor=customtkinter.CENTER)
+        self.song_button_2 = customtkinter.CTkButton(self.tabview.tab(dic.Personalization[dic.language]),
+                                                     text="Search",
+                                                     fg_color=green_light, hover_color=green,
+                                                     command=self.SongSelect2)
+        self.song_button_2.place(relx=0.75, rely=0.6, anchor=customtkinter.CENTER)
+
         self.cancion3 = customtkinter.CTkEntry(self.tabview.tab(dic.Personalization[dic.language]))
         self.cancion3.place(relx=0.5, rely=0.7, anchor=customtkinter.CENTER)
-
+        self.song_button_3 = customtkinter.CTkButton(self.tabview.tab(dic.Personalization[dic.language]),
+                                                     text="Search",
+                                                     fg_color=green_light, hover_color=green,
+                                                     command=self.SongSelect3)
+        self.song_button_3.place(relx=0.75, rely=0.7, anchor=customtkinter.CENTER)
+        # ---------------------------------------------------------------------------------------------
         self.sidebar_button_1 = customtkinter.CTkButton(self.tabview.tab(dic.Personalization[dic.language]),
                                                         text=dic.Register[dic.language],
                                                         fg_color=green_light, hover_color=green,
@@ -163,6 +190,42 @@ class Registro(customtkinter.CTk):
                                                          command=self.toggle_calendar)
         self.calendario_button.place(relx=0.5, rely=0.9, anchor=customtkinter.CENTER)
 
+        self.testPlay = customtkinter.CTkButton(self.tabview.tab(dic.Personalization[dic.language]),
+                                                text="Play text",
+                                                fg_color=green_light, hover_color=green,
+                                                command=self.PlayTEst)
+        self.testPlay.place(relx=0.9, rely=0.9, anchor=customtkinter.CENTER)
+    def UserSpotSelect(self):
+        User = self.userSpot.get()
+        spot.userSpot = User
+        print(spot.userSpot)
+    def SongSelect1(self):
+        SongGet = self.cancion1.get()
+        print("Here:",SongGet)
+        if SongGet == "":
+            return 0
+        spot.SearchSong(SongGet)
+        user.Songs1[0] = spot.Song1
+        print(user.Songs1)
+
+    def SongSelect2(self):
+        SongGet = self.cancion2.get()
+        if SongGet == "":
+            return 0
+        spot.SearchSong(SongGet)
+        user.Songs1[1] = spot.Song1
+        print(user.Songs1)
+    def SongSelect3(self):
+        SongGet = self.cancion3.get()
+        if SongGet == "":
+            return 0
+        spot.SearchSong(SongGet)
+        user.Songs1[2] = spot.Song1
+        print(user.Songs1)
+
+
+    def PlayTEst(self):
+        spot.PlaySong(user.Songs1[0])
     def DateSelect(self):
         datese = self.calendario.get_date()
         date_part = datese.split("/")
