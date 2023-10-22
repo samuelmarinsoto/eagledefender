@@ -7,7 +7,16 @@ pygame.init()
 screen = pygame.display.set_mode((pygame.display.Info().current_w // 1.5, pygame.display.Info().current_h // 1.5))
 pygame.display.set_caption('Eagle Defender')
 clock = pygame.time.Clock()
+start_time = pygame.time.get_ticks()
 
+# Duración del cronómetro en milisegundos (1 minuto)
+cronometro_duration = 60 * 1000  # 60,000 milisegundos = 1 minuto
+
+# Variable para rastrear si el cronómetro está activo
+cronometro_activo = True
+
+# Fuente para mostrar el tiempo restante
+fuente = pygame.font.Font(None, 36)
 # Definir colores
 WHITE = (255, 255, 255)
 BLUE = (0, 0, 255)
@@ -45,7 +54,7 @@ point_y = 300
 # Lista para almacenar los cuadrados
 cuadrados = []
 
-cuadro_color = RED  # Por defecto, el cuadro es de color rojo
+cuadro_color = GREEN  # Por defecto, el cuadro es de color rojo
 key_1_pressed = False
 key_2_pressed = False
 key_3_pressed = False
@@ -58,23 +67,25 @@ while True:
     key_input = pygame.key.get_pressed()
 
     # Movemos el cuadrado con las teclas de flecha
-    if key_input[pygame.K_UP]:
+
+    # Movemos el cuadrado con las teclas de flecha
+    if key_input[pygame.K_UP] and rojoy > 0:
         rojoy -= 4
-    if key_input[pygame.K_DOWN]:
+    if key_input[pygame.K_DOWN] and rojoy + cubo_original.get_height() < rio.get_height():
         rojoy += 4
-    if key_input[pygame.K_LEFT]:
+    if key_input[pygame.K_LEFT] and rojox > 0:
         rojox -= 4
-    if key_input[pygame.K_RIGHT]:
+    if key_input[pygame.K_RIGHT] and rojox + cubo_original.get_width() < screen.get_width():
         rojox += 4
 
     # Movemos el punto con las teclas W, A, S y D
-    if key_input[pygame.K_w]:
+    if key_input[pygame.K_w] and point_y > 0:
         point_y -= 4
-    if key_input[pygame.K_s]:
+    if key_input[pygame.K_s] and point_y < screen.get_height():
         point_y += 4
-    if key_input[pygame.K_a]:
+    if key_input[pygame.K_a] and point_x > 0:
         point_x -= 4
-    if key_input[pygame.K_d]:
+    if key_input[pygame.K_d] and point_x < screen.get_width():
         point_x += 4
 
     if key_input[pygame.K_l]:
@@ -161,11 +172,13 @@ while True:
         }
         cuadrados.append(nuevo_cuadrado)
 
+
     if key_input[pygame.K_1]:
         cuadro_color = BLUE  # Cambiar el color del cuadro a azul
         key_1_pressed = True
         key_2_pressed = False
         key_3_pressed = False
+
 
     if key_input[pygame.K_2]:
         cuadro_color = GREEN  # Cambiar el color del cuadro a verde
@@ -178,6 +191,31 @@ while True:
         key_1_pressed = False
         key_2_pressed = False
         key_3_pressed = True
+
+    if cronometro_activo:
+        # Obtener el tiempo actual en milisegundos
+        tiempo_actual = pygame.time.get_ticks()
+
+        # Calcular el tiempo restante
+        tiempo_restante = max(0, cronometro_duration - (tiempo_actual - start_time))
+
+        if tiempo_restante == 0:
+            # Detener el cronómetro cuando se alcanza la duración deseada
+            cronometro_activo = False
+
+    # ...
+
+    # Mostrar el tiempo restante en la pantalla
+    tiempo_mostrar = tiempo_restante // 1000  # Convertir a segundos
+    texto_tiempo = fuente.render(f"Tiempo restante: {tiempo_mostrar} s", True, BLUE)
+    screen.blit(texto_tiempo, (10, 10))
+
+
+
+
+ 
+
+
 
     pygame.display.update()
     clock.tick(144)
