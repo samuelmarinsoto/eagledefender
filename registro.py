@@ -3,6 +3,7 @@ import tkinter
 import tkinter.messagebox
 import customtkinter
 import tkinter.filedialog as filedialog
+from tkinter import PhotoImage, Button
 from PIL import Image, ImageTk
 import language_dictionary as dic
 import os
@@ -34,26 +35,40 @@ class Registro(customtkinter.CTk):
         font_style = ('helvic', 20)
         self.imagen_seleccionada = None
         super().__init__()
+        ResX = 900
+        ResY = 500
+        ScreenRes = f"{ResX}x{ResY}"
+
+        self.GuestWindow = customtkinter.CTkToplevel(self)
+        self.GuestWindow.geometry(ScreenRes)
+        #self.withdraw()
+        #self.GuestWindow.withdraw()
+
+        if user.Member == True:
+            self.GuestWindow.withdraw()
+            self.deiconify()
+        else:
+            self.GuestWindow.deiconify()
+            self.withdraw()
 
         # configure window
         # self.attributes("-fullscreen", True)
         self.title(dic.Registration[dic.language])
-        self.geometry(f"{600}x{600}")
-
-        # configure grid layout (4x4)
+        self.geometry(ScreenRes)
 
         # create sidebar frame with widgets
-
-        self.tabview = customtkinter.CTkTabview(self, width=800, height=800, fg_color=grey,
+        self.tabview = customtkinter.CTkTabview(self, width=ResX, height=ResY, fg_color=grey,
                                                 segmented_button_selected_color=green,
                                                 segmented_button_selected_hover_color=pink)
         self.tabview.place(relx=0.5, rely=0.5, anchor=customtkinter.CENTER)
         self.tabview.add(dic.Data[dic.language])
         self.tabview.add(dic.Game[dic.language])
-        self.tabview.add(dic.Personalization[dic.language])
+        self.tabview.add(dic.Music[dic.language])
+        self.tabview.add("Paletas")
         self.tabview.add("texturas")
         self.tabview.tab(dic.Data[dic.language]).grid_columnconfigure(0, weight=1)  # configure grid of individual tabs
         self.tabview.tab(dic.Game[dic.language]).grid_columnconfigure(0, weight=1)
+
 
         self.logo_label = customtkinter.CTkLabel(self.tabview.tab(dic.Data[dic.language]),
                                                  text=dic.Registration[dic.language],
@@ -87,7 +102,7 @@ class Registro(customtkinter.CTk):
         self.edad_label.place(relx=0.5, rely=0.8, anchor=customtkinter.CENTER)
 
 
-        self.calendario = Calendar(self,mindate=date(1930,1,1),maxdate=date.today())
+        self.calendario = Calendar(self.tabview.tab(dic.Data[dic.language]),mindate=date(1930,1,1),maxdate=date.today())
         self.calendario.place_forget()
 
         self.edad_button = customtkinter.CTkButton(self.tabview.tab(dic.Data[dic.language]), text = "Confirmar fecha",fg_color=green_light,
@@ -112,13 +127,13 @@ class Registro(customtkinter.CTk):
 
         self.entry_Contra = customtkinter.CTkEntry(self.tabview.tab(dic.Game[dic.language]), show="◊")
         self.entry_Contra.place(relx=0.5, rely=0.5, anchor=customtkinter.CENTER)
-
+        
         self.foto_label = customtkinter.CTkLabel(self.tabview.tab(dic.Game[dic.language]), corner_radius=60,
                                                  text=dic.Photo[dic.language])
         self.foto_label.place(relx=0.5, rely=0.7, anchor=customtkinter.CENTER)
 
-        # self.foto = customtkinter.CTkFrame(self.tabview.tab("Juego"), fg_color=grey, corner_radius=100, height=80,width=80)
-        # self.foto.place(relx=0.5, rely=0.7, anchor=customtkinter.CENTER)
+        self.foto = customtkinter.CTkFrame(self.tabview.tab("Juego"), fg_color=grey, corner_radius=100, height=80,width=80)
+        self.foto.place(relx=0.5, rely=0.7, anchor=customtkinter.CENTER)
 
         self.subir_Foto = customtkinter.CTkButton(self.tabview.tab(dic.Game[dic.language]), text="✚",
                                                   fg_color=green_light, hover_color=green, corner_radius=80, width=10,
@@ -127,74 +142,157 @@ class Registro(customtkinter.CTk):
 
         # ----------------------------------------------------------------------------------------
 
-        self.logo_label = customtkinter.CTkLabel(self.tabview.tab(dic.Personalization[dic.language]),
-                                                 text=dic.Registration[dic.language],
+        self.logo_label = customtkinter.CTkLabel(self.tabview.tab(dic.Music[dic.language]),
+                                                 text=dic.Personalization[dic.language],
                                                  font=customtkinter.CTkFont(size=20, weight="bold"))
         self.logo_label.place(relx=0.5, rely=0.1, anchor=customtkinter.CENTER)
 
-        self.username = customtkinter.CTkLabel(self.tabview.tab(dic.Personalization[dic.language]),
-                                               text=dic.Theme[dic.language], anchor="w")
-        self.username.place(relx=0.5, rely=0.2, anchor=customtkinter.CENTER)
 
-        self.appearance_mode_optionemenu = customtkinter.CTkOptionMenu(
-            self.tabview.tab(dic.Personalization[dic.language]),
-            values=[dic.Red[dic.language], dic.Black[dic.language], dic.Blue[dic.language], dic.White[dic.language],
-                    dic.Green[dic.language]], fg_color=green_light, button_color=green)
-        self.appearance_mode_optionemenu.place(relx=0.5, rely=0.3, anchor=customtkinter.CENTER)
-
-        self.username = customtkinter.CTkLabel(self.tabview.tab(dic.Personalization[dic.language]),
+        self.username = customtkinter.CTkLabel(self.tabview.tab(dic.Music[dic.language]),
                                                text=dic.FavoriteSongs[dic.language], anchor="w")
-        self.username.place(relx=0.5, rely=0.4, anchor=customtkinter.CENTER)
+        self.username.place(relx=0.5, rely=0.2, anchor=customtkinter.CENTER)
         #---------------------------------------------------------------------------------------------
-        self.userSpot = customtkinter.CTkEntry(self.tabview.tab(dic.Personalization[dic.language]))
+        self.userSpot = customtkinter.CTkEntry(self.tabview.tab(dic.Music[dic.language]))
         self.userSpot.place(relx=0.5, rely=0.4, anchor=customtkinter.CENTER)
-        self.SaveuserSpot = customtkinter.CTkButton(self.tabview.tab(dic.Personalization[dic.language]),
+        self.SaveuserSpot = customtkinter.CTkButton(self.tabview.tab(dic.Music[dic.language]),
                                                      text="Save Spotify User",
                                                      fg_color=green_light, hover_color=green,
                                                      command=self.UserSpotSelect)
         self.SaveuserSpot.place(relx=0.75, rely=0.4, anchor=customtkinter.CENTER)
 
-        self.cancion1 = customtkinter.CTkEntry(self.tabview.tab(dic.Personalization[dic.language]))
+        self.cancion1 = customtkinter.CTkEntry(self.tabview.tab(dic.Music[dic.language]))
         self.cancion1.place(relx=0.5, rely=0.5, anchor=customtkinter.CENTER)
-        self.song_button_1 = customtkinter.CTkButton(self.tabview.tab(dic.Personalization[dic.language]),
+        self.song_button_1 = customtkinter.CTkButton(self.tabview.tab(dic.Music[dic.language]),
                                                         text="Search",
                                                         fg_color=green_light, hover_color=green,
                                                         command=self.SongSelect1)
         self.song_button_1.place(relx=0.75, rely=0.5, anchor=customtkinter.CENTER)
 
-        self.cancion2 = customtkinter.CTkEntry(self.tabview.tab(dic.Personalization[dic.language]))
+        self.cancion2 = customtkinter.CTkEntry(self.tabview.tab(dic.Music[dic.language]))
         self.cancion2.place(relx=0.5, rely=0.6, anchor=customtkinter.CENTER)
-        self.song_button_2 = customtkinter.CTkButton(self.tabview.tab(dic.Personalization[dic.language]),
+        self.song_button_2 = customtkinter.CTkButton(self.tabview.tab(dic.Music[dic.language]),
                                                      text="Search",
                                                      fg_color=green_light, hover_color=green,
                                                      command=self.SongSelect2)
         self.song_button_2.place(relx=0.75, rely=0.6, anchor=customtkinter.CENTER)
 
-        self.cancion3 = customtkinter.CTkEntry(self.tabview.tab(dic.Personalization[dic.language]))
+        self.cancion3 = customtkinter.CTkEntry(self.tabview.tab(dic.Music[dic.language]))
         self.cancion3.place(relx=0.5, rely=0.7, anchor=customtkinter.CENTER)
-        self.song_button_3 = customtkinter.CTkButton(self.tabview.tab(dic.Personalization[dic.language]),
+        self.song_button_3 = customtkinter.CTkButton(self.tabview.tab(dic.Music[dic.language]),
                                                      text="Search",
                                                      fg_color=green_light, hover_color=green,
                                                      command=self.SongSelect3)
         self.song_button_3.place(relx=0.75, rely=0.7, anchor=customtkinter.CENTER)
-        # ---------------------------------------------------------------------------------------------
-        self.sidebar_button_1 = customtkinter.CTkButton(self.tabview.tab(dic.Personalization[dic.language]),
-                                                        text=dic.Register[dic.language],
-                                                        fg_color=green_light, hover_color=green,
-                                                        command=self.registro_facial)
-        self.sidebar_button_1.place(relx=0.5, rely=0.9, anchor=customtkinter.CENTER)
 
+        self.testPlay = customtkinter.CTkButton(self.tabview.tab(dic.Music[dic.language]),
+                                                text="Play text",
+                                                fg_color=green_light, hover_color=green,
+                                                command=self.PlayTEst)
+        self.testPlay.place(relx=0.9, rely=0.9, anchor=customtkinter.CENTER)
+        # ---------------------------------------------------------------------------------------------
+        self.sidebar_button_1 = customtkinter.CTkButton(self.tabview.tab("texturas"),
+                                                        text=dic.Continue[dic.language],
+                                                        fg_color=green_light, hover_color=green,
+                                                        command=self.iniciar)
+        self.sidebar_button_1.place(relx=0.25, rely=0.9, anchor=customtkinter.CENTER)
+
+        self.CheckAll = customtkinter.CTkButton(self.tabview.tab("texturas"),text="Check",fg_color=green_light, hover_color=green,command=self.check)
+        self.CheckAll.place(relx=0.75, rely=0.9, anchor=customtkinter.CENTER)
         self.calendario_button = customtkinter.CTkButton(self.tabview.tab(dic.Data[dic.language]),
                                                          text="Show/Hide Calendar",
                                                          fg_color=green_light, hover_color=green,
                                                          command=self.toggle_calendar)
         self.calendario_button.place(relx=0.5, rely=0.9, anchor=customtkinter.CENTER)
+        # ------------------------------------------------------------------------------------------------
+      
+        paletteRed= PhotoImage(file="assets/Palettes/Red.png").subsample(4, 4)
+        paletteWhite = PhotoImage(file="assets/Palettes/White.png").subsample(4, 4)
+        paletteGreen = PhotoImage(file="assets/Palettes/Green.png").subsample(4, 4)
+        paletteBlack = PhotoImage(file="assets/Palettes/Black.png").subsample(4, 4)
+        paletteBlue = PhotoImage(file="assets/Palettes/Blue.png").subsample(4, 4)
 
-        self.testPlay = customtkinter.CTkButton(self.tabview.tab(dic.Personalization[dic.language]),
-                                                text="Play text",
-                                                fg_color=green_light, hover_color=green,
-                                                command=self.PlayTEst)
-        self.testPlay.place(relx=0.9, rely=0.9, anchor=customtkinter.CENTER)
+
+        self.buttonRed = customtkinter.CTkButton(self.tabview.tab("Paletas"), text="", image= paletteRed, fg_color= grey, command=lambda: user.selecPalett("RED"),width=100,height=100)
+        self.buttonWhite = customtkinter.CTkButton(self.tabview.tab("Paletas"), text="", image = paletteWhite, fg_color= grey, command=lambda: user.selecPalett("WHITE"),width=100,height=100)
+        self.buttonGreen = customtkinter.CTkButton(self.tabview.tab("Paletas"), text="",image = paletteGreen, fg_color= grey,command=lambda: user.selecPalett("GREEN"),width=100,height=100)
+        self.buttonBlack = customtkinter.CTkButton(self.tabview.tab("Paletas"), text="",image=paletteBlack,fg_color= grey,command=lambda: user.selecPalett("BLACK"),width=100,height=100)
+        self.buttonBlue = customtkinter.CTkButton(self.tabview.tab("Paletas"), text="", image = paletteBlue,fg_color= grey,command=lambda: user.selecPalett("BLUE"),width=100,height=100)
+
+        # Coloca los botones en la ventana
+        self.buttonRed.place(relx=0.25, rely=0.13)
+        self.buttonWhite.place(relx=0.25, rely=0.35)
+        self.buttonGreen.place(relx=0.25, rely=0.55)
+        self.buttonBlack.place(relx=0.75, rely=0.35)
+        self.buttonBlue.place(relx=0.75, rely=0.55)
+
+        # ------------------------------------------------------------------------------------------------
+
+
+
+        #-------------------------------------------------------------------------------------------------
+        self.GuestWindow.nombre = customtkinter.CTkLabel(self.GuestWindow, text=dic.Name[dic.language],
+                                             anchor="w")
+        self.GuestWindow.nombre.place(relx=0.5, rely=0.15, anchor=customtkinter.CENTER)
+
+        self.GuestWindow.entry_Nombre = customtkinter.CTkEntry(self.GuestWindow)
+        self.GuestWindow.entry_Nombre.place(relx=0.5, rely=0.21, anchor=customtkinter.CENTER)
+
+        self.GuestWindow.apellido = customtkinter.CTkLabel(self.GuestWindow, text=dic.Surname[dic.language],
+                                               anchor="w")
+        self.GuestWindow.apellido.place(relx=0.5, rely=0.27, anchor=customtkinter.CENTER)
+
+        self.GuestWindow.entry_Apellido = customtkinter.CTkEntry(self.GuestWindow)
+        self.GuestWindow.entry_Apellido.place(relx=0.5, rely=0.33, anchor=customtkinter.CENTER)
+
+        self.GuestWindow.correo = customtkinter.CTkLabel(self.GuestWindow, text=dic.Email[dic.language],
+                                             anchor="w")
+        self.GuestWindow.correo.place(relx=0.5, rely=0.39, anchor=customtkinter.CENTER)
+
+        self.GuestWindow.entry_Correo = customtkinter.CTkEntry(self.GuestWindow)
+        self.GuestWindow.entry_Correo.place(relx=0.5, rely=0.45, anchor=customtkinter.CENTER)
+
+        self.GuestWindow.logo_label = customtkinter.CTkLabel(self.GuestWindow,
+                                                             text=dic.Registration[dic.language],
+                                                             font=customtkinter.CTkFont(size=20, weight="bold"))
+        self.GuestWindow.logo_label.place(relx=0.5, rely=0.1, anchor=customtkinter.CENTER)######
+
+        self.GuestWindow.username = customtkinter.CTkLabel(self.GuestWindow,
+                                                           text=dic.Username[dic.language], anchor="w")
+        self.GuestWindow.username.place(relx=0.5, rely=0.51, anchor=customtkinter.CENTER)
+        self.GuestWindow.entry_Username = customtkinter.CTkEntry(self.GuestWindow)
+        self.GuestWindow.entry_Username.place(relx=0.5, rely=0.57, anchor=customtkinter.CENTER)
+
+        self.GuestWindow.contra = customtkinter.CTkLabel(self.GuestWindow, text=dic.Password[dic.language],
+                                                         anchor="w")
+        self.GuestWindow.contra.place(relx=0.5, rely=0.63, anchor=customtkinter.CENTER)
+
+        self.GuestWindow.entry_Contra = customtkinter.CTkEntry(self.GuestWindow, show="◊")
+        self.GuestWindow.entry_Contra.place(relx=0.5, rely=0.69, anchor=customtkinter.CENTER)
+
+        self.GuestWindow.edad_label = customtkinter.CTkLabel(self.GuestWindow,
+                                                             text=dic.Age[dic.language] + ": 0")
+        self.GuestWindow.edad_label.place(relx=0.5, rely=0.75, anchor=customtkinter.CENTER)
+
+        self.GuestWindow.calendario1 = Calendar(self.GuestWindow, mindate=date(1930, 1, 1), maxdate=date.today())
+        self.GuestWindow.calendario1.place_forget()
+
+        self.GuestWindow.edad_button1 = customtkinter.CTkButton(self.GuestWindow, text="Confirmar fecha",
+                                                   fg_color=green_light,
+                                                   hover_color=green,
+                                                   command=lambda: [self.DateSelectGuest(), self.toggle_calendarGuest()])
+        self.GuestWindow.edad_button1.place(relx=0.5, rely=0.75)
+        self.GuestWindow.calendario_button1 = customtkinter.CTkButton( self.GuestWindow,
+                                                         text="Show/Hide Calendar",
+                                                         fg_color=green_light, hover_color=green,
+                                                         command=self.toggle_calendarGuest)
+        self.GuestWindow.calendario_button1.place(relx=0.5, rely=0.86, anchor=customtkinter.CENTER)
+
+        self.GuestWindow.edad_button1.place_forget()
+
+
+
+
+
     def UserSpotSelect(self):
         User = self.userSpot.get()
         spot.userSpot = User
@@ -240,9 +338,25 @@ class Registro(customtkinter.CTk):
         user.age = age
         self.update_edad_label(age)
 
+    def DateSelectGuest(self):
+        datese = self.GuestWindow.calendario1.get_date()
+        date_part = datese.split("/")
+        month = int(date_part[0])
+        day = int(date_part[1])
+        if 0 <= int(date_part[2]) <= 23:
+            year = int("20" + date_part[2])
+        elif 30 <= int(date_part[2]) <= 99:
+            year = int("19" + date_part[2])
+        dateborn = date(year, month, day)
+        age = date.today().year - dateborn.year
+        user.age = age
+        self.update_edad_label(age)
+
+
 
     def update_edad_label(self, value):
         self.edad_label.configure(text=dic.Age[dic.language] + f" :{round(value)}")
+        self.GuestWindow.edad_label.configure(text=dic.Age[dic.language] + f" :{round(value)}")
 
     def abrir_archivo(self):
         archivo = filedialog.askopenfilename(filetypes=[(dic.Photo[dic.language], "*.png *.jpg *.jpeg *.gif *.bmp")])
@@ -260,6 +374,24 @@ class Registro(customtkinter.CTk):
             self.foto_label.configure(text="")
             self.foto_label.image = imagen_tk  # ¡Importante! Debes mantener una referencia a la imagen para que no se elimine de la memoria
 
+
+    def check(self):
+        NameGet = self.entry_Nombre.get()
+        if not user.FirstNameCheck(NameGet):
+            print("Nombre no válido")
+        SurNameGet = self.entry_Apellido.get()
+        if not user.LastNameCheck(SurNameGet):
+            print("Apellido no válido")
+        UserGet = self.entry_Username.get()
+        if not user.UsernameCheck(UserGet):
+            print("Usuario no válido")
+        CorreoGet = self.entry_Correo.get()
+        if not user.MailCheck(CorreoGet):
+            print("Correo no válido")
+        PasswordGet = self.entry_Contra.get()
+        if not user.PasswordCheck(PasswordGet):
+            print("Contraseña no válida")
+
     def iniciar(self):
         self.destroy()
         menu.Menu_principal().mainloop()
@@ -271,6 +403,14 @@ class Registro(customtkinter.CTk):
         else:
             self.calendario.place(relx=0.8, rely=0.7, anchor=customtkinter.CENTER)
             self.edad_button.place(relx=0.5, rely=0.79, anchor=customtkinter.CENTER)
+
+    def toggle_calendarGuest(self):
+        if self.GuestWindow.calendario1.winfo_ismapped():
+            self.GuestWindow.calendario1.place_forget()
+            self.GuestWindow.edad_button1.place_forget()
+        else:
+            self.GuestWindow.calendario1.place(relx=0.8, rely=0.7, anchor=customtkinter.CENTER)
+            self.GuestWindow.edad_button1.place(relx=0.5, rely=0.79, anchor=customtkinter.CENTER)
 
     def change_appearance_mode_event(self, new_appearance_mode: str):
         customtkinter.set_appearance_mode(new_appearance_mode)
@@ -308,6 +448,7 @@ class Registro(customtkinter.CTk):
                 pyplot.imshow(data[y1:y2, x1:x2])
 
         img = usuario_img + ".jpg"
+        user.picpassword = img
         pixeles = pyplot.imread(img)
         detector = MTCNN()
         caras = detector.detect_faces(pixeles)

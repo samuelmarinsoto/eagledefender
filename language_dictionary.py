@@ -5,14 +5,26 @@ Phrase = namedtuple('Phrase',['es','en','fr'])
 Member = 0
 def changeLanguage(lang):
     """
-        Cambia la variable global de idioma
-        Args:
-            int: 0 español, 1 ingles, 2 frances.
-        Returns:
-            None
-     """
+            Cambia la variable global de idioma
+            Args:
+                int: Español, Ingles, Frances.
+            Returns:
+                None
+         """
     global language
-    language = lang
+    if isinstance(lang,str):
+        if lang == "Español":
+            language = 0
+        elif lang == "English":
+            language = 1
+        elif lang == "Français":
+            language = 2
+    else:
+        return 0
+
+
+
+
 #____________________Diccionario de palabras en español, ingles y frances_______________________
 
 Login = Word('INICIAR SESION','LOG IN','SE CONNECTER')
@@ -45,7 +57,9 @@ FacialRegistration = Word('Registro facial', 'Facial Registration', 'Enregistrem
 Dark = Word('Oscuro', 'Dark', 'Sombre')
 Light = Word('Claro', 'Light', 'Clair')
 System = Word('Sistema', 'System', 'Système')
-
+Music = Word('Musica','Music','Musique')
+SelecMusic = Phrase('Seleccione las canciones', 'Choose the songs','Sélectionnez des chansons')
+Continue = Word('Continuar','Continue','Continuer')
 
 
 

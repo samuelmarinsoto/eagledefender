@@ -11,9 +11,7 @@ token = util.prompt_for_user_token(userSpot, scope, SPOTIPY_CLIENT_ID, SPOTIPY_C
 sp = spotipy.Spotify(auth=token)
 
 Song1 = ""
-Song2 = ""
-Song3 = ""
-Song = "One"
+
 
 def SearchSong(Song):
      global Song1
