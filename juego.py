@@ -1,3 +1,5 @@
+
+
 import pygame
 import math
 
@@ -6,8 +8,19 @@ screen = pygame.display.set_mode((pygame.display.Info().current_w // 1.5, pygame
 pygame.display.set_caption('Eagle Defender')
 clock = pygame.time.Clock()
 
+# Definir colores
+WHITE = (255, 255, 255)
+BLUE = (0, 0, 255)
+RED = (255, 0, 0)
+GREEN = (0, 255, 0)
+PINK = (255, 182, 193)  # Color rosa
+
+# Cronómetro
+start_time = pygame.time.get_ticks()  # Obtener el tiempo de inicio en milisegundos
+game_duration = 5 * 60 * 1000  # 5 minutos en milisegundos
+
 rio = pygame.Surface((20, pygame.display.get_surface().get_height()))
-rio.fill('Blue')
+rio.fill(BLUE)
 
 cubo_original = pygame.Surface((50, 50))
 cubo_original.fill('Red')
@@ -31,6 +44,11 @@ point_y = 300
 
 # Lista para almacenar los cuadrados
 cuadrados = []
+
+cuadro_color = RED  # Por defecto, el cuadro es de color rojo
+key_1_pressed = False
+key_2_pressed = False
+key_3_pressed = False
 
 while True:
     for event in pygame.event.get():
@@ -68,8 +86,30 @@ while True:
                 'x': rojox + cubo_original.get_width() / 2,
                 'y': rojoy + cubo_original.get_height() / 2,
                 'dx': bullet_speed * math.cos(math.radians(player_angle)),
-                'dy': -bullet_speed * math.sin(math.radians(player_angle))
+                'dy': -bullet_speed * math.sin(math.radians(player_angle)),
+                'color': GREEN  # Cambia el color de la bola a verde
             }
+
+    if key_input[pygame.K_j]:
+        if bullet is None:
+            bullet = {
+                'x': rojox + cubo_original.get_width() / 2,
+                'y': rojoy + cubo_original.get_height() / 2,
+                'dx': bullet_speed * math.cos(math.radians(player_angle)),
+                'dy': -bullet_speed * math.sin(math.radians(player_angle)),
+                'color': BLUE  # Cambia el color de la bola a azul
+            }
+
+    if key_input[pygame.K_h]:
+        if bullet is None:
+            bullet = {
+                'x': rojox + cubo_original.get_width() / 2,
+                'y': rojoy + cubo_original.get_height() / 2,
+                'dx': bullet_speed * math.cos(math.radians(player_angle)),
+                'dy': -bullet_speed * math.sin(math.radians(player_angle)),
+                'color': RED  # Cambia el color de la bola a rojo
+            }
+
 
     player_x = rojox + cubo_original.get_width() / 2
     player_y = rojoy + cubo_original.get_height() / 2
@@ -93,12 +133,12 @@ while True:
     if bullet:
         bullet['x'] += bullet['dx']
         bullet['y'] += bullet['dy']
-        pygame.draw.circle(screen, (0, 255, 0), (int(bullet['x']), int(bullet['y'])), 5)
+        pygame.draw.circle(screen, bullet["color"], (int(bullet['x']), int(bullet['y'])), 5)
 
         # Comprobar colisión entre la bala y los cuadrados
         for cuadrado in cuadrados:
             cuadrado_rect = cuadrado['surface'].get_rect(topleft=(cuadrado['x'], cuadrado['y']))
-            if cuadrado_rect.collidepoint(int(bullet['x']), int(bullet['y'])):
+            if cuadrado_rect.collidepoint(int(bullet['qx']), int(bullet['y'])):
                 cuadrados.remove(cuadrado)  # Eliminar el cuadrado si hay colisión
 
         # Eliminar la bala si está fuera de la pantalla
@@ -108,17 +148,36 @@ while True:
     # Dibujar los cuadrados
     for cuadrado in cuadrados:
         cuadrado_surface = cuadrado['surface'].copy()
-        cuadrado_surface.fill('Pink')  # Cambiar el color del cuadrado a rosa
+        cuadrado_surface.fill(cuadrado['color'])  # Usar el color almacenado en la estructura
         screen.blit(cuadrado_surface, (cuadrado['x'], cuadrado['y']))
 
     if key_input[pygame.K_q]:
-        # Cuando se presiona Q, agregamos un cuadrado a la lista en las coordenadas del punto
+        # Cuando se presiona Q, agregamos un cuadro a la lista con el color actual
         nuevo_cuadrado = {
             'surface': cubo_original.copy(),
             'x': point_x - cubo_original.get_width() / 2,
-            'y': point_y - cubo_original.get_height() / 2
+            'y': point_y - cubo_original.get_height() / 2,
+            'color': cuadro_color  # Almacena el color actual
         }
         cuadrados.append(nuevo_cuadrado)
+
+    if key_input[pygame.K_1]:
+        cuadro_color = BLUE  # Cambiar el color del cuadro a azul
+        key_1_pressed = True
+        key_2_pressed = False
+        key_3_pressed = False
+
+    if key_input[pygame.K_2]:
+        cuadro_color = GREEN  # Cambiar el color del cuadro a verde
+        key_1_pressed = False
+        key_2_pressed = True
+        key_3_pressed = False
+
+    if key_input[pygame.K_3]:
+        cuadro_color = PINK  # Cambiar el color del cuadro a rosa
+        key_1_pressed = False
+        key_2_pressed = False
+        key_3_pressed = True
 
     pygame.display.update()
     clock.tick(144)
