@@ -94,12 +94,22 @@ while True:
         bullet['x'] += bullet['dx']
         bullet['y'] += bullet['dy']
         pygame.draw.circle(screen, (0, 255, 0), (int(bullet['x']), int(bullet['y'])), 5)
+
+        # Comprobar colisión entre la bala y los cuadrados
+        for cuadrado in cuadrados:
+            cuadrado_rect = cuadrado['surface'].get_rect(topleft=(cuadrado['x'], cuadrado['y']))
+            if cuadrado_rect.collidepoint(int(bullet['x']), int(bullet['y'])):
+                cuadrados.remove(cuadrado)  # Eliminar el cuadrado si hay colisión
+
+        # Eliminar la bala si está fuera de la pantalla
         if not (0 <= bullet['x'] < screen.get_width() and 0 <= bullet['y'] < screen.get_height()):
             bullet = None
 
     # Dibujar los cuadrados
     for cuadrado in cuadrados:
-        screen.blit(cuadrado['surface'], (cuadrado['x'], cuadrado['y']))
+        cuadrado_surface = cuadrado['surface'].copy()
+        cuadrado_surface.fill('Pink')  # Cambiar el color del cuadrado a rosa
+        screen.blit(cuadrado_surface, (cuadrado['x'], cuadrado['y']))
 
     if key_input[pygame.K_q]:
         # Cuando se presiona Q, agregamos un cuadrado a la lista en las coordenadas del punto
