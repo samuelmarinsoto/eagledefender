@@ -1,6 +1,7 @@
 import random
 from tkinter import PhotoImage
 import re
+import datetime as date
 """
 
 In this .py the user information will be saved or collected of server
@@ -26,7 +27,7 @@ def LoggedComprobation():
     global LOGGED,Member, PLAY, name, password, username, picture, picpassword
     if LOGGED and Member:
         PLAY = True
-        name = "ass"
+        name = "xd"
         #password =
         #username =
         #picture =
@@ -44,9 +45,55 @@ def LoggedComprobation():
         PLAY = False
     return 0
 
-"""def changePic(PATH):
-    global picture
-    picture = PATH"""
+
+def RegisterComprobationGuest():
+    global LOGGED,Member, PLAY, name,lastname,age,mail,password, username
+
+    if  Member:
+        return 0
+    elif name == "NONE":
+        return 0
+    elif lastname == "NONE":
+        return 0
+    elif age == "NONE":
+        return 0
+    elif mail == "NONE":
+        return 0
+    elif password == "NONE":
+        return 0
+    elif username == "NONE":
+        return 0
+    else:
+        return 1
+
+def RegisterComprobationGold():
+    global LOGGED,Member, PLAY, name,lastname,age,mail,password, username, picture, picpassword,Songs1,Palette
+    if not Member:
+        return 0
+    elif name == "NONE":
+        return 0
+    elif lastname == "NONE":
+        return 0
+    elif age == "NONE":
+        return 0
+    elif mail == "NONE":
+        return 0
+    elif password == "NONE":
+        return 0
+    elif username == "NONE":
+        return 0
+    elif picture == "NONE":
+        return 0
+    elif picpassword == "NONE":
+        return 0
+    elif Songs1[0] == "" or Songs1[1] == "" or Songs1[2] == "":
+        return 0
+    elif Palette == "":
+        return 0
+    else:
+        return 1
+        
+    
 
 def selecPalett(Color):
     global Palette
@@ -65,7 +112,7 @@ def UsernameCheck(Username):
         else:
             return 0
     else:
-        return -1
+        return 0
 
 
 def LastNameCheck(last_name):
@@ -77,7 +124,7 @@ def LastNameCheck(last_name):
         else:
             return 0  # Longitud del apellido no válida
     else:
-        return -1  # Tipo de dato no válido
+        return 0  # Tipo de dato no válido
 
 def FirstNameCheck(first_name):
     global name
@@ -88,7 +135,7 @@ def FirstNameCheck(first_name):
         else:
             return 0  # Longitud del nombre no válida
     else:
-        return -1  # Tipo de dato no válido
+        return 0  # Tipo de dato no válido
 
 def MailCheck(Mail):
     global mail
@@ -102,9 +149,9 @@ def MailCheck(Mail):
             else:
                 return 0
         else:
-            return -1
+            return 0
     else:
-        return -1  # Tipo de dato no válido
+        return 0  # Tipo de dato no válido
 
 def PasswordCheck(Password):
     global password
@@ -128,5 +175,25 @@ def PasswordCheck(Password):
         else:
             return 0  # Longitud de contraseña no válida
     else:
-        return -1  # Tipo de dato no válido
+        return 0  # Tipo de dato no válido
+    
+
+def SelectDate(datese):
+    global age
+    if isinstance(datese, str):
+        date_part = datese.split("/")
+        month = int(date_part[0])
+        day = int(date_part[1])
+        if 0 <= int(date_part[2]) <= 23:
+            year = int("20"+date_part[2])
+        elif 30<= int(date_part[2]) <= 99:
+            year = int("19" + date_part[2])
+        dateborn = date.datetime(year, month, day)
+        Age = date.datetime.today().year-dateborn.year
+        age = Age
+        return 1
+    else:
+        return 0
+            
+
 

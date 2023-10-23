@@ -157,7 +157,7 @@ class Registro(customtkinter.CTk):
         self.SaveuserSpot = customtkinter.CTkButton(self.tabview.tab(dic.Music[dic.language]),
                                                      text="Save Spotify User",
                                                      fg_color=green_light, hover_color=green,
-                                                     command=self.UserSpotSelect)
+                                                     command=lambda: spot.UserSpotSelect(self.userSpot.get()))
         self.SaveuserSpot.place(relx=0.75, rely=0.4, anchor=customtkinter.CENTER)
 
         self.cancion1 = customtkinter.CTkEntry(self.tabview.tab(dic.Music[dic.language]))
@@ -165,7 +165,7 @@ class Registro(customtkinter.CTk):
         self.song_button_1 = customtkinter.CTkButton(self.tabview.tab(dic.Music[dic.language]),
                                                         text="Search",
                                                         fg_color=green_light, hover_color=green,
-                                                        command=self.SongSelect1)
+                                                        command=lambda: spot.SelectSong(self.cancion1.get(),0))
         self.song_button_1.place(relx=0.75, rely=0.5, anchor=customtkinter.CENTER)
 
         self.cancion2 = customtkinter.CTkEntry(self.tabview.tab(dic.Music[dic.language]))
@@ -173,7 +173,7 @@ class Registro(customtkinter.CTk):
         self.song_button_2 = customtkinter.CTkButton(self.tabview.tab(dic.Music[dic.language]),
                                                      text="Search",
                                                      fg_color=green_light, hover_color=green,
-                                                     command=self.SongSelect2)
+                                                     command=lambda: spot.SelectSong(self.cancion2.get(),1))
         self.song_button_2.place(relx=0.75, rely=0.6, anchor=customtkinter.CENTER)
 
         self.cancion3 = customtkinter.CTkEntry(self.tabview.tab(dic.Music[dic.language]))
@@ -181,13 +181,13 @@ class Registro(customtkinter.CTk):
         self.song_button_3 = customtkinter.CTkButton(self.tabview.tab(dic.Music[dic.language]),
                                                      text="Search",
                                                      fg_color=green_light, hover_color=green,
-                                                     command=self.SongSelect3)
+                                                     command=lambda: spot.SelectSong(self.cancion3.get(),2))
         self.song_button_3.place(relx=0.75, rely=0.7, anchor=customtkinter.CENTER)
 
         self.testPlay = customtkinter.CTkButton(self.tabview.tab(dic.Music[dic.language]),
                                                 text="Play text",
                                                 fg_color=green_light, hover_color=green,
-                                                command=self.PlayTEst)
+                                                command=lambda: spot.PlaySong(user.Songs1[0]))
         self.testPlay.place(relx=0.9, rely=0.9, anchor=customtkinter.CENTER)
         # ---------------------------------------------------------------------------------------------
         self.sidebar_button_1 = customtkinter.CTkButton(self.tabview.tab("texturas"),
@@ -195,6 +195,7 @@ class Registro(customtkinter.CTk):
                                                         fg_color=green_light, hover_color=green,
                                                         command=self.iniciar)
         self.sidebar_button_1.place(relx=0.25, rely=0.9, anchor=customtkinter.CENTER)
+        self.sidebar_button_1.forget()
 
         self.CheckAll = customtkinter.CTkButton(self.tabview.tab("texturas"),text="Check",fg_color=green_light, hover_color=green,command=self.check)
         self.CheckAll.place(relx=0.75, rely=0.9, anchor=customtkinter.CENTER)
@@ -287,71 +288,54 @@ class Registro(customtkinter.CTk):
                                                          command=self.toggle_calendarGuest)
         self.GuestWindow.calendario_button1.place(relx=0.5, rely=0.86, anchor=customtkinter.CENTER)
 
+        self.GuestWindow.CheckGuest = customtkinter.CTkButton(self.GuestWindow,text="Check",fg_color=green_light, hover_color=green,command=self.checkGuest)
+        self.GuestWindow.CheckGuest.place(relx=0.75, rely=0.9, anchor=customtkinter.CENTER)
+
+
+        self.GuestWindow.Continue = customtkinter.CTkButton(self.GuestWindow,
+                                                        text=dic.Continue[dic.language],
+                                                        fg_color=green_light, hover_color=green,
+                                                        command=self.iniciar)
+        #self.GuestWindow.Continue.place(relx=0.25, rely=0.9, anchor=customtkinter.CENTER)
+        self.GuestWindow.Continue.place_forget()
+
+
+        self.GuestWindow.back = customtkinter.CTkButton(self.GuestWindow,
+                                                        text="←",
+                                                        fg_color=green_light, hover_color=green,
+                                                        command=self.back,width=30, height=30)
+        self.GuestWindow.back.place(relx=0.001, rely=0.001, anchor=customtkinter.NW)   
+
         self.GuestWindow.edad_button1.place_forget()
 
 
 
-
-
-    def UserSpotSelect(self):
-        User = self.userSpot.get()
-        spot.userSpot = User
-        print(spot.userSpot)
-    def SongSelect1(self):
-        SongGet = self.cancion1.get()
-        print("Here:",SongGet)
-        if SongGet == "":
-            return 0
-        spot.SearchSong(SongGet)
-        user.Songs1[0] = spot.Song1
-        print(user.Songs1)
-
-    def SongSelect2(self):
-        SongGet = self.cancion2.get()
-        if SongGet == "":
-            return 0
-        spot.SearchSong(SongGet)
-        user.Songs1[1] = spot.Song1
-        print(user.Songs1)
-    def SongSelect3(self):
-        SongGet = self.cancion3.get()
-        if SongGet == "":
-            return 0
-        spot.SearchSong(SongGet)
-        user.Songs1[2] = spot.Song1
-        print(user.Songs1)
-
-
-    def PlayTEst(self):
-        spot.PlaySong(user.Songs1[0])
     def DateSelect(self):
         datese = self.calendario.get_date()
-        date_part = datese.split("/")
-        month = int(date_part[0])
-        day = int(date_part[1])
-        if 0 <= int(date_part[2]) <= 23:
-            year = int("20"+date_part[2])
-        elif 30<= int(date_part[2]) <= 99:
-            year = int("19" + date_part[2])
-        dateborn = date(year, month, day)
-        age = date.today().year-dateborn.year
-        user.age = age
-        self.update_edad_label(age)
-
+        if user.SelectDate(datese):
+            self.update_edad_label(user.age)
+    
     def DateSelectGuest(self):
         datese = self.GuestWindow.calendario1.get_date()
-        date_part = datese.split("/")
-        month = int(date_part[0])
-        day = int(date_part[1])
-        if 0 <= int(date_part[2]) <= 23:
-            year = int("20" + date_part[2])
-        elif 30 <= int(date_part[2]) <= 99:
-            year = int("19" + date_part[2])
-        dateborn = date(year, month, day)
-        age = date.today().year - dateborn.year
-        user.age = age
-        self.update_edad_label(age)
+        if user.SelectDate(datese):
+            self.update_edad_label(user.age)
 
+    def toggle_calendar(self):
+        if self.calendario.winfo_ismapped():
+            self.calendario.place_forget()
+            self.edad_button.place_forget()
+        else:
+            self.calendario.place(relx=0.8, rely=0.7, anchor=customtkinter.CENTER)
+            self.edad_button.place(relx=0.5, rely=0.79, anchor=customtkinter.CENTER)
+
+    def toggle_calendarGuest(self):
+        if self.GuestWindow.calendario1.winfo_ismapped():
+            self.GuestWindow.calendario1.place_forget()
+            self.GuestWindow.edad_button1.place_forget()
+        else:
+            self.GuestWindow.calendario1.place(relx=0.8, rely=0.7, anchor=customtkinter.CENTER)
+            self.GuestWindow.edad_button1.place(relx=0.5, rely=0.79, anchor=customtkinter.CENTER)
+        
 
 
     def update_edad_label(self, value):
@@ -375,6 +359,26 @@ class Registro(customtkinter.CTk):
             self.foto_label.image = imagen_tk  # ¡Importante! Debes mantener una referencia a la imagen para que no se elimine de la memoria
 
 
+    def checkGuest(self):
+        NameGet = self.GuestWindow.entry_Nombre.get()
+        if not user.FirstNameCheck(NameGet):
+            self.GuestWindow.Continue.place_forget()
+        SurNameGet =  self.GuestWindow.entry_Apellido.get()
+        if not user.LastNameCheck(SurNameGet):
+            self.GuestWindow.Continue.place_forget()
+        UserGet =  self.GuestWindow.entry_Username.get()
+        if not user.UsernameCheck(UserGet):
+            self.GuestWindow.Continue.place_forget()
+        CorreoGet =  self.GuestWindow.entry_Correo.get()
+        if not user.MailCheck(CorreoGet):
+            self.GuestWindow.Continue.place_forget()
+        PasswordGet =  self.GuestWindow.entry_Contra.get()
+        if not user.PasswordCheck(PasswordGet):
+            self.GuestWindow.Continue.place_forget()
+        else:
+            self.GuestWindow.Continue.place(relx=0.25, rely=0.9, anchor=customtkinter.CENTER)
+
+
     def check(self):
         NameGet = self.entry_Nombre.get()
         if not user.FirstNameCheck(NameGet):
@@ -391,27 +395,18 @@ class Registro(customtkinter.CTk):
         PasswordGet = self.entry_Contra.get()
         if not user.PasswordCheck(PasswordGet):
             print("Contraseña no válida")
+        else:
+            self.sidebar_button_1.place(relx=0.25, rely=0.9, anchor=customtkinter.CENTER)
 
     def iniciar(self):
         self.destroy()
         menu.Menu_principal().mainloop()
 
-    def toggle_calendar(self):
-        if self.calendario.winfo_ismapped():
-            self.calendario.place_forget()
-            self.edad_button.place_forget()
-        else:
-            self.calendario.place(relx=0.8, rely=0.7, anchor=customtkinter.CENTER)
-            self.edad_button.place(relx=0.5, rely=0.79, anchor=customtkinter.CENTER)
+    def back(self):
+        self.destroy()
+        menu.Menu_principal().mainloop()
 
-    def toggle_calendarGuest(self):
-        if self.GuestWindow.calendario1.winfo_ismapped():
-            self.GuestWindow.calendario1.place_forget()
-            self.GuestWindow.edad_button1.place_forget()
-        else:
-            self.GuestWindow.calendario1.place(relx=0.8, rely=0.7, anchor=customtkinter.CENTER)
-            self.GuestWindow.edad_button1.place(relx=0.5, rely=0.79, anchor=customtkinter.CENTER)
-
+    
     def change_appearance_mode_event(self, new_appearance_mode: str):
         customtkinter.set_appearance_mode(new_appearance_mode)
 

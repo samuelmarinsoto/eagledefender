@@ -96,7 +96,7 @@ class Menu_principal(customtkinter.CTk):
         self.foto_label.place(relx=1, rely=0.009, anchor=customtkinter.NE)
         self.foto_label.configure(image=imagen_tk)
         self.foto_label.configure()
-        
+
         """_______________________________________________________________________________________________________________________"""
 
         self.LoginWindow.logo_label = customtkinter.CTkLabel(self.LoginWindow, text=dic.Login3[dic.language],
@@ -115,9 +115,9 @@ class Menu_principal(customtkinter.CTk):
         self.LoginWindow.entry_Contra = customtkinter.CTkEntry(self.LoginWindow, show="◊")
         self.LoginWindow.entry_Contra.place(relx=0.5, rely=0.6, anchor=customtkinter.CENTER)
 
-        self.LoginWindow.back = customtkinter.CTkButton(self.LoginWindow, text="Vuelta", fg_color=green_light, hover_color=green,
-                                            command=self.back_menu)
-        self.LoginWindow.back.place(relx=0.02, rely=0.05, anchor=customtkinter.NW)
+        self.LoginWindow.back = customtkinter.CTkButton(self.LoginWindow, text="←", fg_color=green_light, hover_color=green,
+                                            command=self.back_menu,width=30, height=30)
+        self.LoginWindow.back.place(relx=0.001, rely=0.001, anchor=customtkinter.NW)
 
         self.LoginWindow.sidebar_button_1 = customtkinter.CTkButton(self.LoginWindow, text=dic.Login2[dic.language], fg_color=green_light,
                                                         hover_color=green)
@@ -146,9 +146,9 @@ class Menu_principal(customtkinter.CTk):
                                                         hover_color=green, command=self.RegisterUser)
         self.MembersWindow.sidebar_button_3.place(relx=0.5, rely=0.6, anchor=customtkinter.CENTER)
 
-        self.MembersWindow.sidebar_button_3 = customtkinter.CTkButton( self.MembersWindow, text="X", fg_color=green_light,
-                                                        hover_color=green, command=self.back_menu, width=50)
-        self.MembersWindow.sidebar_button_3.place(relx=0.02, rely=0.05, anchor=customtkinter.NW)
+        self.MembersWindow.sidebar_button_3 = customtkinter.CTkButton( self.MembersWindow, text="←", fg_color=green_light,
+                                                        hover_color=green, command=self.back_menu, width=30, height=30)
+        self.MembersWindow.sidebar_button_3.place(relx=0.001, rely=0.001, anchor=customtkinter.NW)
 
         """______________________________________________________________________________________________________________________"""
 
@@ -181,9 +181,9 @@ class Menu_principal(customtkinter.CTk):
                                                         hover_color=green, command= lambda:[self.MemberChange(),self.RegisterUser()])
         self.PayWindow.sidebar_button_3.place(relx=0.5, rely=0.8, anchor=customtkinter.CENTER)
 
-        self.PayWindow.back = customtkinter.CTkButton( self.PayWindow, text="Vuelta", fg_color=green_light, hover_color=green,
-                                            command=self.back_menu)
-        self.PayWindow.back.place(relx=0.02, rely=0.05, anchor=customtkinter.NW)
+        self.PayWindow.back = customtkinter.CTkButton( self.PayWindow, text="←", fg_color=green_light, hover_color=green,
+                                            command=self.back_menu,width=30, height=30)
+        self.PayWindow.back.place(relx=0.001, rely=0.001, anchor=customtkinter.NW)
     def ejecutar_login(self):
         """Handle the 'Login' button click event.
                This method is called when the 'Login' button is clicked.
