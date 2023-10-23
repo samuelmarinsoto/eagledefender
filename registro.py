@@ -30,7 +30,7 @@ class Registro(customtkinter.CTk):
         green = "#245953"
         green_light = "#408E91"
         pink = "#E49393"
-        grey = "#D8D8D8"
+        grey = "#000000"
         font_style = ('helvic', 20)
         self.imagen_seleccionada = None
         super().__init__()
@@ -38,7 +38,7 @@ class Registro(customtkinter.CTk):
         # configure window
         # self.attributes("-fullscreen", True)
         self.title(dic.Registration[dic.language])
-        self.geometry(f"{600}x{600}")
+        self.geometry(f"{800}x{800}")
 
         # configure grid layout (4x4)
 
@@ -51,7 +51,7 @@ class Registro(customtkinter.CTk):
         self.tabview.add(dic.Data[dic.language])
         self.tabview.add(dic.Game[dic.language])
         self.tabview.add(dic.Personalization[dic.language])
-        self.tabview.add("texturas")
+        self.tabview.add("Texturas")
         self.tabview.tab(dic.Data[dic.language]).grid_columnconfigure(0, weight=1)  # configure grid of individual tabs
         self.tabview.tab(dic.Game[dic.language]).grid_columnconfigure(0, weight=1)
 
@@ -115,7 +115,14 @@ class Registro(customtkinter.CTk):
 
         self.foto_label = customtkinter.CTkLabel(self.tabview.tab(dic.Game[dic.language]), corner_radius=60,
                                                  text=dic.Photo[dic.language])
-        self.foto_label.place(relx=0.5, rely=0.7, anchor=customtkinter.CENTER)
+        self.foto_label.place(relx=0.25, rely=0.7, anchor=customtkinter.CENTER)
+        self.camera_icon = ImageTk.PhotoImage(file="camera_icon.png")  # Cargar el ícono
+        self.camera_button = customtkinter.CTkButton(self.tabview.tab(dic.Game[dic.language]), image=self.camera_icon,
+                                                    corner_radius=0,
+                                                    width=0, border_width=0,
+                                                    text="", command=self.registro_facial)
+
+        self.camera_button.place(relx=0.75, rely=0.9, anchor=customtkinter.CENTER)
 
         # self.foto = customtkinter.CTkFrame(self.tabview.tab("Juego"), fg_color=grey, corner_radius=100, height=80,width=80)
         # self.foto.place(relx=0.5, rely=0.7, anchor=customtkinter.CENTER)
@@ -123,7 +130,7 @@ class Registro(customtkinter.CTk):
         self.subir_Foto = customtkinter.CTkButton(self.tabview.tab(dic.Game[dic.language]), text="✚",
                                                   fg_color=green_light, hover_color=green, corner_radius=80, width=10,
                                                   command=self.abrir_archivo)
-        self.subir_Foto.place(relx=0.5, rely=0.9, anchor=customtkinter.CENTER)
+        self.subir_Foto.place(relx=0.25, rely=0.9, anchor=customtkinter.CENTER)
 
         # ----------------------------------------------------------------------------------------
 
@@ -178,11 +185,11 @@ class Registro(customtkinter.CTk):
                                                      command=self.SongSelect3)
         self.song_button_3.place(relx=0.75, rely=0.7, anchor=customtkinter.CENTER)
         # ---------------------------------------------------------------------------------------------
-        self.sidebar_button_1 = customtkinter.CTkButton(self.tabview.tab(dic.Personalization[dic.language]),
-                                                        text=dic.Register[dic.language],
-                                                        fg_color=green_light, hover_color=green,
-                                                        command=self.registro_facial)
-        self.sidebar_button_1.place(relx=0.5, rely=0.9, anchor=customtkinter.CENTER)
+        # self.sidebar_button_1 = customtkinter.CTkButton(self.tabview.tab(dic.Personalization[dic.language]),
+        #                                                 text=dic.Register[dic.language],
+        #                                                 fg_color=green_light, hover_color=green,
+        #                                                 command=self.registro_facial)
+        # self.sidebar_button_1.place(relx=0.5, rely=0.9, anchor=customtkinter.CENTER)
 
         self.calendario_button = customtkinter.CTkButton(self.tabview.tab(dic.Data[dic.language]),
                                                          text="Show/Hide Calendar",
@@ -280,6 +287,7 @@ class Registro(customtkinter.CTk):
         customtkinter.set_widget_scaling(new_scaling_float)
 
     def registro_facial(self):
+
         # Vamos a capturar el rostro
         cap = cv2.VideoCapture(0)  # Elegimos la camara con la que vamos a hacer la deteccion
         while (True):
@@ -312,4 +320,4 @@ class Registro(customtkinter.CTk):
         detector = MTCNN()
         caras = detector.detect_faces(pixeles)
         reg_rostro(img, caras)
-        self.iniciar()
+        # self.iniciar()
