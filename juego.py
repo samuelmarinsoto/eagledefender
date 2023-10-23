@@ -10,7 +10,7 @@ clock = pygame.time.Clock()
 start_time = pygame.time.get_ticks()
 
 # Duración del cronómetro en milisegundos (1 minuto)
-cronometro_duration = 1000  # 60,000 milisegundos = 1 minuto
+cronometro_duration = 1000 *60  # 60,000 milisegundos = 1 minuto
 
 # Variable para rastrear si el cronómetro está activo
 cronometro_activo = True
@@ -294,12 +294,15 @@ while True:
             if tiempo_restante == 0:
                 # Detener el cronómetro cuando se alcanza la duración deseada
                 cronometro_activo = False
+                
+
+
 
         # ...
 
         # Mostrar el tiempo restante en la pantalla
         tiempo_mostrar = tiempo_restante // 1000  # Convertir a segundos
-        texto_tiempo = fuente.render(f"haz tu estrategia: {tiempo_mostrar} s", True, BLUE)
+        texto_tiempo = fuente.render(f"haz tu estrategia: {tiempo_mostrar} s", True, (0,0,0))
         screen.blit(texto_tiempo, (10, 10))
 
         draw_color_boxes(screen, max_cubos_por_color, cubos_azules, cubos_verdes, cubos_rosados, aguila)
