@@ -1,4 +1,4 @@
-
+import time
 
 import pygame
 import math
@@ -23,6 +23,7 @@ BLUE = (0, 0, 255)
 RED = (255, 0, 0)
 GREEN = (0, 255, 0)
 PINK = (255, 182, 193)  # Color rosa
+BROWN = (139, 69, 19)
 
 # Cronómetro
 start_time = pygame.time.get_ticks()  # Obtener el tiempo de inicio en milisegundos
@@ -72,6 +73,23 @@ max_cubos_por_color = 10
 cubos_azules = 0
 cubos_verdes = 0
 cubos_rosados = 0
+aguila = 0
+
+
+def draw_color_boxes(screen, max_boxes, blue_count, green_count, pink_count, brown_count):
+    box_size = 30
+    margin = 10
+    box_x = margin
+    box_y = screen.get_height() - (max_boxes * (box_size + margin) + margin)
+
+    # Dibujar cuadros de colores
+
+    # Mostrar el texto indicador
+    font = pygame.font.Font(None, 24)
+    text = f"Azul: {max_boxes - blue_count}, Verde: {max_boxes - green_count}, Rosa: {max_boxes - pink_count}"
+    text_surface = font.render(text, True, (0, 0, 0))
+    screen.blit(text_surface, (margin, screen.get_height() - 2 * margin - text_surface.get_height()))
+
 
 while True:
     for event in pygame.event.get():
@@ -90,6 +108,7 @@ while True:
     if tiempo_restante == 0:
         texto_espera_turno = fuente_espera_turno.render(espera_turno_texto, True, (0, 0, 0))
         screen.blit(texto_espera_turno, (screen.get_width() - 200, 10))
+
 
     # Movemos el cuadrado con las teclas de flecha
     if key_input[pygame.K_UP] and rojoy > 0 and tiempo_restante<=0:
@@ -214,6 +233,16 @@ while True:
             }
             cuadrados.append(nuevo_cuadro)
             cubos_rosados += 1
+        elif cuadro_color == BROWN and aguila < 10:
+            nuevo_cuadro = {
+                'surface': cubo_original.copy(),
+                'x': point_x - cubo_original.get_width() / 2,
+                'y': point_y - cubo_original.get_height() / 2,
+                'color': cuadro_color  # Almacena el color actual
+            }
+            cuadrados.append(nuevo_cuadro)
+            aguila += 1
+
 
 
     if key_input[pygame.K_1]:
@@ -221,6 +250,7 @@ while True:
         key_1_pressed = True
         key_2_pressed = False
         key_3_pressed = False
+        key_4_pressed = False
 
 
     if key_input[pygame.K_2]:
@@ -228,12 +258,21 @@ while True:
         key_1_pressed = False
         key_2_pressed = True
         key_3_pressed = False
+        key_4_pressed = False
 
     if key_input[pygame.K_3]:
         cuadro_color = PINK  # Cambiar el color del cuadro a rosa
         key_1_pressed = False
         key_2_pressed = False
         key_3_pressed = True
+        key_4_pressed = False
+    if key_input[pygame.K_4]:
+        cuadro_color = BROWN  # Cambiar el color del cuadro a rosa
+        key_1_pressed = False
+        key_2_pressed = False
+        key_3_pressed = False
+        key_4_pressed = True
+
 
     if cronometro_activo:
         # Obtener el tiempo actual en milisegundos
@@ -250,9 +289,10 @@ while True:
 
     # Mostrar el tiempo restante en la pantalla
     tiempo_mostrar = tiempo_restante // 1000  # Convertir a segundos
-    texto_tiempo = fuente.render(f"Tiempo restante: {tiempo_mostrar} s", True, BLUE)
+    texto_tiempo = fuente.render(f"haz tu estrategia: {tiempo_mostrar} s", True, BLUE)
     screen.blit(texto_tiempo, (10, 10))
 
+    draw_color_boxes(screen, max_cubos_por_color, cubos_azules, cubos_verdes, cubos_rosados, aguila)
 
     pygame.display.update()
     clock.tick(144)
