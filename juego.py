@@ -59,6 +59,20 @@ key_1_pressed = False
 key_2_pressed = False
 key_3_pressed = False
 
+
+tiempo_actual = pygame.time.get_ticks()
+
+tiempo_restante = max(0, cronometro_duration - (tiempo_actual - start_time))
+
+espera_turno_texto = "Espera tu turno"
+fuente_espera_turno = pygame.font.Font(None, 36)
+
+
+max_cubos_por_color = 10
+cubos_azules = 0
+cubos_verdes = 0
+cubos_rosados = 0
+
 while True:
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
@@ -66,16 +80,25 @@ while True:
 
     key_input = pygame.key.get_pressed()
 
-    # Movemos el cuadrado con las teclas de flecha
+    texto_cubos = fuente.render(
+        f"Azules: {max_cubos_por_color - cubos_azules}, Verdes: {max_cubos_por_color - cubos_verdes}, Rosados: {max_cubos_por_color - cubos_rosados}",
+        True, (0, 0, 0))
+    screen.blit(texto_cubos, (screen.get_width() - 250, screen.get_height() - 30))
 
     # Movemos el cuadrado con las teclas de flecha
-    if key_input[pygame.K_UP] and rojoy > 0:
+
+    if tiempo_restante == 0:
+        texto_espera_turno = fuente_espera_turno.render(espera_turno_texto, True, (0, 0, 0))
+        screen.blit(texto_espera_turno, (screen.get_width() - 200, 10))
+
+    # Movemos el cuadrado con las teclas de flecha
+    if key_input[pygame.K_UP] and rojoy > 0 and tiempo_restante<=0:
         rojoy -= 4
-    if key_input[pygame.K_DOWN] and rojoy + cubo_original.get_height() < rio.get_height():
+    if key_input[pygame.K_DOWN] and rojoy + cubo_original.get_height() < rio.get_height() and tiempo_restante<=0:
         rojoy += 4
-    if key_input[pygame.K_LEFT] and rojox > 0:
+    if key_input[pygame.K_LEFT] and rojox > 0 and tiempo_restante<=0:
         rojox -= 4
-    if key_input[pygame.K_RIGHT] and rojox + cubo_original.get_width() < screen.get_width():
+    if key_input[pygame.K_RIGHT] and rojox + cubo_original.get_width() < screen.get_width() and tiempo_restante<=0:
         rojox += 4
 
     # Movemos el punto con las teclas W, A, S y D
@@ -88,10 +111,10 @@ while True:
     if key_input[pygame.K_d] and point_x < screen.get_width():
         point_x += 4
 
-    if key_input[pygame.K_l]:
+    if key_input[pygame.K_l] and tiempo_restante<=0:
         player_angle += 2
 
-    if key_input[pygame.K_k]:
+    if key_input[pygame.K_k] and tiempo_restante<=0:
         if bullet is None:
             bullet = {
                 'x': rojox + cubo_original.get_width() / 2,
@@ -149,7 +172,7 @@ while True:
         # Comprobar colisión entre la bala y los cuadrados
         for cuadrado in cuadrados:
             cuadrado_rect = cuadrado['surface'].get_rect(topleft=(cuadrado['x'], cuadrado['y']))
-            if cuadrado_rect.collidepoint(int(bullet['qx']), int(bullet['y'])):
+            if cuadrado_rect.collidepoint(int(bullet['x']), int(bullet['y'])):
                 cuadrados.remove(cuadrado)  # Eliminar el cuadrado si hay colisión
 
         # Eliminar la bala si está fuera de la pantalla
@@ -163,14 +186,34 @@ while True:
         screen.blit(cuadrado_surface, (cuadrado['x'], cuadrado['y']))
 
     if key_input[pygame.K_q]:
-        # Cuando se presiona Q, agregamos un cuadro a la lista con el color actual
-        nuevo_cuadrado = {
-            'surface': cubo_original.copy(),
-            'x': point_x - cubo_original.get_width() / 2,
-            'y': point_y - cubo_original.get_height() / 2,
-            'color': cuadro_color  # Almacena el color actual
-        }
-        cuadrados.append(nuevo_cuadrado)
+        if cuadro_color == BLUE and cubos_azules < 200:
+            nuevo_cuadro = {
+                'surface': cubo_original.copy(),
+                'x': point_x - cubo_original.get_width() / 2,
+                'y': point_y - cubo_original.get_height() / 2,
+                'color': cuadro_color  # Almacena el color actual
+            }
+            cuadrados.append(nuevo_cuadro)
+            cubos_azules += 1
+            print(cubos_azules)
+        elif cuadro_color == GREEN and cubos_verdes < 200:
+            nuevo_cuadro = {
+                'surface': cubo_original.copy(),
+                'x': point_x - cubo_original.get_width() / 2,
+                'y': point_y - cubo_original.get_height() / 2,
+                'color': cuadro_color  # Almacena el color actual
+            }
+            cuadrados.append(nuevo_cuadro)
+            cubos_verdes += 1
+        elif cuadro_color == PINK and cubos_rosados < 200:
+            nuevo_cuadro = {
+                'surface': cubo_original.copy(),
+                'x': point_x - cubo_original.get_width() / 2,
+                'y': point_y - cubo_original.get_height() / 2,
+                'color': cuadro_color  # Almacena el color actual
+            }
+            cuadrados.append(nuevo_cuadro)
+            cubos_rosados += 1
 
 
     if key_input[pygame.K_1]:
@@ -209,12 +252,6 @@ while True:
     tiempo_mostrar = tiempo_restante // 1000  # Convertir a segundos
     texto_tiempo = fuente.render(f"Tiempo restante: {tiempo_mostrar} s", True, BLUE)
     screen.blit(texto_tiempo, (10, 10))
-
-
-
-
- 
-
 
 
     pygame.display.update()
