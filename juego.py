@@ -10,7 +10,7 @@ clock = pygame.time.Clock()
 start_time = pygame.time.get_ticks()
 
 # Duración del cronómetro en milisegundos (1 minuto)
-cronometro_duration = 60 * 1000  # 60,000 milisegundos = 1 minuto
+cronometro_duration = 1000  # 60,000 milisegundos = 1 minuto
 
 # Variable para rastrear si el cronómetro está activo
 cronometro_activo = True
@@ -27,7 +27,7 @@ BROWN = (139, 69, 19)
 
 # Cronómetro
 start_time = pygame.time.get_ticks()  # Obtener el tiempo de inicio en milisegundos
-game_duration = 5 * 60 * 1000  # 5 minutos en milisegundos
+
 
 rio = pygame.Surface((20, pygame.display.get_surface().get_height()))
 rio.fill(BLUE)
@@ -122,10 +122,10 @@ while True:
             rojoy -= 4
         if key_input[pygame.K_DOWN] and rojoy + cubo_original.get_height() < rio.get_height() and tiempo_restante <= 0:
             rojoy += 4
-        if key_input[pygame.K_LEFT] and rojox > 0 and tiempo_restante <= 0:
+        if key_input[pygame.K_LEFT] and rojox > 0 and tiempo_restante <= 0 and rojox>screen.get_width()/2:
             rojox -= 4
         if key_input[
-            pygame.K_RIGHT] and rojox + cubo_original.get_width() < screen.get_width() and tiempo_restante <= 0:
+            pygame.K_RIGHT] and rojox + cubo_original.get_width() < screen.get_width() and tiempo_restante <= 0 :
             rojox += 4
 
         # Movemos el punto con las teclas W, A, S y D
@@ -133,9 +133,9 @@ while True:
             point_y -= 4
         if key_input[pygame.K_s] and point_y < screen.get_height():
             point_y += 4
-        if key_input[pygame.K_a] and point_x > 0 and point_x:
+        if key_input[pygame.K_a] and point_x > 0 :
             point_x -= 4
-        if key_input[pygame.K_d] and point_x < screen.get_width():
+        if key_input[pygame.K_d] and point_x < screen.get_width() and point_x<screen.get_width()/2:
             point_x += 4
 
         if key_input[pygame.K_l] and tiempo_restante <= 0:
