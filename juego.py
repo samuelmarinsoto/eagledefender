@@ -11,6 +11,7 @@ start_time = pygame.time.get_ticks()
 # Duración del cronómetro en milisegundos (1 minuto)
 cronometro_duration = 1000 *60  # 60,000 milisegundos = 1 minuto
 background = pygame.image.load("Scenary/Arena Tileset Template Verde.png")
+background = pygame.transform.scale(background, (screen.get_width(), screen.get_height()))
 # Variable para rastrear si el cronómetro está activo
 cronometro_activo = True
 
@@ -80,10 +81,11 @@ key_1_pressed = False
 key_2_pressed = False
 key_3_pressed = False
 
+# texturas
 
-
-
-
+textura_madera = pygame.image.load("assets/bloquemadera.png")
+textura_acero = pygame.image.load("assets/bloquemetal.png")
+textura_concreto = pygame.image.load("assets/bloqueconcreto.png")
 
 
 tiempo_actual = pygame.time.get_ticks()
@@ -112,7 +114,7 @@ pausa_text_color = RED
 pausado = False
 
 
-def draw_color_boxes(screen, max_boxes, blue_count, green_count, pink_count, brown_count):
+def draw_color_boxes(screen, max_boxes, madera_count, acero_count, concreto_count):
     box_size = 30
     margin = 10
     box_x = margin
@@ -122,9 +124,15 @@ def draw_color_boxes(screen, max_boxes, blue_count, green_count, pink_count, bro
 
     # Mostrar el texto indicador
     font = pygame.font.Font(None, 24)
-    text = f"Azul: {max_boxes - blue_count}, Verde: {max_boxes - green_count}, Rosa: {max_boxes - pink_count}"
-    text_surface = font.render(text, True, cuadro_color)
-    screen.blit(text_surface, (margin, screen.get_height() - 2 * margin - text_surface.get_height()))
+    textmadera = f"Madera: {max_boxes - madera_count}"
+    textacero = f"Acero: {max_boxes - acero_count}"
+    textconcreto = f"Concreto: {max_boxes - concreto_count}"
+    madera_textsurf = font.render(textmadera, True, (0,0,0))
+    acero_textsurf = font.render(textacero, True, (0,0,0))
+    concreto_textsurf = font.render(textconcreto, True, (0,0,0))
+    screen.blit(madera_textsurf, (margin, screen.get_height() - 2 * margin - madera_textsurf.get_height() -100 ))
+    screen.blit(acero_textsurf, (margin, screen.get_height() - 2 * margin - acero_textsurf.get_height() -50 ))
+    screen.blit(concreto_textsurf, (margin, screen.get_height() - 2 * margin - concreto_textsurf.get_height()))
 
 
 while True:
@@ -385,7 +393,7 @@ while True:
         texto_tiempo = fuente.render(f"haz tu estrategia: {tiempo_mostrar} s", True, (0,0,0))
         screen.blit(texto_tiempo, (10, 10))
 
-        draw_color_boxes(screen, max_cubos_por_color, cubos_azules, cubos_verdes, cubos_rosados, aguila)
+        draw_color_boxes(screen, max_cubos_por_color, cubos_azules, cubos_verdes, cubos_rosados)
 
       
 
