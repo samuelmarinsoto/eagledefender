@@ -11,7 +11,7 @@ clock = pygame.time.Clock()
 start_time = pygame.time.get_ticks()
 
 # Duración del cronómetro en milisegundos (1 minuto)
-cronometro_duration = 1000 *60  # 60,000 milisegundos = 1 minuto
+cronometro_duration = 1000   # 60,000 milisegundos = 1 minuto
 
 # Variable para rastrear si el cronómetro está activo
 cronometro_activo = True
@@ -327,21 +327,41 @@ while True:
             # Comprobar colisión entre la bala y los cuadrados
             for cuadrado in cuadrados:
                 cuadrado_rect = cuadrado['surface'].get_rect(topleft=(cuadrado['x'], cuadrado['y']))
-                if cuadrado_rect.collidepoint(int(bullet['x']), int(bullet['y'])):
-                    cuadrado['vida'] -= bullet['fuerza']
+                try:
+                    if cuadrado_rect.collidepoint(int(bullet['x']), int(bullet['y'])):
+                        cuadrado['vida'] -= bullet['fuerza']
+                        bullet = None
+                        if cuadrado['vida'] < 0:
+                            cuadrados.remove(cuadrado)  # Eliminar el cuadrado si hay colisión
+                except:
+                    None
+
+
+            try:
+                if not (0 <= bullet['x'] < screen.get_width() and 0 <= bullet['y'] < screen.get_height()):
                     bullet = None
-                    if cuadrado['vida'] < 0:
-                        cuadrados.remove(cuadrado)  # Eliminar el cuadrado si hay colisión
+            except:
+                None
 
             # Eliminar la bala si está fuera de la pantalla
-            if not (0 <= bullet['x'] < screen.get_width() and 0 <= bullet['y'] < screen.get_height()):
-                bullet = None
+
 
         # Dibujar los cuadrados
         for cuadrado in cuadrados:
             cuadrado_surface = cuadrado['surface'].copy()
-            # cuadrado_surface.fill(cuadrado['color'])  # Usar el color almacenado en la estructura
             screen.blit(cuadrado_surface, (cuadrado['x'], cuadrado['y']))
+            try:
+                # Comprobar colisión entre la bala y los cuadrados
+                cuadrado_rect = cuadrado['surface'].get_rect(topleft=(cuadrado['x'], cuadrado['y']))
+                if cuadrado_rect.collidepoint(int(bullet['x']), int(bullet['y'])):
+                    cuadrado['vida'] -= bullet['fuerza']
+                    bullet = None
+                    if cuadrado['vida'] < 0:
+                        cuadrados.remove(cuadrado)
+            except:
+                None
+
+
 
         if key_input[pygame.K_q]:
             # Si la tecla "q" se presiona y no está siendo mantenida presionada
