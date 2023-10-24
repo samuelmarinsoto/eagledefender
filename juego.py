@@ -27,11 +27,6 @@ BROWN = (139, 69, 19)
 # Cronómetro
 start_time = pygame.time.get_ticks()  # Obtener el tiempo de inicio en milisegundos
 
-
-rio = pygame.Surface((20, pygame.display.get_surface().get_height()))
-rio.fill(BLUE)
-
-
 GoblinWalk = [pygame.image.load("goblinSpriteWalk/tile000.png"),
               pygame.image.load("goblinSpriteWalk/tile001.png"),
               pygame.image.load("goblinSpriteWalk/tile002.png"),
@@ -121,7 +116,7 @@ pausa_text_color = RED
 pausado = False
 
 
-def draw_color_boxes(screen, max_boxes, madera_count, acero_count, concreto_count):
+def draw_color_boxes(screen, max_boxes, madera_count, acero_count, concreto_count, seleccion):
     box_size = 30
     margin = 10
     box_x = margin
@@ -134,9 +129,21 @@ def draw_color_boxes(screen, max_boxes, madera_count, acero_count, concreto_coun
     textmadera = f"Madera: {max_boxes - madera_count}"
     textacero = f"Acero: {max_boxes - acero_count}"
     textconcreto = f"Concreto: {max_boxes - concreto_count}"
-    madera_textsurf = font.render(textmadera, True, (0,0,0))
-    acero_textsurf = font.render(textacero, True, (0,0,0))
-    concreto_textsurf = font.render(textconcreto, True, (0,0,0))
+    if seleccion == BLUE:
+        madera_textsurf = font.render(textmadera, True, (255,0,0))
+    else:
+        madera_textsurf = font.render(textmadera, True, (0,0,0))
+        
+    if seleccion == GREEN:
+        acero_textsurf = font.render(textacero, True, (255,0,0))
+    else:
+        acero_textsurf = font.render(textacero, True, (0,0,0))
+        
+    if seleccion == PINK:
+        concreto_textsurf = font.render(textconcreto, True, (255,0,0))
+    else:
+        concreto_textsurf = font.render(textconcreto, True, (0,0,0))
+    
     screen.blit(madera_textsurf, (margin, screen.get_height() - 2 * margin - madera_textsurf.get_height() -100 ))
     screen.blit(acero_textsurf, (margin, screen.get_height() - 2 * margin - acero_textsurf.get_height() -50 ))
     screen.blit(concreto_textsurf, (margin, screen.get_height() - 2 * margin - concreto_textsurf.get_height()))
@@ -261,7 +268,7 @@ while True:
         player_rect = rotated_cubo.get_rect(center=(player_x, player_y))
 
         # screen.fill((255, 255, 255))
-        screen.blit(rio, ((pygame.display.get_surface().get_width() // 2) - 10, 0))
+        # screen.blit(rio, ((pygame.display.get_surface().get_width() // 2) - 10, 0))
 
         # Dibujar una línea más grande que indica la dirección del frente del cuadrado
         front_x = player_x + line_length * math.cos(math.radians(player_angle))
@@ -400,7 +407,7 @@ while True:
         texto_tiempo = fuente.render(f"haz tu estrategia: {tiempo_mostrar} s", True, (0,0,0))
         screen.blit(texto_tiempo, (10, 10))
 
-        draw_color_boxes(screen, max_cubos_por_color, cubos_azules, cubos_verdes, cubos_rosados)
+        draw_color_boxes(screen, max_cubos_por_color, cubos_azules, cubos_verdes, cubos_rosados, cuadro_color)
 
       
 
