@@ -99,7 +99,7 @@ def create_tables():
                 LastName TEXT,
                 Email TEXT NOT NULL UNIQUE,
                 Age INTEGER,
-                PhotoPath TEXT,
+                Photo TEXT,
                 Code TEXT,
                 DateCode TIMESTAMP,
                 Membresía TEXT
@@ -172,6 +172,7 @@ def verify_password(password, hashed_from_db):
 
 
 def insert_user(username, password, first_name, last_name, email, age, photo, code):
+
 	"""Inserts a new user into the database with the provided information.
 
 	Args:
@@ -187,17 +188,11 @@ def insert_user(username, password, first_name, last_name, email, age, photo, co
 	Returns:
 		bool: True if the user was inserted successfully, False otherwise.
 	"""
+	username = username.lower()
 	if age < 13:
 		tkinter.messagebox.showerror("Error", "The user must be at least 13 years old to register.")
 		return False
 
-	if is_username_registered(username):
-		tkinter.messagebox.showerror("Error", "This username is already registered.")
-		return False
-
-	if is_email_registered(email):
-		tkinter.messagebox.showerror("Error", "This email is already registered.")
-		return False
 
 	hashed_pass = hash_password(password)
 

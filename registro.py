@@ -110,23 +110,23 @@ class Registro(customtkinter.CTk):
                                                text=dic.Username[dic.language], anchor="w")
         self.username.place(relx=0.5, rely=0.2, anchor=customtkinter.CENTER)
         self.entry_Username = customtkinter.CTkEntry(self.tabview.tab(dic.Game[dic.language]))
-        self.entry_Username.place(relx=0.5, rely=0.3, anchor=customtkinter.CENTER)
+        self.entry_Username.place(relx=0.5, rely=0.25, anchor=customtkinter.CENTER)
 
         self.contra = customtkinter.CTkLabel(self.tabview.tab(dic.Game[dic.language]), text=dic.Password[dic.language],
                                              anchor="w")
-        self.contra.place(relx=0.5, rely=0.4, anchor=customtkinter.CENTER)
+        self.contra.place(relx=0.5, rely=0.3, anchor=customtkinter.CENTER)
 
         self.entry_Contra = customtkinter.CTkEntry(self.tabview.tab(dic.Game[dic.language]), show="◊")
-        self.entry_Contra.place(relx=0.5, rely=0.5, anchor=customtkinter.CENTER)
+        self.entry_Contra.place(relx=0.5, rely=0.35, anchor=customtkinter.CENTER)
         self.contra_check = customtkinter.CTkLabel(self.tabview.tab(dic.Game[dic.language]),
                                                    text="Verificar " + dic.Password[dic.language], anchor="w")
-        self.contra_check.place(relx=0.5, rely=0.55, anchor=customtkinter.CENTER)
+        self.contra_check.place(relx=0.5, rely=0.4, anchor=customtkinter.CENTER)
 
         self.entry_Contra_check = customtkinter.CTkEntry(self.tabview.tab(dic.Game[dic.language]), show="◊")
-        self.entry_Contra_check.place(relx=0.5, rely=0.65, anchor=customtkinter.CENTER)
+        self.entry_Contra_check.place(relx=0.5, rely=0.45, anchor=customtkinter.CENTER)
         self.foto_label = customtkinter.CTkLabel(self.tabview.tab(dic.Game[dic.language]), corner_radius=60,
                                                  text=dic.Photo[dic.language])
-        self.foto_label.place(relx=0.25, rely=0.7, anchor=customtkinter.CENTER)
+        self.foto_label.place(relx=0.25, rely=0.6, anchor=customtkinter.CENTER)
         self.camera_icon = ImageTk.PhotoImage(file="camera_icon.png")  # Cargar el ícono
 
         # self.foto = customtkinter.CTkFrame(self.tabview.tab("Juego"), fg_color=grey, corner_radius=100, height=80,width=80)
@@ -287,6 +287,19 @@ class Registro(customtkinter.CTk):
         if self.entry_Contra.get() == self.entry_Contra_check.get():
             return self.entry_Contra_check.get()
 
+    def check_verification_code(self, user_input_code):
+        if user_input_code == self.temp_verification_code:
+            # El código es correcto, procede con el registro
+            self.complete_registration()
+            self.temp_verification_code = None
+        else:
+            # El código es incorrecto, muestra un mensaje de error
+            tkinter.messagebox.showerror("Error", "Código de verificación incorrecto.")
+
+    def complete_registration(self):
+        # Acciones necesarias para completar el registro
+        self.registrar_usuario()
+
     @staticmethod
     def validar_contrasena(contrasena):
         """
@@ -315,7 +328,8 @@ class Registro(customtkinter.CTk):
         nombre = self.entry_Nombre.get()
         apellido = self.entry_Apellido.get()
         correo = self.entry_Correo.get()
-        edad = self.edad_slider.get()
+        edad = user.age
+
         # cancion = self.cancion1.get()
         usuario_img = self.entry_Username.get()
         imagen_ruta = 'ProfilePics/' + usuario_img + ".jpg"  # Ruta de la imagen guardada
@@ -359,10 +373,13 @@ class Registro(customtkinter.CTk):
         except Exception as e:
             print("Error", f"Ocurrió un error al registrar al usuario: {e}")
             return False  # Retornamos False para indicar que el registro no fue exitoso
+        self.solicitar_verificacion()
 
         return True  # Retornamos True para indicar que el registro fue exitoso
 
     def on_register_button_click(self):
+
+
         missing_fields, missing_tabs = self.check_fields_filled()
         if missing_fields:
             # Mostrar un mensaje de error con los campos y las pestañas que faltan
@@ -370,7 +387,6 @@ class Registro(customtkinter.CTk):
             tkinter.messagebox.showerror("Error", f"Faltan los siguientes campos: {missing_info}")
             return
 
-        print("Botón de registro clickeado")
         if self.selected_photo_path == "assets/flags/Avatar-Profile.png":
             respuesta = tkinter.messagebox.askyesno("Confirmación",
                                                     "¿Seguro que no quieres tener una foto personalizada?")
@@ -380,41 +396,34 @@ class Registro(customtkinter.CTk):
             else:
                 return
 
+        # Convertir el nombre de usuario a minúsculas para la verificación
+        username = self.entry_Username.get().lower()
+
         # Verifica si el correo electrónico o el nombre de usuario ya están registrados
         if DataBase.is_email_registered(self.entry_Correo.get()):
             tkinter.messagebox.showerror("Error", "Este correo ya está registrado.")
             return
 
-        if DataBase.is_username_registered(self.entry_Username.get()):
+        if DataBase.is_username_registered(username):
             tkinter.messagebox.showerror("Error", "Este nombre de usuario ya está registrado.")
             return
 
-        # Intentamos registrar al usuario.
-        if self.registrar_usuario():
-            contrasena = self.entry_Contra.get()
-            if not self.validar_contrasena(contrasena):
-                tkinter.messagebox.showerror("Error",
-                                             "La contraseña no cumple con los requisitos. - Mínimo 8 caracteres- Máximo 16 caracteres- Al menos una letra mayúscula- Al menos una letra minúscula- Al menos un número- Al menos un carácter especial: @#$%^&+=")
-                return
-
-            # Ahora solicitamos la verificación
-            self.solicitar_verificacion()
+        contrasena = self.entry_Contra.get()
+        if not self.validar_contrasena(contrasena):
+            tkinter.messagebox.showerror("Error",
+                                         "La contraseña no cumple con los requisitos. - Mínimo 8 caracteres- Máximo 16 caracteres- Al menos una letra mayúscula- Al menos una letra minúscula- Al menos un número- Al menos un carácter especial: @#$%^&+=")
+            return
+        self.temp_verification_code = DataBase.generate_confirmation_code()
+        DataBase.send_confirmation_email(self.entry_Correo.get(), self.temp_verification_code)
+        self.registrar_usuario()
 
     def solicitar_verificacion(self):
         # Aquí puedes abrir una nueva ventana o usar la actual para solicitar el código al usuario.
         codigo_ingresado = simpledialog.askstring("Verificación",
                                                   "Por favor, ingresa el código de verificación enviado a tu correo:",
                                                   parent=self)
+        self.check_verification_code(codigo_ingresado)
 
-        correo = self.entry_Correo.get()  # Obtenemos el correo desde la GUI
-
-        if DataBase.confirm_email(correo, codigo_ingresado):
-            tkinter.messagebox.showinfo("Éxito", "Correo verificado con éxito.")
-            # Aquí puedes proceder con el siguiente paso, por ejemplo, registro facial.
-            self.registro_facial()
-        else:
-            tkinter.messagebox.showerror("Error", "El código de verificación es incorrecto o ha expirado.")
-            # Opcionalmente, puedes permitir que el usuario lo intente de nuevo o cancelar el registro.
 
     def check_fields_filled(self):
         """
