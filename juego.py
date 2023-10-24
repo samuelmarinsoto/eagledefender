@@ -172,6 +172,14 @@ spot.SearchSong("The Less I Know The Better")
 spot.PlaySong(spot.Song1)
 
 
+left_mask = pygame.Surface((screen.get_width() // 2, screen.get_height()))
+left_mask.set_alpha(50)  # Ajusta la transparencia
+left_mask.fill((0, 0, 255))  # Azul
+
+right_mask = pygame.Surface((screen.get_width() // 2, screen.get_height()))
+right_mask.set_alpha(50)  # Ajusta la transparencia
+right_mask.fill((255, 0, 0))  # Rojo
+
 
 while True:
     for event in pygame.event.get():
@@ -184,6 +192,8 @@ while True:
         # Presionar la tecla "t" pausará o reanudará el juego
         pausado = not pausado
     if not pausado:
+
+
 
         
         
@@ -443,6 +453,8 @@ while True:
         screen.blit(texto_tiempo, (10, 10))
 
         draw_color_boxes(screen, max_cubos_por_color, cubos_azules, cubos_verdes, cubos_rosados, cuadro_color)
+        screen.blit(left_mask, (0, 0))
+        screen.blit(right_mask, (screen.get_width() // 2, 0))
 
       
 
