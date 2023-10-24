@@ -10,8 +10,7 @@ start_time = pygame.time.get_ticks()
 
 # Duración del cronómetro en milisegundos (1 minuto)
 cronometro_duration = 1000 *60  # 60,000 milisegundos = 1 minuto
-background = pygame.image.load("Scenary/Arena Tileset Template Verde.png")
-background = pygame.transform.scale(background, (screen.get_width(), screen.get_height()))
+
 # Variable para rastrear si el cronómetro está activo
 cronometro_activo = True
 
@@ -31,6 +30,7 @@ start_time = pygame.time.get_ticks()  # Obtener el tiempo de inicio en milisegun
 
 rio = pygame.Surface((20, pygame.display.get_surface().get_height()))
 rio.fill(BLUE)
+
 
 GoblinWalk = [pygame.image.load("goblinSpriteWalk/tile000.png"),
               pygame.image.load("goblinSpriteWalk/tile001.png"),
@@ -84,8 +84,15 @@ key_3_pressed = False
 # texturas
 
 textura_madera = pygame.image.load("assets/bloquemadera.png")
+textura_madera = pygame.transform.scale(textura_madera, (screen.get_height()//20, screen.get_height()//20))
 textura_acero = pygame.image.load("assets/bloquemetal.png")
+textura_acero = pygame.transform.scale(textura_acero, (screen.get_height()//20, screen.get_height()//20))
 textura_concreto = pygame.image.load("assets/bloqueconcreto.png")
+textura_concreto = pygame.transform.scale(textura_concreto, (screen.get_height()//20, screen.get_height()//20))
+
+
+background = pygame.image.load("Scenary/Arena Tileset Template Verde.png")
+background = pygame.transform.scale(background, (screen.get_width(), screen.get_height()))
 
 
 tiempo_actual = pygame.time.get_ticks()
@@ -285,7 +292,7 @@ while True:
         # Dibujar los cuadrados
         for cuadrado in cuadrados:
             cuadrado_surface = cuadrado['surface'].copy()
-            cuadrado_surface.fill(cuadrado['color'])  # Usar el color almacenado en la estructura
+            # cuadrado_surface.fill(cuadrado['color'])  # Usar el color almacenado en la estructura
             screen.blit(cuadrado_surface, (cuadrado['x'], cuadrado['y']))
 
         if key_input[pygame.K_q]:
@@ -294,7 +301,7 @@ while True:
                 q_key_held = True
                 if cuadro_color == BLUE and cubos_azules < 10:
                     nuevo_cuadro = {
-                        'surface': cubo_original.copy(),
+                        'surface': textura_madera,
                         'x': point_x - cubo_original.get_width() / 2,
                         'y': point_y - cubo_original.get_height() / 2,
                         'color': cuadro_color  # Almacena el color actual
@@ -304,7 +311,7 @@ while True:
                     print(cubos_azules)
                 elif cuadro_color == GREEN and cubos_verdes < 10:
                     nuevo_cuadro = {
-                        'surface': cubo_original.copy(),
+                        'surface': textura_acero,
                         'x': point_x - cubo_original.get_width() / 2,
                         'y': point_y - cubo_original.get_height() / 2,
                         'color': cuadro_color  # Almacena el color actual
@@ -314,7 +321,7 @@ while True:
 
                 elif cuadro_color == PINK and cubos_rosados < 10:
                     nuevo_cuadro = {
-                        'surface': cubo_original.copy(),
+                        'surface': textura_concreto,
                         'x': point_x - cubo_original.get_width() / 2,
                         'y': point_y - cubo_original.get_height() / 2,
                         'color': cuadro_color  # Almacena el color actual
