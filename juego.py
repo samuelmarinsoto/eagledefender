@@ -84,6 +84,9 @@ textura_acero = pygame.image.load("assets/bloquemetal.png")
 textura_acero = pygame.transform.scale(textura_acero, (screen.get_height()//20, screen.get_height()//20))
 textura_concreto = pygame.image.load("assets/bloqueconcreto.png")
 textura_concreto = pygame.transform.scale(textura_concreto, (screen.get_height()//20, screen.get_height()//20))
+textura_agila = pygame.image.load("assets/agila.png")
+textura_agila = pygame.transform.scale(textura_agila, (screen.get_height()//20, screen.get_height()//20))
+
 
 
 background = pygame.image.load("Scenary/Arena Tileset Template Verde.png")
@@ -337,7 +340,7 @@ while True:
                     cubos_rosados += 1
                 elif cuadro_color == BROWN and aguila < 1:
                     nuevo_cuadro = {
-                        'surface': cubo_original.copy(),
+                        'surface': textura_agila,
                         'x': point_x - cubo_original.get_width() / 2,
                         'y': point_y - cubo_original.get_height() / 2,
                         'color': cuadro_color  # Almacena el color actual
