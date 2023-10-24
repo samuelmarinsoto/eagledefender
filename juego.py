@@ -166,6 +166,8 @@ def draw_color_boxes(screen, max_boxes, madera_count, acero_count, concreto_coun
     screen.blit(concreto_textsurf, (margin, screen.get_height() - 2 * margin - concreto_textsurf.get_height()))
 
 
+
+
 while True:
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
