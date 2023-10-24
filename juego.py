@@ -3,7 +3,8 @@ import pygame
 import math
 
 pygame.init()
-screen = pygame.display.set_mode((pygame.display.Info().current_w // 1.5, pygame.display.Info().current_h // 1.5))
+#screen = pygame.display.set_mode((pygame.display.Info().current_w // 1.5, pygame.display.Info().current_h // 1.5))
+screen = pygame.display.set_mode((1024, 720))
 pygame.display.set_caption('Eagle Defender')
 clock = pygame.time.Clock()
 start_time = pygame.time.get_ticks()
@@ -165,18 +166,18 @@ while True:
             GoblinLeft = False
             GoblinRight = False
           
-        if key_input[pygame.K_LEFT]:
+        if key_input[pygame.K_LEFT] and GoblinRect.x < screen.get_width() and (GoblinRect.x>screen.get_width()/2  + 20) :
                     GoblinRect.x -= GoblinSpeed
                     GoblinMovin = True
                     GoblinLeft = True
-        if key_input[pygame.K_RIGHT]:
+        if key_input[pygame.K_RIGHT] and GoblinRect.x < (screen.get_width() - GoblinRect.width) :
                     GoblinRect.x += GoblinSpeed
                     GoblinMovin = True
                     GoblinRight = True
-        if key_input[pygame.K_UP]:
+        if key_input[pygame.K_UP] and GoblinRect.y > (screen.get_height()-550) and GoblinRect.y:
                     GoblinRect.y -= GoblinSpeed
                     GoblinMovin = True
-        if key_input[pygame.K_DOWN]:
+        if key_input[pygame.K_DOWN] and GoblinRect.y < (screen.get_height() - GoblinRect.height):
                     GoblinRect.y += GoblinSpeed
                     GoblinMovin = True
 
@@ -193,13 +194,13 @@ while True:
             rojox += 4"""
 
         # Movemos el punto con las teclas W, A, S y D
-        if key_input[pygame.K_w] and point_y > 0 and point_y:
+        if key_input[pygame.K_w] and point_y > (screen.get_height()-470) and point_y:
             point_y -= 7
         if key_input[pygame.K_s] and point_y < screen.get_height():
             point_y += 7
         if key_input[pygame.K_a] and point_x > 0 :
             point_x -= 7
-        if key_input[pygame.K_d] and point_x < screen.get_width() and point_x<screen.get_width()/2:
+        if key_input[pygame.K_d] and point_x < screen.get_width() and (point_x<screen.get_width()/2  - 26):
             point_x += 7
 
         if key_input[pygame.K_l] and tiempo_restante <= 0:
@@ -246,7 +247,7 @@ while True:
         player_rect = rotated_cubo.get_rect(center=(player_x, player_y))
 
         # screen.fill((255, 255, 255))
-        screen.blit(rio, ((pygame.display.get_surface().get_width() // 2) - 10, 0))
+        #screen.blit(rio, ((pygame.display.get_surface().get_width() // 2) - 10, 0))
 
         # Dibujar una línea más grande que indica la dirección del frente del cuadrado
         front_x = player_x + line_length * math.cos(math.radians(player_angle))
@@ -374,7 +375,7 @@ while True:
             else:
                     screen.blit(GoblinWalk[CurrentFrame], GoblinRect)
         else:
-            screen.blit(GoblinStatic,GoblinRect)
+            screen.blit(pygame.transform.flip(GoblinStatic,True,False),GoblinRect)
 
 
         

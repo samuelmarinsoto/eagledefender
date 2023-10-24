@@ -1,6 +1,6 @@
 import spotipy
 import spotipy.util as util
-import datauser as user
+#import datauser as user
 
 SPOTIPY_CLIENT_ID = '5b219ea7c93c475db3fa7acd846af046'
 SPOTIPY_CLIENT_SECRET = '372adbb3af4d4a03a935d894cd5f2af5'
@@ -44,3 +44,5 @@ def UserSpotSelect(UserSpot):
      print(userSpot)
     
 
+SearchSong("One Metallica")
+PlaySong(Song1)
