@@ -10,7 +10,7 @@ start_time = pygame.time.get_ticks()
 
 # Duración del cronómetro en milisegundos (1 minuto)
 cronometro_duration = 1000 *60  # 60,000 milisegundos = 1 minuto
-
+background = pygame.image.load("Scenary/Arena Tileset Template Verde.png")
 # Variable para rastrear si el cronómetro está activo
 cronometro_activo = True
 
@@ -31,8 +31,29 @@ start_time = pygame.time.get_ticks()  # Obtener el tiempo de inicio en milisegun
 rio = pygame.Surface((20, pygame.display.get_surface().get_height()))
 rio.fill(BLUE)
 
+GoblinWalk = [pygame.image.load("goblinSpriteWalk/tile000.png"),
+              pygame.image.load("goblinSpriteWalk/tile001.png"),
+              pygame.image.load("goblinSpriteWalk/tile002.png"),
+              pygame.image.load("goblinSpriteWalk/tile003.png"),
+              pygame.image.load("goblinSpriteWalk/tile004.png"),
+              pygame.image.load("goblinSpriteWalk/tile005.png")]
+
+GoblinStatic = pygame.image.load("goblinSpriteWalk/tile100.png")
+GoblinMovin = False
+
+GoblinAnimationSpeed = 0.2
+CurrentFrame = 0
+lastUpdate = pygame.time.get_ticks()
+
+GoblinRect = GoblinWalk[0].get_rect()
+GoblinRect.center = (750,300)
+GoblinSpeed = 1.3
+
+GoblinLeft = False
+GoblinRight = False
+
 cubo_original = pygame.Surface((50, 50))
-cubo_original.fill('Red')
+cubo_original.fill('Blue')
 cubo_rojo = cubo_original.copy()
 
 bola = pygame.Surface((10, 10))
@@ -42,7 +63,7 @@ rojox = 750
 rojoy = 300
 player_angle = 0
 bullet = None
-bullet_speed = 5
+bullet_speed = 7
 
 line_length = 40
 line_width = 3
@@ -60,9 +81,9 @@ key_2_pressed = False
 key_3_pressed = False
 
 
-sprite_sheet = pygame.image.load('assets/goblin/Goblin King Sprite .png')
-sprite_rect = sprite_sheet.get_rect()
-sprite_rect.center = (400,300)
+
+
+
 
 
 tiempo_actual = pygame.time.get_ticks()
@@ -110,19 +131,57 @@ while True:
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             pygame.quit()
-
+    
     key_input = pygame.key.get_pressed()
-    screen.blit(sprite_sheet, sprite_rect)
     if key_input[pygame.K_t]:
         # Presionar la tecla "t" pausará o reanudará el juego
         pausado = not pausado
     if not pausado:
+
+        
         
         if tiempo_restante == 0:
             texto_espera_turno = fuente_espera_turno.render(espera_turno_texto, True, (0, 0, 0))
             screen.blit(texto_espera_turno, (screen.get_width() - 200, 10))
 
         # Movemos el cuadrado con las teclas de flecha
+
+        now = pygame.time.get_ticks()
+
+        if GoblinMovin:
+            if now -lastUpdate > GoblinAnimationSpeed * 1000:
+                lastUpdate = now
+                CurrentFrame = (CurrentFrame+1)%len(GoblinWalk)
+
+        if now - lastUpdate > GoblinAnimationSpeed * 1000:  # Convierte a milisegundos
+            lastUpdate = now
+            CurrentFrame = (CurrentFrame + 1) % len(GoblinWalk)
+
+        
+
+    
+        if any(key_input):
+            GoblinMovin = False
+            GoblinLeft = False
+            GoblinRight = False
+          
+        if key_input[pygame.K_LEFT]:
+                    GoblinRect.x -= GoblinSpeed
+                    GoblinMovin = True
+                    GoblinLeft = True
+        if key_input[pygame.K_RIGHT]:
+                    GoblinRect.x += GoblinSpeed
+                    GoblinMovin = True
+                    GoblinRight = True
+        if key_input[pygame.K_UP]:
+                    GoblinRect.y -= GoblinSpeed
+                    GoblinMovin = True
+        if key_input[pygame.K_DOWN]:
+                    GoblinRect.y += GoblinSpeed
+                    GoblinMovin = True
+
+        
+        """
         if key_input[pygame.K_UP] and rojoy > 0 and tiempo_restante <= 0:
             rojoy -= 4
         if key_input[pygame.K_DOWN] and rojoy + cubo_original.get_height() < rio.get_height() and tiempo_restante <= 0:
@@ -131,26 +190,29 @@ while True:
             rojox -= 4
         if key_input[
             pygame.K_RIGHT] and rojox + cubo_original.get_width() < screen.get_width() and tiempo_restante <= 0 :
-            rojox += 4
+            rojox += 4"""
 
         # Movemos el punto con las teclas W, A, S y D
         if key_input[pygame.K_w] and point_y > 0 and point_y:
-            point_y -= 4
+            point_y -= 7
         if key_input[pygame.K_s] and point_y < screen.get_height():
-            point_y += 4
+            point_y += 7
         if key_input[pygame.K_a] and point_x > 0 :
-            point_x -= 4
+            point_x -= 7
         if key_input[pygame.K_d] and point_x < screen.get_width() and point_x<screen.get_width()/2:
-            point_x += 4
+            point_x += 7
 
         if key_input[pygame.K_l] and tiempo_restante <= 0:
-            player_angle += 2
+            player_angle += 6
+        
+        if key_input[pygame.K_o] and tiempo_restante <= 0:
+            player_angle -= 6
 
         if key_input[pygame.K_k] and tiempo_restante <= 0:
             if bullet is None:
                 bullet = {
-                    'x': rojox + cubo_original.get_width() / 2,
-                    'y': rojoy + cubo_original.get_height() / 2,
+                    'x': GoblinRect.x + cubo_original.get_width() / 2,
+                    'y': GoblinRect.y + cubo_original.get_height() / 2,
                     'dx': bullet_speed * math.cos(math.radians(player_angle)),
                     'dy': -bullet_speed * math.sin(math.radians(player_angle)),
                     'color': GREEN  # Cambia el color de la bola a verde
@@ -159,8 +221,8 @@ while True:
         if key_input[pygame.K_j]:
             if bullet is None:
                 bullet = {
-                    'x': rojox + cubo_original.get_width() / 2,
-                    'y': rojoy + cubo_original.get_height() / 2,
+                    'x': GoblinRect.x + cubo_original.get_width() / 2,
+                    'y': GoblinRect.y + cubo_original.get_height() / 2,
                     'dx': bullet_speed * math.cos(math.radians(player_angle)),
                     'dy': -bullet_speed * math.sin(math.radians(player_angle)),
                     'color': BLUE  # Cambia el color de la bola a azul
@@ -169,15 +231,17 @@ while True:
         if key_input[pygame.K_h]:
             if bullet is None:
                 bullet = {
-                    'x': rojox + cubo_original.get_width() / 2,
-                    'y': rojoy + cubo_original.get_height() / 2,
+                    'x': GoblinRect.x + cubo_original.get_width() / 2,
+                    'y': GoblinRect.y + cubo_original.get_height() / 2,
                     'dx': bullet_speed * math.cos(math.radians(player_angle)),
                     'dy': -bullet_speed * math.sin(math.radians(player_angle)),
                     'color': RED  # Cambia el color de la bola a rojo
                 }
+
+        #screen.blit(background,(0,0))
        
-        player_x = rojox + cubo_original.get_width() / 2
-        player_y = rojoy + cubo_original.get_height() / 2
+        player_x = GoblinRect.x + cubo_original.get_width() / 2
+        player_y = GoblinRect.y + 40 + cubo_original.get_height() / 2
         rotated_cubo = pygame.transform.rotate(cubo_original, player_angle)
         player_rect = rotated_cubo.get_rect(center=(player_x, player_y))
 
@@ -190,7 +254,7 @@ while True:
         pygame.draw.line(screen, (255, 0, 0), (player_x, player_y), (front_x, front_y), line_width)
 
         # Utilizamos el cuadro original sin cambios de tamaño
-        screen.blit(rotated_cubo, player_rect.topleft)
+        #screen.blit(rotated_cubo, player_rect.topleft)
 
         # Dibujamos el punto
         pygame.draw.circle(screen, (0, 0, 255), (int(point_x), int(point_y)), 5)
@@ -300,9 +364,20 @@ while True:
                 # Detener el cronómetro cuando se alcanza la duración deseada
                 cronometro_activo = False
                 
+       
+        if GoblinMovin:
+            GoblinMovin = False
+            if GoblinLeft:
+                    screen.blit(pygame.transform.flip(GoblinWalk[CurrentFrame],True,False), GoblinRect)
+            elif GoblinRight:
+                    screen.blit(GoblinWalk[CurrentFrame], GoblinRect)
+            else:
+                    screen.blit(GoblinWalk[CurrentFrame], GoblinRect)
+        else:
+            screen.blit(GoblinStatic,GoblinRect)
 
 
-
+        
         # ...
 
         # Mostrar el tiempo restante en la pantalla
@@ -312,7 +387,7 @@ while True:
 
         draw_color_boxes(screen, max_cubos_por_color, cubos_azules, cubos_verdes, cubos_rosados, aguila)
 
-
+      
 
 
 
@@ -320,11 +395,11 @@ while True:
         # Si está en pausa, muestra un aviso en la pantalla
         pygame.draw.rect(screen, pausa_text_color, (pausa_text_x, pausa_text_y, pausa_text_width, pausa_text_height))
         fuente_pausa = pygame.font.Font(None, 24)
-        texto_pausa = fuente_pausa.render("Juego pausado", True, WHITE)
+        texto_pausa = fuente_pausa.render("Juego pausado ", True, WHITE)
         screen.blit(texto_pausa, (pausa_text_x + 10, pausa_text_y + 5))
 
 
-
+    
 
     pygame.display.update()
-    clock.tick(144)
+    clock.tick(60)
