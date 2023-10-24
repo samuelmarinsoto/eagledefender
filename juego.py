@@ -58,7 +58,7 @@ CurrentFrame = 0
 lastUpdate = pygame.time.get_ticks()
 
 GoblinRect = GoblinWalk[0].get_rect()
-GoblinRect.center = (750,300)
+GoblinRect.center = (screen.get_width()*(3/4), screen.get_height()//2)
 GoblinSpeed = 1.3
 
 GoblinLeft = False
@@ -321,6 +321,7 @@ while True:
                 cuadrado_rect = cuadrado['surface'].get_rect(topleft=(cuadrado['x'], cuadrado['y']))
                 if cuadrado_rect.collidepoint(int(bullet['x']), int(bullet['y'])):
                     cuadrado['vida'] -= bullet['fuerza']
+                    bullet = None
                     if cuadrado['vida'] < 0:
                         cuadrados.remove(cuadrado)  # Eliminar el cuadrado si hay colisión
 
