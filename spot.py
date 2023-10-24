@@ -13,15 +13,17 @@ token = util.prompt_for_user_token(userSpot, scope, SPOTIPY_CLIENT_ID, SPOTIPY_C
 sp = spotipy.Spotify(auth=token)
 
 Song1 = ""
+Song1All= ""
 
 current_playback = None
 def SearchSong(Song):
-     global Song1
+     global Song1, Song1All
      result = sp.search(q=Song,type='track',limit=1)
      if not isinstance(Song,str):
          return 0
      elif result['tracks']['items']:
         Song1 = result['tracks']['items'][0]['uri']
+        Song1All = result['tracks']['items'][0]
         return 1
      else:
          print("Song not found! {song_name}")
@@ -49,11 +51,26 @@ def PauseMusic():
     sp.pause_playback()
 
 
-def GetSongDuration():
-    global current_playback
-    current_playback = sp.current_playback()
-    print(current_playback)
 
+
+
+def GetSongDuration(Duration):
+    
+    duration_ms = Duration
+    duration_s = duration_ms / 1000
+    print(duration_s)
+    
+
+    #duration_minutes = duration_ms // 60000
+    #duration_seconds = (duration_ms // 1000) % 60
+    #print(duration_ms)
+    #print("Minutes:",duration_minutes,":",duration_seconds) #Es para darlo en minutos y segundos exacti
+    return duration_s
+    
+
+SearchSong("Sepultura Territory")
+GetSongDuration(Song1All['duration_ms'])
+PlaySong(Song1)
 
 
 
