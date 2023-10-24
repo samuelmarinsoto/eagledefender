@@ -45,6 +45,10 @@ FacialRegistration = Word('Registro facial', 'Facial Registration', 'Enregistrem
 Dark = Word('Oscuro', 'Dark', 'Sombre')
 Light = Word('Claro', 'Light', 'Clair')
 System = Word('Sistema', 'System', 'Système')
+Music = Word('Musica','Music','Musique')
+Texture = Word('Texturas','Texture','Textures')
+Palettes = Word('Paletas de color', 'Color palettes','Palettes de couleurs')
+
 
 
 
