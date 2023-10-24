@@ -5,12 +5,12 @@ Phrase = namedtuple('Phrase',['es','en','fr'])
 Member = 0
 def changeLanguage(lang):
     """
-            Cambia la variable global de idioma
-            Args:
-                int: Español, Ingles, Frances.
-            Returns:
-                None
-         """
+        Cambia la variable global de idioma
+        Args:
+            int: 0 español, 1 ingles, 2 frances.
+        Returns:
+            None
+     """
     global language
     if isinstance(lang,str):
         if lang == "Español":
@@ -58,8 +58,10 @@ Dark = Word('Oscuro', 'Dark', 'Sombre')
 Light = Word('Claro', 'Light', 'Clair')
 System = Word('Sistema', 'System', 'Système')
 Music = Word('Musica','Music','Musique')
-SelecMusic = Phrase('Seleccione las canciones', 'Choose the songs','Sélectionnez des chansons')
-Continue = Word('Continuar','Continue','Continuer')
+Texture = Word('Texturas','Texture','Textures')
+Palettes = Word('Paletas de color', 'Color palettes','Palettes de couleurs')
+
+
 
 
 
