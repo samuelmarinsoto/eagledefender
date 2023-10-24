@@ -1,5 +1,4 @@
 import time
-
 import pygame
 import math
 
@@ -39,7 +38,7 @@ cubo_rojo = cubo_original.copy()
 bola = pygame.Surface((10, 10))
 bola.fill('Green')
 
-rojox = 550
+rojox = 750
 rojoy = 300
 player_angle = 0
 bullet = None
@@ -59,6 +58,11 @@ cuadro_color = GREEN  # Por defecto, el cuadro es de color rojo
 key_1_pressed = False
 key_2_pressed = False
 key_3_pressed = False
+
+
+sprite_sheet = pygame.image.load('assets/goblin/Goblin King Sprite .png')
+sprite_rect = sprite_sheet.get_rect()
+sprite_rect.center = (400,300)
 
 
 tiempo_actual = pygame.time.get_ticks()
@@ -108,11 +112,12 @@ while True:
             pygame.quit()
 
     key_input = pygame.key.get_pressed()
-
+    screen.blit(sprite_sheet, sprite_rect)
     if key_input[pygame.K_t]:
         # Presionar la tecla "t" pausará o reanudará el juego
         pausado = not pausado
     if not pausado:
+        
         if tiempo_restante == 0:
             texto_espera_turno = fuente_espera_turno.render(espera_turno_texto, True, (0, 0, 0))
             screen.blit(texto_espera_turno, (screen.get_width() - 200, 10))
@@ -170,7 +175,7 @@ while True:
                     'dy': -bullet_speed * math.sin(math.radians(player_angle)),
                     'color': RED  # Cambia el color de la bola a rojo
                 }
-
+       
         player_x = rojox + cubo_original.get_width() / 2
         player_y = rojoy + cubo_original.get_height() / 2
         rotated_cubo = pygame.transform.rotate(cubo_original, player_angle)
