@@ -44,6 +44,7 @@ class Registro(customtkinter.CTk):
         # self.attributes("-fullscreen", True)
         self.title(dic.Registration[dic.language])
         self.geometry(f"{800}x{800}")
+        self.selected_photo_path = "assets/flags/Avatar-Profile.png"
 
         # configure grid layout (4x4)
 
@@ -71,26 +72,26 @@ class Registro(customtkinter.CTk):
         self.nombre.place(relx=0.5, rely=0.2, anchor=customtkinter.CENTER)
 
         self.entry_Nombre = customtkinter.CTkEntry(self.tabview.tab(dic.Data[dic.language]))
-        self.entry_Nombre.place(relx=0.5, rely=0.3, anchor=customtkinter.CENTER)
+        self.entry_Nombre.place(relx=0.5, rely=0.25, anchor=customtkinter.CENTER)
 
         self.apellido = customtkinter.CTkLabel(self.tabview.tab(dic.Data[dic.language]), text=dic.Surname[dic.language],
                                                anchor="w")
-        self.apellido.place(relx=0.5, rely=0.4, anchor=customtkinter.CENTER)
+        self.apellido.place(relx=0.5, rely=0.3, anchor=customtkinter.CENTER)
 
         self.entry_Apellido = customtkinter.CTkEntry(self.tabview.tab(dic.Data[dic.language]))
-        self.entry_Apellido.place(relx=0.5, rely=0.5, anchor=customtkinter.CENTER)
+        self.entry_Apellido.place(relx=0.5, rely=0.35, anchor=customtkinter.CENTER)
 
         self.correo = customtkinter.CTkLabel(self.tabview.tab(dic.Data[dic.language]), text=dic.Email[dic.language],
                                              anchor="w")
-        self.correo.place(relx=0.5, rely=0.6, anchor=customtkinter.CENTER)
+        self.correo.place(relx=0.5, rely=0.4, anchor=customtkinter.CENTER)
 
         self.entry_Correo = customtkinter.CTkEntry(self.tabview.tab(dic.Data[dic.language]))
-        self.entry_Correo.place(relx=0.5, rely=0.7, anchor=customtkinter.CENTER)
+        self.entry_Correo.place(relx=0.5, rely=0.45, anchor=customtkinter.CENTER)
 
 
         self.edad_label = customtkinter.CTkLabel(self.tabview.tab(dic.Data[dic.language]),
                                                  text=dic.Age[dic.language] + ": 0")
-        self.edad_label.place(relx=0.5, rely=0.8, anchor=customtkinter.CENTER)
+        self.edad_label.place(relx=0.5, rely=0.5, anchor=customtkinter.CENTER)
 
 
         self.calendario = Calendar(self,mindate=date(1930,1,1),maxdate=date.today())
@@ -222,7 +223,7 @@ class Registro(customtkinter.CTk):
                                                          text="Show/Hide Calendar",
                                                          fg_color=green_light, hover_color=green,
                                                          command=self.toggle_calendar)
-        self.calendario_button.place(relx=0.5, rely=0.9, anchor=customtkinter.CENTER)
+        self.calendario_button.place(relx=0.5, rely=0.55, anchor=customtkinter.CENTER)
 
         self.testPlay = customtkinter.CTkButton(self.tabview.tab(dic.Personalization[dic.language]),
                                                 text="Play text",
@@ -266,11 +267,16 @@ class Registro(customtkinter.CTk):
         month = int(date_part[0])
         day = int(date_part[1])
         if 0 <= int(date_part[2]) <= 23:
-            year = int("20"+date_part[2])
-        elif 30<= int(date_part[2]) <= 99:
+            year = int("20" + date_part[2])
+        elif 30 <= int(date_part[2]) <= 99:
             year = int("19" + date_part[2])
         dateborn = date(year, month, day)
-        age = date.today().year-dateborn.year
+        age = date.today().year - dateborn.year
+
+        if age < 13:  # Comprobación de edad
+            tkinter.messagebox.showerror("Error", "Debes tener al menos 13 años para registrarte.")
+            return
+
         user.age = age
         self.update_edad_label(age)
     def validar_usuario(usuario):
@@ -315,7 +321,7 @@ class Registro(customtkinter.CTk):
                 re.search("[a-z]", contrasena) and
                 re.search("[A-Z]", contrasena) and
                 re.search("[0-9]", contrasena) and
-                re.search("[@#$%^&+=]", contrasena)):
+                re.search("[@#$%^&+=.,!/*()-<>]", contrasena)):
             return True
         return False
     def registrar_usuario(self):
@@ -323,7 +329,7 @@ class Registro(customtkinter.CTk):
         usuario = self.entry_Username.get()
         contra = self.verificar_contrasenas()
         if contra is None:
-            print("Error", "Las contraseñas no coinciden.")
+            tkinter.messagebox.showerror("Error", "Las contraseñas no coinciden")
             return
         nombre = self.entry_Nombre.get()
         apellido = self.entry_Apellido.get()
@@ -334,11 +340,7 @@ class Registro(customtkinter.CTk):
         usuario_img = self.entry_Username.get()
         imagen_ruta = 'ProfilePics/' + usuario_img + ".jpg"  # Ruta de la imagen guardada
 
-        # Genera un nuevo código de confirmación
-        codigo = DataBase.generate_confirmation_code()
 
-        # Enviar código de confirmación por correo electrónico
-        DataBase.send_confirmation_email(correo, codigo)
 
         # Validaciones antes de insertar el usuario
         if edad < 13:
@@ -352,30 +354,45 @@ class Registro(customtkinter.CTk):
         if DataBase.is_email_registered(correo):
             tkinter.messagebox.showerror("Error", "Este correo ya está registrado.")
             return
+
         # Llama a la función para insertar los datos en la base de datos
         try:
-            print(f"Debug: Código generado: {codigo}")
-            DataBase.insert_user(usuario, contra, nombre, apellido, correo, edad, imagen_ruta, codigo)
+            DataBase.insert_user(usuario, contra, nombre, apellido, correo, edad, imagen_ruta)
             # Nota: No mostramos el mensaje de éxito aquí.
         except Exception as e:
             print("Error", f"Ocurrió un error al registrar al usuario: {e}")
             return False  # Retornamos False para indicar que el registro no fue exitoso
         # Llama a la función para insertar los datos en la base de datos
         try:
-            print(f"Debug: Código generado: {codigo}")
+
             DataBase.insert_user(self.entry_Username.get(), self.entry_Contra.get(), self.entry_Nombre.get(),
                                  self.entry_Apellido.get(), self.entry_Correo.get(), user.age,
-                                 self.selected_photo_path, codigo)
+                                 self.selected_photo_path)
             # Nota: No mostramos el mensaje de éxito aquí.
         except Exception as e:
             print("Error", f"Ocurrió un error al registrar al usuario: {e}")
             return False  # Retornamos False para indicar que el registro no fue exitoso
+
+        # Genera un nuevo código de confirmación
+        codigo = DataBase.generate_confirmation_code()
+        print(f"Debug: Código generado: {codigo}")
+        # Enviar código de confirmación por correo electrónico
+        DataBase.send_confirmation_email(correo, codigo)
         self.solicitar_verificacion()
 
         return True  # Retornamos True para indicar que el registro fue exitoso
 
     def on_register_button_click(self):
-
+        # Comprobación de la imagen personalizada
+        if self.selected_photo_path == "assets/flags/Avatar-Profile.png":
+            respuesta = tkinter.messagebox.askyesno("Confirmación",
+                                                    "¿Seguro que no quieres tener una foto personalizada?")
+            if respuesta == "no":
+                return
+            else:
+                # Si el usuario decide no tener una foto personalizada, establece una imagen predeterminada.
+                # (Asegúrate de reemplazar "ruta/de/imagen/predeterminada.png" con la ruta real de la imagen que quieras usar.)
+                self.selected_photo_path = "ruta/de/imagen/predeterminada.png"
 
         missing_fields, missing_tabs = self.check_fields_filled()
         if missing_fields:
@@ -383,15 +400,6 @@ class Registro(customtkinter.CTk):
             missing_info = ', '.join([f"{field} ({tab})" for field, tab in zip(missing_fields, missing_tabs)])
             tkinter.messagebox.showerror("Error", f"Faltan los siguientes campos: {missing_info}")
             return
-
-        if self.selected_photo_path == "assets/flags/Avatar-Profile.png":
-            respuesta = tkinter.messagebox.askyesno("Confirmación",
-                                                    "¿Seguro que no quieres tener una foto personalizada?")
-            if respuesta == "yes":
-                # El usuario está seguro de no querer una foto personalizada.
-                pass
-            else:
-                return
 
         # Convertir el nombre de usuario a minúsculas para la verificación
         username = self.entry_Username.get().lower()
@@ -408,10 +416,17 @@ class Registro(customtkinter.CTk):
         contrasena = self.entry_Contra.get()
         if not self.validar_contrasena(contrasena):
             tkinter.messagebox.showerror("Error",
-                                         "La contraseña no cumple con los requisitos. - Mínimo 8 caracteres- Máximo 16 caracteres- Al menos una letra mayúscula- Al menos una letra minúscula- Al menos un número- Al menos un carácter especial: @#$%^&+=")
+                                         "La contraseña no cumple con los requisitos. - Mínimo 8 caracteres- Máximo 16 caracteres- Al menos una letra mayúscula- Al menos una letra minúscula- Al menos un número- Al menos un carácter especial: @#$%^&+=.,!/*()-<>")
             return
         self.temp_verification_code = DataBase.generate_confirmation_code()
         DataBase.send_confirmation_email(self.entry_Correo.get(), self.temp_verification_code)
+        self.registrar_usuario()
+
+        # Generación y envío del código de verificación
+        self.temp_verification_code = DataBase.generate_confirmation_code()
+        DataBase.send_confirmation_email(self.entry_Correo.get(), self.temp_verification_code)
+
+        # Registrar al usuario
         self.registrar_usuario()
 
     def solicitar_verificacion(self):
@@ -452,7 +467,7 @@ class Registro(customtkinter.CTk):
         if not self.entry_Contra.get():
             missing_fields.append(dic.Password[dic.language])
             missing_tabs.append(dic.Game[dic.language])
-        if not user.picture or user.picture == "assets/flags/Avatar-Profile.png":
+        if not user.picture:
             missing_fields.append(dic.Photo[dic.language])
             missing_tabs.append(dic.Game[dic.language])
 
@@ -524,7 +539,7 @@ class Registro(customtkinter.CTk):
             self.edad_button.place_forget()
         else:
             self.calendario.place(relx=0.8, rely=0.7, anchor=customtkinter.CENTER)
-            self.edad_button.place(relx=0.5, rely=0.79, anchor=customtkinter.CENTER)
+            self.edad_button.place(relx=0.5, rely=0.6, anchor=customtkinter.CENTER)
 
     def change_appearance_mode_event(self, new_appearance_mode: str):
         customtkinter.set_appearance_mode(new_appearance_mode)

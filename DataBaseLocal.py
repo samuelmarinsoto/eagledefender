@@ -198,7 +198,8 @@ def insert_user(username, password, first_name, last_name, email, age, photo):
 		conn = connect()
 		cursor = conn.cursor()
 		cursor.execute("""
-	            INSERT INTO Users (Username, Password, FirstName, LastName, Email, Age, Photo,
+	            INSERT INTO Users (Username, Password, FirstName, LastName, Email, Age, Photo)
+	            VALUES (?, ?, ?, ?, ?, ?, ?)
 	        """, (username, hashed_pass, first_name, last_name, email, age, photo))
 		conn.commit()
 		return True
