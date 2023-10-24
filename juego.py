@@ -1,6 +1,7 @@
 import time
 import pygame
 import math
+from PIL import Image
 
 pygame.init()
 #screen = pygame.display.set_mode((pygame.display.Info().current_w // 1.5, pygame.display.Info().current_h // 1.5))
@@ -12,6 +13,15 @@ start_time = pygame.time.get_ticks()
 # Duración del cronómetro en milisegundos (1 minuto)
 cronometro_duration = 1000 *60  # 60,000 milisegundos = 1 minuto
 background = pygame.image.load("Scenary/Arena Tileset Template Verde.png")
+
+background_1 = Image.open("Scenary/Arena Tileset Rojo.png")
+background_2 = Image.open("Scenary/Arena Tileset Template Blanco.png")
+
+backgrounLeft = background_1.crop((0,0,512,720))
+backgrounLeft = pygame.image.fromstring(backgrounLeft.tobytes(),backgrounLeft.size,backgrounLeft.mode)
+
+backgroundRight = background_2.crop((512,0,1024,720))
+backgroundRight = pygame.image.fromstring(backgroundRight.tobytes(),backgroundRight.size,backgroundRight.mode)
 # Variable para rastrear si el cronómetro está activo
 cronometro_activo = True
 
@@ -239,7 +249,9 @@ while True:
                     'color': RED  # Cambia el color de la bola a rojo
                 }
 
-        screen.blit(background,(0,0))
+        #screen.blit(background,(0,0))
+        screen.blit(backgrounLeft,(0,0))
+        screen.blit(backgroundRight,(512,0))
        
         player_x = GoblinRect.x + cubo_original.get_width() / 2
         player_y = GoblinRect.y + 40 + cubo_original.get_height() / 2
