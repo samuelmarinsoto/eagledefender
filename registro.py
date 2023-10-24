@@ -305,11 +305,11 @@ class Registro(customtkinter.CTk):
 		self.buttonBlue.place(relx=0.5, rely=0.70)
 		# --------------------------------------------------------------------------------------------------------------------------------
 		# --------------------------------------------------------------------------------------------------------------------------------
-		paletteRed = PhotoImage(file="assets/Palettes/Red.png").subsample(4, 4)
-		paletteWhite = PhotoImage(file="assets/Palettes/White.png").subsample(4, 4)
-		paletteGreen = PhotoImage(file="assets/Palettes/Green.png").subsample(4, 4)
-		paletteBlack = PhotoImage(file="assets/Palettes/Black.png").subsample(4, 4)
-		paletteBlue = PhotoImage(file="assets/Palettes/Blue.png").subsample(4, 4)
+		paletteRed = PhotoImage(file="assets/bloquemetal.png").subsample(4, 4)
+		paletteWhite = PhotoImage(file="assets/bloquemadera.png").subsample(4, 4)
+		paletteGreen = PhotoImage(file="assets/bloqueconcreto.pngpng").subsample(4, 4)
+		# paletteBlack = PhotoImage(file="assets/Palettes/Black.png").subsample(4, 4)
+		# paletteBlue = PhotoImage(file="assets/Palettes/Blue.png").subsample(4, 4)
 
 		self.buttonRed = customtkinter.CTkButton(self.tabview.tab(dic.Texture[dic.language]), text="",
 		                                         image=paletteRed, fg_color=grey,
@@ -322,21 +322,21 @@ class Registro(customtkinter.CTk):
 		                                           image=paletteGreen,
 		                                           fg_color=grey, command=lambda: user.selecPalett("GREEN"), width=100,
 		                                           height=100)
-		self.buttonBlack = customtkinter.CTkButton(self.tabview.tab(dic.Texture[dic.language]), text="",
-		                                           image=paletteBlack,
-		                                           fg_color=grey, command=lambda: user.selecPalett("BLACK"), width=100,
-		                                           height=100)
-		self.buttonBlue = customtkinter.CTkButton(self.tabview.tab(dic.Texture[dic.language]), text="",
-		                                          image=paletteBlue,
-		                                          fg_color=grey, command=lambda: user.selecPalett("BLUE"), width=100,
-		                                          height=100)
+		# self.buttonBlack = customtkinter.CTkButton(self.tabview.tab(dic.Texture[dic.language]), text="",
+		#                                            image=paletteBlack,
+		#                                            fg_color=grey, command=lambda: user.selecPalett("BLACK"), width=100,
+		#                                            height=100)
+		# self.buttonBlue = customtkinter.CTkButton(self.tabview.tab(dic.Texture[dic.language]), text="",
+		#                                           image=paletteBlue,
+		#                                           fg_color=grey, command=lambda: user.selecPalett("BLUE"), width=100,
+		#                                           height=100)
 
 		# Coloca los botones en la ventana
 		self.buttonRed.place(relx=0.5, rely=0.10)
 		self.buttonWhite.place(relx=0.5, rely=0.25)
 		self.buttonGreen.place(relx=0.5, rely=0.40)
-		self.buttonBlack.place(relx=0.5, rely=0.55)
-		self.buttonBlue.place(relx=0.5, rely=0.70)
+		# self.buttonBlack.place(relx=0.5, rely=0.55)
+		# self.buttonBlue.place(relx=0.5, rely=0.70)
 
 	def UserSpotSelect(self):
 		User = self.userSpot.get()
