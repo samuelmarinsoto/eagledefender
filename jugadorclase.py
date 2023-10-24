@@ -1,5 +1,4 @@
 import pygame
-from threading import Thread
 
 class Jugador:
     def __init__(self, rol, pantalla):
