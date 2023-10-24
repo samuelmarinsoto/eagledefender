@@ -26,15 +26,29 @@ BROWN = (139, 69, 19)
 
 # Cronómetro
 start_time = pygame.time.get_ticks()  # Obtener el tiempo de inicio en milisegundos
+g1 = pygame.image.load("goblinSpriteWalk/tile000.png")
+g1 = pygame.transform.scale(g1, (screen.get_height()//20 * 1.5, screen.get_height()//20 * 1.5))
 
-GoblinWalk = [pygame.image.load("goblinSpriteWalk/tile000.png"),
-              pygame.image.load("goblinSpriteWalk/tile001.png"),
-              pygame.image.load("goblinSpriteWalk/tile002.png"),
-              pygame.image.load("goblinSpriteWalk/tile003.png"),
-              pygame.image.load("goblinSpriteWalk/tile004.png"),
-              pygame.image.load("goblinSpriteWalk/tile005.png")]
+g2 = pygame.image.load("goblinSpriteWalk/tile001.png")
+g2 = pygame.transform.scale(g2, (screen.get_height()//20 * 1.5, screen.get_height()//20 * 1.5))
+
+g3 = pygame.image.load("goblinSpriteWalk/tile002.png")
+g3 = pygame.transform.scale(g3, (screen.get_height()//20 * 1.5, screen.get_height()//20 * 1.5))
+
+g4 = pygame.image.load("goblinSpriteWalk/tile003.png")
+g4 = pygame.transform.scale(g4, (screen.get_height()//20 * 1.5, screen.get_height()//20 * 1.5))
+
+g5 = pygame.image.load("goblinSpriteWalk/tile004.png")
+g5 = pygame.transform.scale(g5, (screen.get_height()//20 * 1.5, screen.get_height()//20 * 1.5))
+
+g6 = pygame.image.load("goblinSpriteWalk/tile005.png")
+g6 = pygame.transform.scale(g6, (screen.get_height()//20 * 1.5, screen.get_height()//20 * 1.5))
+
+
+GoblinWalk = [g1, g2, g3, g4, g5, g6]
 
 GoblinStatic = pygame.image.load("goblinSpriteWalk/tile100.png")
+GoblinStatic = pygame.transform.scale(GoblinStatic, (screen.get_height()//20 * 1.5, screen.get_height()//20 * 1.5))
 GoblinMovin = False
 
 GoblinAnimationSpeed = 0.2
