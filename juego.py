@@ -27,28 +27,28 @@ BROWN = (139, 69, 19)
 # Cronómetro
 start_time = pygame.time.get_ticks()  # Obtener el tiempo de inicio en milisegundos
 g1 = pygame.image.load("goblinSpriteWalk/tile000.png")
-g1 = pygame.transform.scale(g1, (screen.get_height()//20 * 1.5, screen.get_height()//20 * 1.5))
+g1 = pygame.transform.scale(g1, (screen.get_height()//20 * 3, screen.get_height()//20 * 3))
 
 g2 = pygame.image.load("goblinSpriteWalk/tile001.png")
-g2 = pygame.transform.scale(g2, (screen.get_height()//20 * 1.5, screen.get_height()//20 * 1.5))
+g2 = pygame.transform.scale(g2, (screen.get_height()//20 * 3, screen.get_height()//20 * 3))
 
 g3 = pygame.image.load("goblinSpriteWalk/tile002.png")
-g3 = pygame.transform.scale(g3, (screen.get_height()//20 * 1.5, screen.get_height()//20 * 1.5))
+g3 = pygame.transform.scale(g3, (screen.get_height()//20 * 3, screen.get_height()//20 * 3))
 
 g4 = pygame.image.load("goblinSpriteWalk/tile003.png")
-g4 = pygame.transform.scale(g4, (screen.get_height()//20 * 1.5, screen.get_height()//20 * 1.5))
+g4 = pygame.transform.scale(g3, (screen.get_height()//20 * 3, screen.get_height()//20 * 3))
 
 g5 = pygame.image.load("goblinSpriteWalk/tile004.png")
-g5 = pygame.transform.scale(g5, (screen.get_height()//20 * 1.5, screen.get_height()//20 * 1.5))
+g5 = pygame.transform.scale(g5, (screen.get_height()//20 * 3, screen.get_height()//20 * 3))
 
 g6 = pygame.image.load("goblinSpriteWalk/tile005.png")
-g6 = pygame.transform.scale(g6, (screen.get_height()//20 * 1.5, screen.get_height()//20 * 1.5))
+g6 = pygame.transform.scale(g6, (screen.get_height()//20 * 3, screen.get_height()//20 * 3))
 
 
 GoblinWalk = [g1, g2, g3, g4, g5, g6]
 
 GoblinStatic = pygame.image.load("goblinSpriteWalk/tile100.png")
-GoblinStatic = pygame.transform.scale(GoblinStatic, (screen.get_height()//20 * 1.5, screen.get_height()//20 * 1.5))
+GoblinStatic = pygame.transform.scale(GoblinStatic, (screen.get_height()//20 * 3, screen.get_height()//20 * 3))
 GoblinMovin = False
 
 GoblinAnimationSpeed = 0.2
@@ -250,31 +250,34 @@ while True:
         if key_input[pygame.K_k] and tiempo_restante <= 0:
             if bullet is None:
                 bullet = {
+                    'fuerza': 10,
                     'x': GoblinRect.x + cubo_original.get_width() / 2,
                     'y': GoblinRect.y + cubo_original.get_height() / 2,
                     'dx': bullet_speed * math.cos(math.radians(player_angle)),
                     'dy': -bullet_speed * math.sin(math.radians(player_angle)),
-                    'color': GREEN  # Cambia el color de la bola a verde
+                    'color': GREEN  # Cambia el color de la bola a verde, tierra (bomba)
                 }
 
         if key_input[pygame.K_j]:
             if bullet is None:
                 bullet = {
+                    'fuerza': 3,
                     'x': GoblinRect.x + cubo_original.get_width() / 2,
                     'y': GoblinRect.y + cubo_original.get_height() / 2,
                     'dx': bullet_speed * math.cos(math.radians(player_angle)),
                     'dy': -bullet_speed * math.sin(math.radians(player_angle)),
-                    'color': BLUE  # Cambia el color de la bola a azul
+                    'color': BLUE  # Cambia el color de la bola a azul, agua
                 }
 
         if key_input[pygame.K_h]:
             if bullet is None:
                 bullet = {
+                    'fuerza': 5,
                     'x': GoblinRect.x + cubo_original.get_width() / 2,
                     'y': GoblinRect.y + cubo_original.get_height() / 2,
                     'dx': bullet_speed * math.cos(math.radians(player_angle)),
                     'dy': -bullet_speed * math.sin(math.radians(player_angle)),
-                    'color': RED  # Cambia el color de la bola a rojo
+                    'color': RED  # Cambia el color de la bola a rojo, fuego
                 }
 
         screen.blit(background,(0,0))
@@ -307,7 +310,9 @@ while True:
             for cuadrado in cuadrados:
                 cuadrado_rect = cuadrado['surface'].get_rect(topleft=(cuadrado['x'], cuadrado['y']))
                 if cuadrado_rect.collidepoint(int(bullet['x']), int(bullet['y'])):
-                    cuadrados.remove(cuadrado)  # Eliminar el cuadrado si hay colisión
+                    cuadrado['vida'] -= bullet['fuerza']
+                    if cuadrado['vida'] < 0:
+                        cuadrados.remove(cuadrado)  # Eliminar el cuadrado si hay colisión
 
             # Eliminar la bala si está fuera de la pantalla
             if not (0 <= bullet['x'] < screen.get_width() and 0 <= bullet['y'] < screen.get_height()):
@@ -325,6 +330,7 @@ while True:
                 q_key_held = True
                 if cuadro_color == BLUE and cubos_azules < 10:
                     nuevo_cuadro = {
+                        'vida': 3,
                         'surface': textura_madera,
                         'x': point_x - cubo_original.get_width() / 2,
                         'y': point_y - cubo_original.get_height() / 2,
@@ -335,6 +341,7 @@ while True:
                     print(cubos_azules)
                 elif cuadro_color == GREEN and cubos_verdes < 10:
                     nuevo_cuadro = {
+                        'vida': 5,
                         'surface': textura_acero,
                         'x': point_x - cubo_original.get_width() / 2,
                         'y': point_y - cubo_original.get_height() / 2,
@@ -345,6 +352,7 @@ while True:
 
                 elif cuadro_color == PINK and cubos_rosados < 10:
                     nuevo_cuadro = {
+                        'vida': 10,
                         'surface': textura_concreto,
                         'x': point_x - cubo_original.get_width() / 2,
                         'y': point_y - cubo_original.get_height() / 2,
@@ -354,6 +362,7 @@ while True:
                     cubos_rosados += 1
                 elif cuadro_color == BROWN and aguila < 1:
                     nuevo_cuadro = {
+                        'vida': 1,
                         'surface': textura_agila,
                         'x': point_x - cubo_original.get_width() / 2,
                         'y': point_y - cubo_original.get_height() / 2,
