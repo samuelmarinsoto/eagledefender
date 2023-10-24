@@ -238,14 +238,14 @@ while True:
                     'color': RED  # Cambia el color de la bola a rojo
                 }
 
-        #screen.blit(background,(0,0))
+        screen.blit(background,(0,0))
        
         player_x = GoblinRect.x + cubo_original.get_width() / 2
         player_y = GoblinRect.y + 40 + cubo_original.get_height() / 2
         rotated_cubo = pygame.transform.rotate(cubo_original, player_angle)
         player_rect = rotated_cubo.get_rect(center=(player_x, player_y))
 
-        screen.fill((255, 255, 255))
+        # screen.fill((255, 255, 255))
         screen.blit(rio, ((pygame.display.get_surface().get_width() // 2) - 10, 0))
 
         # Dibujar una línea más grande que indica la dirección del frente del cuadrado
