@@ -79,7 +79,7 @@ class Menu_principal(customtkinter.CTk):
         self.sidebar_button_1 = customtkinter.CTkButton(self, command=self.sidebar_button_event, text=dic.Play[dic.language],fg_color=green_light,hover_color=green, width=250, height=50)
         self.sidebar_button_1.place(relx=0.25, rely=0.5, anchor=customtkinter.CENTER)
 
-        imagen = Image.open(user.picture)
+        imagen = Image.open("assets/flags/Avatar-Profile.png")
         imagen.thumbnail((100, 100))
         imagen_tk = ImageTk.PhotoImage(imagen)
 
