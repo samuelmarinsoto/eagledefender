@@ -1,12 +1,12 @@
 import spotipy
 import spotipy.util as util
-import datauser as user
+
 
 SPOTIPY_CLIENT_ID = '5b219ea7c93c475db3fa7acd846af046'
 SPOTIPY_CLIENT_SECRET = '372adbb3af4d4a03a935d894cd5f2af5'
 SPOTIPY_REDIRECT_URI = 'http://localhost:8888/callback'
 
-userSpot = ""
+userSpot = "ANGELOCEL"
 scope = 'user-library-read user-modify-playback-state'
 
 token = util.prompt_for_user_token(userSpot, scope, SPOTIPY_CLIENT_ID, SPOTIPY_CLIENT_SECRET, SPOTIPY_REDIRECT_URI)
@@ -29,7 +29,7 @@ def SearchSong(Song):
      
 def SelectSong(Song,Space):
         if SearchSong(Song):
-            user.Songs1[Space] = Song1
+            # user.Songs1[Space] = Song1
             return 1
         else:
              return 0
@@ -44,3 +44,20 @@ def UserSpotSelect(UserSpot):
      print(userSpot)
     
 
+
+def PauseMusic():
+    sp.pause_playback()
+
+def GetCurrentlyPlayingInfo():
+    current_track_info = sp.current_playback()
+    if current_track_info is not None:
+        track_name = current_track_info['item']['name']
+        track_duration_ms = current_track_info['item']['duration_ms']
+        track_progress_ms = current_track_info['progress_ms']
+        return {
+            "track_name": track_name,
+            "track_duration_ms": track_duration_ms,
+            "track_progress_ms": track_progress_ms
+        }
+    else:
+        return None
