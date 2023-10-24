@@ -14,7 +14,7 @@ sp = spotipy.Spotify(auth=token)
 
 Song1 = ""
 
-
+current_playback = None
 def SearchSong(Song):
      global Song1
      result = sp.search(q=Song,type='track',limit=1)
@@ -49,16 +49,12 @@ def PauseMusic():
     sp.pause_playback()
 
 
-# def GetSongDuration():
-#     current_playback = sp.current_playback()
-#
-#     if current_playback is not None and 'item' in current_playback:
-#         track = current_playback['item']
-#         duration_ms = track['duration_ms']
-#         duration_seconds = duration_ms / 1000
-#         return duration_seconds
-#     else:
-#         return None
+def GetSongDuration():
+    global current_playback
+    current_playback = sp.current_playback()
+    print(current_playback)
+
+
 
 
 

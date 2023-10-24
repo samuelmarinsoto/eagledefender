@@ -171,6 +171,8 @@ def draw_color_boxes(screen, max_boxes, madera_count, acero_count, concreto_coun
 spot.SearchSong("The Less I Know The Better")
 spot.PlaySong(spot.Song1)
 
+spot.GetSongDuration()
+
 
 left_mask = pygame.Surface((screen.get_width() // 2, screen.get_height()))
 left_mask.set_alpha(50)  # Ajusta la transparencia
@@ -179,6 +181,7 @@ left_mask.fill((0, 0, 255))  # Azul
 right_mask = pygame.Surface((screen.get_width() // 2, screen.get_height()))
 right_mask.set_alpha(50)  # Ajusta la transparencia
 right_mask.fill((255, 0, 0))  # Rojo
+
 
 
 while True:
@@ -335,7 +338,6 @@ while True:
                             cuadrados.remove(cuadrado)  # Eliminar el cuadrado si hay colisión
                 except:
                     None
-
 
             try:
                 if not (0 <= bullet['x'] < screen.get_width() and 0 <= bullet['y'] < screen.get_height()):
