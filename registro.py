@@ -1,6 +1,8 @@
 import calendar
 import tkinter
 import tkinter.messagebox
+from tkinter import simpledialog
+
 import customtkinter
 import tkinter.filedialog as filedialog
 from PIL import Image, ImageTk
@@ -15,6 +17,9 @@ import datauser as user
 from tkcalendar import Calendar
 from datetime import date
 import spot
+import DataBaseLocal as DataBase
+import re
+from PIL import Image, ImageDraw
 
 Userspotify = spot.userSpot
 
@@ -41,6 +46,7 @@ class Registro(customtkinter.CTk):
         self.geometry(f"{800}x{800}")
 
         # configure grid layout (4x4)
+
 
         # create sidebar frame with widgets
 
@@ -112,25 +118,33 @@ class Registro(customtkinter.CTk):
 
         self.entry_Contra = customtkinter.CTkEntry(self.tabview.tab(dic.Game[dic.language]), show="◊")
         self.entry_Contra.place(relx=0.5, rely=0.5, anchor=customtkinter.CENTER)
+        self.contra_check = customtkinter.CTkLabel(self.tabview.tab(dic.Game[dic.language]),
+                                                   text="Verificar " + dic.Password[dic.language], anchor="w")
+        self.contra_check.place(relx=0.5, rely=0.55, anchor=customtkinter.CENTER)
 
+        self.entry_Contra_check = customtkinter.CTkEntry(self.tabview.tab(dic.Game[dic.language]), show="◊")
+        self.entry_Contra_check.place(relx=0.5, rely=0.65, anchor=customtkinter.CENTER)
         self.foto_label = customtkinter.CTkLabel(self.tabview.tab(dic.Game[dic.language]), corner_radius=60,
                                                  text=dic.Photo[dic.language])
         self.foto_label.place(relx=0.25, rely=0.7, anchor=customtkinter.CENTER)
         self.camera_icon = ImageTk.PhotoImage(file="camera_icon.png")  # Cargar el ícono
-        self.camera_button = customtkinter.CTkButton(self.tabview.tab(dic.Game[dic.language]), image=self.camera_icon,
-                                                    corner_radius=0,
-                                                    width=0, border_width=0,
-                                                    text="", command=self.registro_facial)
-
-        self.camera_button.place(relx=0.75, rely=0.9, anchor=customtkinter.CENTER)
 
         # self.foto = customtkinter.CTkFrame(self.tabview.tab("Juego"), fg_color=grey, corner_radius=100, height=80,width=80)
         # self.foto.place(relx=0.5, rely=0.7, anchor=customtkinter.CENTER)
 
+        default_image_path = "assets/flags/Avatar-Profile.png"
+
+        self.display_avatar_in_circle(default_image_path, self.tabview.tab(dic.Game[dic.language]), 0.5, 0.7)
+
         self.subir_Foto = customtkinter.CTkButton(self.tabview.tab(dic.Game[dic.language]), text="✚",
                                                   fg_color=green_light, hover_color=green, corner_radius=80, width=10,
                                                   command=self.abrir_archivo)
-        self.subir_Foto.place(relx=0.25, rely=0.9, anchor=customtkinter.CENTER)
+        self.subir_Foto.place(relx=0.3, rely=0.7, anchor=customtkinter.CENTER)
+
+        self.camera_button = customtkinter.CTkButton(self.tabview.tab(dic.Game[dic.language]), image=self.camera_icon,
+                                                     corner_radius=0, width=0, border_width=0, text="",
+                                                     command=self.registro_facial)
+        self.camera_button.place(relx=0.7, rely=0.7, anchor=customtkinter.CENTER)
 
         # ----------------------------------------------------------------------------------------
 
@@ -184,12 +198,25 @@ class Registro(customtkinter.CTk):
                                                      fg_color=green_light, hover_color=green,
                                                      command=self.SongSelect3)
         self.song_button_3.place(relx=0.75, rely=0.7, anchor=customtkinter.CENTER)
-        # ---------------------------------------------------------------------------------------------
-        # self.sidebar_button_1 = customtkinter.CTkButton(self.tabview.tab(dic.Personalization[dic.language]),
-        #                                                 text=dic.Register[dic.language],
-        #                                                 fg_color=green_light, hover_color=green,
-        #                                                 command=self.registro_facial)
-        # self.sidebar_button_1.place(relx=0.5, rely=0.9, anchor=customtkinter.CENTER)
+        #---------------------------------------------------------------------------------------------
+        self.register_button_data = customtkinter.CTkButton(self.tabview.tab(dic.Data[dic.language]),
+                                                            text=dic.Register[dic.language],
+                                                            fg_color=green_light, hover_color=green,
+                                                            command=self.on_register_button_click)
+        self.register_button_data.place(relx=0.5, rely=0.9, anchor=customtkinter.CENTER)
+
+        self.register_button_game = customtkinter.CTkButton(self.tabview.tab(dic.Game[dic.language]),
+                                                            text=dic.Register[dic.language],
+                                                            fg_color=green_light, hover_color=green,
+                                                            command=self.on_register_button_click)
+        self.register_button_game.place(relx=0.5, rely=0.9, anchor=customtkinter.CENTER)
+
+        self.register_button_personalization = customtkinter.CTkButton(
+            self.tabview.tab(dic.Personalization[dic.language]),
+            text=dic.Register[dic.language],
+            fg_color=green_light, hover_color=green,
+            command=self.on_register_button_click)
+        self.register_button_personalization.place(relx=0.5, rely=0.9, anchor=customtkinter.CENTER)
 
         self.calendario_button = customtkinter.CTkButton(self.tabview.tab(dic.Data[dic.language]),
                                                          text="Show/Hide Calendar",
@@ -246,26 +273,240 @@ class Registro(customtkinter.CTk):
         age = date.today().year-dateborn.year
         user.age = age
         self.update_edad_label(age)
+    def validar_usuario(usuario):
+        """
+        Valida que el nombre de usuario no contenga obscenidades.
+        """
+        palabras_prohibidas = ["palabra1", "palabra2", "palabra3"]  # Añade las palabras que desees prohibir
+        for palabra in palabras_prohibidas:
+            if palabra.lower() in usuario.lower():
+                return False
+        return True
 
+    def verificar_contrasenas(self):
+        if self.entry_Contra.get() == self.entry_Contra_check.get():
+            return self.entry_Contra_check.get()
+
+    @staticmethod
+    def validar_contrasena(contrasena):
+        """
+		Valida que la contraseña cumpla con los siguientes requisitos:
+		- Mínimo 8 caracteres
+		- Máximo 16 caracteres
+		- Al menos una letra mayúscula
+		- Al menos una letra minúscula
+		- Al menos un número
+		- Al menos un carácter especial
+		"""
+        if (8 <= len(contrasena) <= 16 and
+                re.search("[a-z]", contrasena) and
+                re.search("[A-Z]", contrasena) and
+                re.search("[0-9]", contrasena) and
+                re.search("[@#$%^&+=]", contrasena)):
+            return True
+        return False
+    def registrar_usuario(self):
+        # Recoge la información del usuario desde la GUI
+        usuario = self.entry_Username.get()
+        contra = self.verificar_contrasenas()
+        if contra is None:
+            print("Error", "Las contraseñas no coinciden.")
+            return
+        nombre = self.entry_Nombre.get()
+        apellido = self.entry_Apellido.get()
+        correo = self.entry_Correo.get()
+        edad = self.edad_slider.get()
+        # cancion = self.cancion1.get()
+        usuario_img = self.entry_Username.get()
+        imagen_ruta = 'ProfilePics/' + usuario_img + ".jpg"  # Ruta de la imagen guardada
+
+        # Genera un nuevo código de confirmación
+        codigo = DataBase.generate_confirmation_code()
+
+        # Guarda el código de confirmación en la base de datos
+        DataBase.save_confirmation_code(correo, codigo)
+
+        # Enviar código de confirmación por correo electrónico
+        DataBase.send_confirmation_email(correo, codigo)
+
+        # Validaciones antes de insertar el usuario
+        if edad < 13:
+            tkinter.messagebox.showerror("Error", "El usuario debe tener al menos 13 años para registrarse.")
+            return
+
+        if DataBase.is_username_registered(usuario):
+            tkinter.messagebox.showerror("Error", "Este nombre de usuario ya está registrado.")
+            return
+
+        if DataBase.is_email_registered(correo):
+            tkinter.messagebox.showerror("Error", "Este correo ya está registrado.")
+            return
+        # Llama a la función para insertar los datos en la base de datos
+        try:
+            print(f"Debug: Código generado: {codigo}")
+            DataBase.insert_user(usuario, contra, nombre, apellido, correo, edad, imagen_ruta, codigo)
+            # Nota: No mostramos el mensaje de éxito aquí.
+        except Exception as e:
+            print("Error", f"Ocurrió un error al registrar al usuario: {e}")
+            return False  # Retornamos False para indicar que el registro no fue exitoso
+        # Llama a la función para insertar los datos en la base de datos
+        try:
+            print(f"Debug: Código generado: {codigo}")
+            DataBase.insert_user(self.entry_Username.get(), self.entry_Contra.get(), self.entry_Nombre.get(),
+                                 self.entry_Apellido.get(), self.entry_Correo.get(), user.age,
+                                 self.selected_photo_path, codigo)
+            # Nota: No mostramos el mensaje de éxito aquí.
+        except Exception as e:
+            print("Error", f"Ocurrió un error al registrar al usuario: {e}")
+            return False  # Retornamos False para indicar que el registro no fue exitoso
+
+        return True  # Retornamos True para indicar que el registro fue exitoso
+
+    def on_register_button_click(self):
+        missing_fields, missing_tabs = self.check_fields_filled()
+        if missing_fields:
+            # Mostrar un mensaje de error con los campos y las pestañas que faltan
+            missing_info = ', '.join([f"{field} ({tab})" for field, tab in zip(missing_fields, missing_tabs)])
+            tkinter.messagebox.showerror("Error", f"Faltan los siguientes campos: {missing_info}")
+            return
+
+        print("Botón de registro clickeado")
+        if self.selected_photo_path == "assets/flags/Avatar-Profile.png":
+            respuesta = tkinter.messagebox.askyesno("Confirmación",
+                                                    "¿Seguro que no quieres tener una foto personalizada?")
+            if respuesta == "yes":
+                # El usuario está seguro de no querer una foto personalizada.
+                pass
+            else:
+                return
+
+        # Verifica si el correo electrónico o el nombre de usuario ya están registrados
+        if DataBase.is_email_registered(self.entry_Correo.get()):
+            tkinter.messagebox.showerror("Error", "Este correo ya está registrado.")
+            return
+
+        if DataBase.is_username_registered(self.entry_Username.get()):
+            tkinter.messagebox.showerror("Error", "Este nombre de usuario ya está registrado.")
+            return
+
+        # Intentamos registrar al usuario.
+        if self.registrar_usuario():
+            contrasena = self.entry_Contra.get()
+            if not self.validar_contrasena(contrasena):
+                tkinter.messagebox.showerror("Error",
+                                             "La contraseña no cumple con los requisitos. - Mínimo 8 caracteres- Máximo 16 caracteres- Al menos una letra mayúscula- Al menos una letra minúscula- Al menos un número- Al menos un carácter especial: @#$%^&+=")
+                return
+
+            # Ahora solicitamos la verificación
+            self.solicitar_verificacion()
+
+    def solicitar_verificacion(self):
+        # Aquí puedes abrir una nueva ventana o usar la actual para solicitar el código al usuario.
+        codigo_ingresado = simpledialog.askstring("Verificación",
+                                                  "Por favor, ingresa el código de verificación enviado a tu correo:",
+                                                  parent=self)
+
+        correo = self.entry_Correo.get()  # Obtenemos el correo desde la GUI
+
+        if DataBase.confirm_email(correo, codigo_ingresado):
+            tkinter.messagebox.showinfo("Éxito", "Correo verificado con éxito.")
+            # Aquí puedes proceder con el siguiente paso, por ejemplo, registro facial.
+            self.registro_facial()
+        else:
+            tkinter.messagebox.showerror("Error", "El código de verificación es incorrecto o ha expirado.")
+            # Opcionalmente, puedes permitir que el usuario lo intente de nuevo o cancelar el registro.
+
+    def check_fields_filled(self):
+        """
+        Verifica si todos los campos necesarios están llenos.
+        Retorna una lista de campos faltantes y sus pestañas asociadas.
+        """
+        missing_fields = []
+        missing_tabs = []
+
+        if not self.entry_Nombre.get():
+            missing_fields.append(dic.Name[dic.language])
+            missing_tabs.append(dic.Data[dic.language])
+
+        if not self.entry_Apellido.get():
+            missing_fields.append(dic.Surname[dic.language])
+            missing_tabs.append(dic.Data[dic.language])
+
+        if not self.entry_Correo.get():
+            missing_fields.append(dic.Email[dic.language])
+            missing_tabs.append(dic.Data[dic.language])
+        if not user.age:
+            missing_fields.append(dic.Age[dic.language])
+            missing_tabs.append(dic.Data[dic.language])
+
+        # Verificar campos en la pestaña Juego
+        if not self.entry_Username.get():
+            missing_fields.append(dic.Username[dic.language])
+            missing_tabs.append(dic.Game[dic.language])
+        if not self.entry_Contra.get():
+            missing_fields.append(dic.Password[dic.language])
+            missing_tabs.append(dic.Game[dic.language])
+        if not user.picture or user.picture == "assets/flags/Avatar-Profile.png":
+            missing_fields.append(dic.Photo[dic.language])
+            missing_tabs.append(dic.Game[dic.language])
+
+        return missing_fields, missing_tabs
 
     def update_edad_label(self, value):
         self.edad_label.configure(text=dic.Age[dic.language] + f" :{round(value)}")
 
     def abrir_archivo(self):
         archivo = filedialog.askopenfilename(filetypes=[(dic.Photo[dic.language], "*.png *.jpg *.jpeg *.gif *.bmp")])
+        self.selected_photo_path = archivo
         if archivo:
             user.picture = archivo
-            print(archivo)
             # Cargar la imagen
             imagen = Image.open(archivo)
-            # Redimensionar la imagen según el tamaño deseado (ajusta según tus necesidades)
-            imagen.thumbnail((80, 80))
-            # Convertir la imagen en un formato compatible con Tkinter
-            imagen_tk = ImageTk.PhotoImage(imagen)
-            # Mostrar la imagen en el CTkLabel
-            self.foto_label.configure(image=imagen_tk)
-            self.foto_label.configure(text="")
-            self.foto_label.image = imagen_tk  # ¡Importante! Debes mantener una referencia a la imagen para que no se elimine de la memoria
+            usuario_img = self.entry_Username.get()
+            img_path = os.path.join("ProfilePics", usuario_img + ".jpg")
+            imagen.save(img_path)
+            self.display_avatar_in_circle(self.selected_photo_path, self.tabview.tab(dic.Game[dic.language]), 0.5, 0.7)
+
+    def display_avatar_in_circle(self, image_path, parent, relx, rely):
+        # Cargar la imagen
+        img = Image.open(image_path)
+        # Redimensionar la imagen a 100x100
+        img = img.resize((100, 100), Image.ANTIALIAS)
+        # Convertir la imagen en circular
+        circular_img = self.make_circle_image_from_img(img)
+        # Convertir la imagen en un formato compatible con Tkinter
+        imagen_tk = ImageTk.PhotoImage(circular_img)
+        # Mostrar la imagen en un label
+        self.avatar_label = tkinter.Label(parent, image=imagen_tk, bg=parent["bg"])
+        self.avatar_label.image = imagen_tk  # ¡Importante! Mantener una referencia a la imagen
+        self.avatar_label.place(relx=relx, rely=rely, anchor=customtkinter.CENTER)
+
+    @staticmethod
+    def make_circle_image(img):
+        """
+		Convert an image into a circular image.
+		"""
+        # Make sure the image has an alpha channel for transparency
+        img = img.convert("RGBA")
+
+        # Create a blank white image
+        mask = Image.new("L", img.size, 0)
+
+        # Draw a white circle on the mask
+        draw = ImageDraw.Draw(mask)
+        width, height = img.size
+        draw.ellipse((0, 0, width, height), fill=255)
+
+        # Apply the mask to the image
+        circular_img = Image.composite(img, mask, mask)
+        return circular_img
+
+    def make_circle_image_from_img(self, img):
+        mask = Image.new("L", (100, 100), 0)
+        draw = ImageDraw.Draw(mask)
+        draw.ellipse((0, 0, 100, 100), fill=255)
+        result = Image.composite(img, Image.new("RGBA", img.size, (0, 0, 0, 0)), mask)
+        return result
 
     def iniciar(self):
         self.destroy()
@@ -297,10 +538,13 @@ class Registro(customtkinter.CTk):
             if cv2.waitKey(1) == 27:  # Cuando oprimamos "Escape" rompe el video
                 break
         usuario_img = self.entry_Username.get()
-        cv2.imwrite(usuario_img + ".jpg",
-                    frame)  # Guardamos la ultima caputra del video como imagen y asignamos el nombre del usuario
+        img_path = os.path.join("ProfilePics", usuario_img + ".jpg")
+        cv2.imwrite(img_path, frame)
+        # Guardamos la ultima caputra del video como imagen y asignamos el nombre del usuario
+        self.selected_photo_path = usuario_img + ".jpg"
         cap.release()  # Cerramos
         cv2.destroyAllWindows()
+        self.display_avatar_in_circle(self.selected_photo_path, None, None, None, self.avatar_label)
 
         def reg_rostro(img, lista_resultados):
             data = pyplot.imread(img)
@@ -312,7 +556,7 @@ class Registro(customtkinter.CTk):
                 cara_reg = data[y1:y2, x1:x2]
                 cara_reg = cv2.resize(cara_reg, (150, 200),
                                       interpolation=cv2.INTER_CUBIC)  # Guardamos la imagen con un tamaño de 150x200
-                cv2.imwrite(usuario_img + ".jpg", cara_reg)
+                cv2.imwrite("ProfilePics", usuario_img + ".jpg", cara_reg)
                 pyplot.imshow(data[y1:y2, x1:x2])
 
         img = usuario_img + ".jpg"
