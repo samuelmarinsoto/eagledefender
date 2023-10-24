@@ -171,7 +171,7 @@ def draw_color_boxes(screen, max_boxes, madera_count, acero_count, concreto_coun
 spot.SearchSong("The Less I Know The Better")
 spot.PlaySong(spot.Song1)
 
-spot.GetSongDuration()
+
 
 
 left_mask = pygame.Surface((screen.get_width() // 2, screen.get_height()))
@@ -477,8 +477,6 @@ while True:
         draw_color_boxes(screen, max_cubos_por_color, cubos_azules, cubos_verdes, cubos_rosados, cuadro_color)
         screen.blit(left_mask, (0, 0))
         screen.blit(right_mask, (screen.get_width() // 2, 0))
-
-      
 
 
 
