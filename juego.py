@@ -170,11 +170,9 @@ def draw_color_boxes(screen, max_boxes, madera_count, acero_count, concreto_coun
 
 spot.SearchSong("The Less I Know The Better")
 spot.PlaySong(spot.Song1)
-# current_info = spot.GetCurrentlyPlayingInfo()
-# if current_info:
-#     print(f"Canción: {current_info['track_name']}")
-#     print(f"Duración total: {current_info['track_duration_ms']} ms")
-#     print(f"Tiempo actual: {current_info['track_progress_ms']} ms")
+
+
+
 while True:
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
@@ -214,18 +212,18 @@ while True:
             GoblinLeft = False
             GoblinRight = False
           
-        if key_input[pygame.K_LEFT] and GoblinRect.x> screen.get_width()/2:
+        if key_input[pygame.K_LEFT] and GoblinRect.x> screen.get_width()/2 and tiempo_restante<=0:
                     GoblinRect.x -= GoblinSpeed
                     GoblinMovin = True
                     GoblinLeft = True
-        if key_input[pygame.K_RIGHT] and GoblinRect.x<screen.get_width() -70:
+        if key_input[pygame.K_RIGHT] and GoblinRect.x<screen.get_width() -70 and tiempo_restante<=0:
                     GoblinRect.x += GoblinSpeed
                     GoblinMovin = True
                     GoblinRight = True
-        if key_input[pygame.K_UP]and GoblinRect.y>5:
+        if key_input[pygame.K_UP]and GoblinRect.y>5 and tiempo_restante<=0:
                     GoblinRect.y -= GoblinSpeed
                     GoblinMovin = True
-        if key_input[pygame.K_DOWN] and GoblinRect.y < screen.get_height()-70:
+        if key_input[pygame.K_DOWN] and GoblinRect.y < screen.get_height()-70 and tiempo_restante<=0:
                     GoblinRect.y += GoblinSpeed
                     GoblinMovin = True
 
@@ -251,10 +249,10 @@ while True:
         if key_input[pygame.K_d] and point_x < screen.get_width() and point_x<screen.get_width()/2:
             point_x += 7
 
-        if key_input[pygame.K_l] and tiempo_restante <= 0:
+        if key_input[pygame.K_l] and tiempo_restante <= 0 and tiempo_restante<=0:
             player_angle += 6
         
-        if key_input[pygame.K_o] and tiempo_restante <= 0:
+        if key_input[pygame.K_o] and tiempo_restante <= 0 and tiempo_restante<=0:
             player_angle -= 6
 
         if key_input[pygame.K_k] and tiempo_restante <= 0:
@@ -268,7 +266,7 @@ while True:
                     'color': GREEN  # Cambia el color de la bola a verde, tierra (bomba)
                 }
 
-        if key_input[pygame.K_j]:
+        if key_input[pygame.K_j] and tiempo_restante<=0:
             if bullet is None:
                 bullet = {
                     'fuerza': 3,
@@ -279,7 +277,7 @@ while True:
                     'color': BLUE  # Cambia el color de la bola a azul, agua
                 }
 
-        if key_input[pygame.K_h]:
+        if key_input[pygame.K_h] and tiempo_restante<=0:
             if bullet is None:
                 bullet = {
                     'fuerza': 5,
@@ -456,6 +454,7 @@ while True:
         fuente_pausa = pygame.font.Font(None, 24)
         texto_pausa = fuente_pausa.render("Juego pausado ", True, WHITE)
         screen.blit(texto_pausa, (pausa_text_x + 10, pausa_text_y + 5))
+
 
 
     

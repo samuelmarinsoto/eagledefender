@@ -48,16 +48,17 @@ def UserSpotSelect(UserSpot):
 def PauseMusic():
     sp.pause_playback()
 
-def GetCurrentlyPlayingInfo():
-    current_track_info = sp.current_playback()
-    if current_track_info is not None:
-        track_name = current_track_info['item']['name']
-        track_duration_ms = current_track_info['item']['duration_ms']
-        track_progress_ms = current_track_info['progress_ms']
-        return {
-            "track_name": track_name,
-            "track_duration_ms": track_duration_ms,
-            "track_progress_ms": track_progress_ms
-        }
-    else:
-        return None
+
+# def GetSongDuration():
+#     current_playback = sp.current_playback()
+#
+#     if current_playback is not None and 'item' in current_playback:
+#         track = current_playback['item']
+#         duration_ms = track['duration_ms']
+#         duration_seconds = duration_ms / 1000
+#         return duration_seconds
+#     else:
+#         return None
+
+
+
