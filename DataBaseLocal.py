@@ -100,8 +100,6 @@ def create_tables():
                 Email TEXT NOT NULL UNIQUE,
                 Age INTEGER,
                 Photo TEXT,
-                Code TEXT,
-                DateCode TIMESTAMP,
                 Membresía TEXT
             )
         """)
@@ -171,7 +169,7 @@ def verify_password(password, hashed_from_db):
 	return bcrypt.checkpw(password.encode('utf-8'), hashed_from_db)
 
 
-def insert_user(username, password, first_name, last_name, email, age, photo, code):
+def insert_user(username, password, first_name, last_name, email, age, photo):
 
 	"""Inserts a new user into the database with the provided information.
 
@@ -200,9 +198,8 @@ def insert_user(username, password, first_name, last_name, email, age, photo, co
 		conn = connect()
 		cursor = conn.cursor()
 		cursor.execute("""
-	            INSERT INTO Users (Username, Password, FirstName, LastName, Email, Age, Photo, Code, DateCode)
-	            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
-	        """, (username, hashed_pass, first_name, last_name, email, age, photo, code, datetime.now()))
+	            INSERT INTO Users (Username, Password, FirstName, LastName, Email, Age, Photo,
+	        """, (username, hashed_pass, first_name, last_name, email, age, photo))
 		conn.commit()
 		return True
 	except sqlite3.IntegrityError:
@@ -267,81 +264,56 @@ def is_username_registered(username):
         print(f"Ocurrió un error al verificar el username: {e}")
         return False
 
-def save_confirmation_code(email, confirmation_code):
-	"""Saves or updates the confirmation code for a user in the database.
-
-    Args:
-        email (str): The user's email address.
-        confirmation_code (str): The confirmation code to save.
-    """
-	timestamp = datetime.now()
-	try:
-		conn = connect()
-		cursor = conn.cursor()
-		cursor.execute("UPDATE Users SET Code = ?, DateCode = ? WHERE Email = ?",
-		               (confirmation_code, timestamp, email))
-		conn.commit()
-	except Exception as e:
-		print(f"Ocurrió un error al guardar el código de confirmación: {e}")
 
 
-def confirm_email(email, entered_code):
-	"""Confirms the user's email by comparing the entered code with the stored one.
 
-	    Args:
-	        email (str): The user's email address.
-	        entered_code (str): The confirmation code entered by the user.
+# def confirm_email(email, entered_code):
+# 	"""Confirms the user's email by comparing the entered code with the stored one.
+#
+# 	    Args:
+# 	        email (str): The user's email address.
+# 	        entered_code (str): The confirmation code entered by the user.
+#
+# 	    Returns:
+# 	        bool: True if the email is confirmed, False otherwise.
+# 	    """
+# 	user = get_user(email)
+#
+# 	if not user:
+# 		print("No existe un usuario con ese correo.")
+# 		return False
+#
+# 	codigo_almacenado = user[8]  # Asumiendo que CodigoConfirmacion es la 9na columna
+# 	print(f"Código almacenado: {codigo_almacenado}")
+# 	print(f"Código ingresado: {entered_code}")
+#
+# 	if str(codigo_almacenado) != str(entered_code):
+# 		print("Los códigos no coinciden.")
+# 		return False
+#
+# 	fecha_codigo_str = user[9]  # Asumiendo que FechaCodigo es la 10ma columna
+# 	if not fecha_codigo_str:
+# 		print("No hay un código de confirmación válido para este correo.")
+# 		return False
+#
+# 	# Verifica si fecha_codigo_str es una instancia de datetime, si es así, úsala directamente
+# 	if isinstance(fecha_codigo_str, datetime):
+# 		fecha_codigo = fecha_codigo_str
+# 	else:  # Si no es un datetime, trata de convertirla (esto maneja casos donde la fecha pueda ser una cadena)
+# 		try:
+# 			fecha_codigo = datetime.strptime(fecha_codigo_str, '%Y-%m-%d %H:%M:%S.%f')
+# 		except ValueError as e:
+# 			print(f"Error: No se pudo convertir fecha_codigo_str a datetime: {e}")
+# 			return False
+#
+# 	if datetime.now() - fecha_codigo > timedelta(minutes=10):
+# 		print("El código ha expirado.")
+# 		return False
+#
+# 	return True
 
-	    Returns:
-	        bool: True if the email is confirmed, False otherwise.
-	    """
-	user = get_user(email)
-
-	if not user:
-		print("No existe un usuario con ese correo.")
-		return False
-
-	codigo_almacenado = user[8]  # Asumiendo que CodigoConfirmacion es la 9na columna
-	print(f"Código almacenado: {codigo_almacenado}")
-	print(f"Código ingresado: {entered_code}")
-
-	if str(codigo_almacenado) != str(entered_code):
-		print("Los códigos no coinciden.")
-		return False
-
-	fecha_codigo_str = user[9]  # Asumiendo que FechaCodigo es la 10ma columna
-	if not fecha_codigo_str:
-		print("No hay un código de confirmación válido para este correo.")
-		return False
-
-	# Verifica si fecha_codigo_str es una instancia de datetime, si es así, úsala directamente
-	if isinstance(fecha_codigo_str, datetime):
-		fecha_codigo = fecha_codigo_str
-	else:  # Si no es un datetime, trata de convertirla (esto maneja casos donde la fecha pueda ser una cadena)
-		try:
-			fecha_codigo = datetime.strptime(fecha_codigo_str, '%Y-%m-%d %H:%M:%S.%f')
-		except ValueError as e:
-			print(f"Error: No se pudo convertir fecha_codigo_str a datetime: {e}")
-			return False
-
-	if datetime.now() - fecha_codigo > timedelta(minutes=10):
-		print("El código ha expirado.")
-		return False
-
-	return True
 
 
-def clear_old_codes():
-	"""Deletes old confirmation codes (older than 10 minutes) from the database.
-	    """
-	try:
-		conn = connect()
-		cursor = conn.cursor()
-		cursor.execute("UPDATE Users SET Code = NULL WHERE DateCode < ?",
-		               (datetime.now() - timedelta(minutes=10),))
-		conn.commit()
-	except Exception as e:
-		print(f"Ocurrió un error al limpiar códigos antiguos: {e}")
 
 
 def get_user(email):
@@ -357,7 +329,7 @@ def get_user(email):
 		conn = connect()
 		cursor = conn.cursor()
 		cursor.execute(
-			'SELECT UserID, Username, Password, FirstName, LastName, Email, Age, Photo, Code, DateCode FROM '
+			'SELECT UserID, Username, Password, FirstName, LastName, Email, Age, Photo FROM '
 			'Users WHERE Email = ?', (email,))
 		usuario = cursor.fetchone()
 		return usuario
@@ -371,30 +343,6 @@ def is_email_registered(email):
 	"""Verifica si un correo ya está registrado en la base de datos."""
 	user = get_user(email)
 	return user is not None
-
-
-def get_confirmation_code(Email):
-	"""Gets the confirmation code for a specific email.
-
-	   Args:
-	       Email (str): The email to get the confirmation code for.
-
-	   Returns:
-	       str: The confirmation code, or None if not found.
-	   """
-
-	try:
-		conn = connect()
-		cursor = conn.cursor()
-		cursor.execute('SELECT Code FROM Users WHERE Email = ?', (Email,))
-		resultado = cursor.fetchone()
-		if resultado:
-			return resultado[0]
-		else:
-			return None
-	except Exception as e:
-		print(f"Ocurrió un error al obtener el código de confirmación: {e}")
-		return None
 
 
 def send_confirmation_email(email, confirmation_code):
@@ -456,7 +404,7 @@ def main():
 
         # Generate and save the confirmation code
         confirmation_code = generate_confirmation_code()
-        insert_user(name, password, None, None, email, age, None, confirmation_code)
+        insert_user(name, password, None, None, email, age, None)
         # Send the confirmation code via email
         send_confirmation_email(email, confirmation_code)
         print("User successfully registered. Please check your email and confirm here.")

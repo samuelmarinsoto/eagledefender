@@ -337,9 +337,6 @@ class Registro(customtkinter.CTk):
         # Genera un nuevo código de confirmación
         codigo = DataBase.generate_confirmation_code()
 
-        # Guarda el código de confirmación en la base de datos
-        DataBase.save_confirmation_code(correo, codigo)
-
         # Enviar código de confirmación por correo electrónico
         DataBase.send_confirmation_email(correo, codigo)
 
