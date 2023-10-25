@@ -2,6 +2,7 @@ import time
 import pygame
 import math
 import spot
+from Game_over import GameWindow
 
 
 pygame.init()
@@ -232,6 +233,9 @@ while True:
                 cronometro_duration = int(duracion) * 1000
                 tiempo_restante = cronometro_duration
             elif round_2 == True:
+                ganador_ventada = GameWindow(400,200)
+                ganador_ventada.mostrar_ganador("holi")
+                ganador_ventada.run()
                 pygame.quit()
                 print(f"player2: {player_2_points}, player 1: {player_1_points}")
 
