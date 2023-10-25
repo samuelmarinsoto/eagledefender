@@ -13,65 +13,68 @@ token = util.prompt_for_user_token(userSpot, scope, SPOTIPY_CLIENT_ID, SPOTIPY_C
 sp = spotipy.Spotify(auth=token)
 
 Song1 = ""
-Song1All= ""
+SongAll = ""
 
 current_playback = None
+
+
 def SearchSong(Song):
-     global Song1, Song1All
-     result = sp.search(q=Song,type='track',limit=1)
-     if not isinstance(Song,str):
-         return 0
-     elif result['tracks']['items']:
-        Song1 = result['tracks']['items'][0]['uri']
-        Song1All = result['tracks']['items'][0]
+    global Song1, SongAll
+    result = sp.search(q=Song, type='track', limit=1)
+    if not isinstance(Song, str):
+        return 0
+    elif result['tracks']['items']:
+        SongAll = result['tracks']['items'][0]
         return 1
-     else:
-         print("Song not found! {song_name}")
-         return 0
-     
-def SelectSong(Song,Space):
-        if SearchSong(Song):
-            # user.Songs1[Space] = Song1
-            return 1
-        else:
-             return 0
-     
+    else:
+        print("Song not found! {song_name}")
+        return 0
+
+
+def SelectSong(Song, Space):
+    if SearchSong(Song):
+        # user.Songs1[Space] = Song1
+        return 1
+    else:
+        return 0
+
+
 def PlaySong(track_uri):
-    sp.start_playback(uris=[track_uri])
+    if sp.devices()['devices']:
+        print("Playing song!")
+        return 1
+    else:
+        print("Song not playing!")
+        return 0
 
 
 def UserSpotSelect(UserSpot):
-     global userSpot
-     userSpot = UserSpot
-     print(userSpot)
-    
+    global userSpot
+    userSpot = UserSpot
+    print(userSpot)
 
 
 def PauseMusic():
     sp.pause_playback()
 
 
-
+def VerifySong(Song):
+    if sp._get_uri(Song['uri'], 'track'):
+        print("Song defualt!")
+        return 1
+    else:
+        return 0
 
 
 def GetSongDuration(Duration):
-    
     duration_ms = Duration
     duration_s = duration_ms / 1000
     print(duration_s)
-    
-
-    #duration_minutes = duration_ms // 60000
-    #duration_seconds = (duration_ms // 1000) % 60
-    #print(duration_ms)
-    #print("Minutes:",duration_minutes,":",duration_seconds) #Es para darlo en minutos y segundos exacti
+    # duration_minutes = duration_ms // 60000
+    # duration_seconds = (duration_ms // 1000) % 60
+    # print(duration_ms)
+    # print("Minutes:",duration_minutes,":",duration_seconds) #Es para darlo en minutos y segundos exacti
     return duration_s
-    
-
-SearchSong("Sepultura Territory")
-GetSongDuration(Song1All['duration_ms'])
-
-
 
 
 

@@ -339,22 +339,52 @@ class Registro(customtkinter.CTk):
         self.buttonBlue.place(relx=0.5, rely=0.70)
         # --------------------------------------------------------------------------------------------------------------------------------
         # --------------------------------------------------------------------------------------------------------------------------------
-        blockMetal= PhotoImage(file="assets/bloquemetal.png").subsample(4, 4)
-        blockWood = PhotoImage(file="assets/bloquemadera.png").subsample(4, 4)
-        blockCement = PhotoImage(file="assets/bloqueconcreto.png").subsample(4, 4)
+        block1Metal= PhotoImage(file="assets/Blocks/bloquemetal.png").subsample(6, 6)
+        block1Wood = PhotoImage(file="assets/Blocks/bloquemadera.png").subsample(6, 6)
+        block1Cement = PhotoImage(file="assets/Blocks/bloqueconcreto.png").subsample(6, 6)
+
+        block2Metal = PhotoImage(file="assets/Blocks/Block2Metal.png").subsample(3, 3)
+        block2Wood = PhotoImage(file="assets/Blocks/Block2Wood.png").subsample(3, 3)
+        block2Cement = PhotoImage(file="assets/Blocks/Block2Cement.png").subsample(3, 3)
+
+        block3Metal = PhotoImage(file="assets/Blocks/Block3Metal.png").subsample(1, 1)
+        block3Wood = PhotoImage(file="assets/Blocks/Block3Wood.png").subsample(1, 1)
+        block3Cement = PhotoImage(file="assets/Blocks/Block3Cement.png").subsample(1, 1)
+
+        self.BlockMetal1 = customtkinter.CTkLabel(self.tabview.tab(dic.Texture[dic.language]),image=block1Metal,text="")
+        self.BlockWood1 = customtkinter.CTkLabel(self.tabview.tab(dic.Texture[dic.language]), image=block1Wood, text="")
+        self.BlockCement1 = customtkinter.CTkLabel(self.tabview.tab(dic.Texture[dic.language]), image=block1Cement,text="")
+        self.BlockMetal1.place(relx=0.2, rely=0.1)
+        self.BlockWood1.place(relx=0.32, rely=0.1)
+        self.BlockCement1.place(relx=0.42, rely=0.1)
+
+        self.BlockMetal2 = customtkinter.CTkLabel(self.tabview.tab(dic.Texture[dic.language]), image=block2Metal, text="")
+        self.BlockWood2 = customtkinter.CTkLabel(self.tabview.tab(dic.Texture[dic.language]), image=block2Wood, text="")
+        self.BlockCement2 = customtkinter.CTkLabel(self.tabview.tab(dic.Texture[dic.language]), image=block2Cement, text="")
+        self.BlockMetal2.place(relx=0.2, rely=0.27)
+        self.BlockWood2.place(relx=0.32, rely=0.27)
+        self.BlockCement2.place(relx=0.42, rely=0.27)
+
+        self.BlockMetal3 = customtkinter.CTkLabel(self.tabview.tab(dic.Texture[dic.language]), image=block3Metal,                                 text="")
+        self.BlockWood3 = customtkinter.CTkLabel(self.tabview.tab(dic.Texture[dic.language]), image=block3Wood, text="")
+        self.BlockCement3 = customtkinter.CTkLabel(self.tabview.tab(dic.Texture[dic.language]), image=block3Cement,                                          text="")
+        self.BlockMetal3.place(relx=0.2, rely=0.43)
+        self.BlockWood3.place(relx=0.32, rely=0.43)
+        self.BlockCement3.place(relx=0.42, rely=0.43)
+
+
         # paletteBlack = PhotoImage(file="assets/Palettes/Black.png").subsample(4, 4)
         # paletteBlue = PhotoImage(file="assets/Palettes/Blue.png").subsample(4, 4)
 
-        self.buttonRed = customtkinter.CTkButton(self.tabview.tab(dic.Texture[dic.language]), text="",
-                                                 image=blockMetal, fg_color=grey,
-                                                 command=lambda: user.selectTexture("Metal"), width=100, height=100)
-        self.buttonWhite = customtkinter.CTkButton(self.tabview.tab(dic.Texture[dic.language]), text="",
-                                                   image=blockWood,
-                                                   fg_color=grey, command=lambda: user.selectTexture("Wood"), width=100,
+        self.buttonRed = customtkinter.CTkButton(self.tabview.tab(dic.Texture[dic.language]), text="Option 1",
+                                                 fg_color=grey,
+                                                 command=lambda: user.selectTexture("OP1"), width=100, height=100)
+        self.buttonWhite = customtkinter.CTkButton(self.tabview.tab(dic.Texture[dic.language]), text="Option 2",
+
+                                                   fg_color=grey, command=lambda: user.selectTexture("OP2"), width=100,
                                                    height=100)
-        self.buttonGreen = customtkinter.CTkButton(self.tabview.tab(dic.Texture[dic.language]), text="",
-                                                   image=blockCement,
-                                                   fg_color=grey, command=lambda: user.selectTexture("Cement"), width=100,
+        self.buttonGreen = customtkinter.CTkButton(self.tabview.tab(dic.Texture[dic.language]), text="Option 3",
+                                                   fg_color=grey, command=lambda: user.selectTexture("OP3"), width=100,
                                                    height=100)
 #-----------------------------------------------------------------------------------------------------------------------------------
 
@@ -396,8 +426,51 @@ class Registro(customtkinter.CTk):
         user.Songs1[2] = spot.Song1
         print(user.Songs1)
 
+
+    def VerifyTexture(self):
+        TextureOp = ["OP1","OP2","OP3"]
+        if isinstance(user.Texture,str):
+            if user.Texture in TextureOp:
+                return 1
+            else:
+                return 0
+        else:
+            return 0
+
+    def VerifyPalette(self):
+        PaletteOp = ["RED","GREEN","BLACK","BLUE","WHITE"]
+        if isinstance(user.Palette,str):
+            if user.Palette in PaletteOp:
+                return 1
+            else:
+                return 0
+        else:
+            return 0
+    def VerifySongs(self):
+        try:
+            for song in user.Songs1:
+                if song == "":
+                    raise ValueError("Una canción está vacía")
+        except ValueError as e:
+            print(f"Error: {e}")
+            return 0
+
+        try:
+            for song in user.Songs1:
+                result = spot.VerifySong(song)
+                if not result:
+                    raise ValueError(f"Fallo la verificación de la canción: {song}")
+        except ValueError as e:
+            print(f"Error: {e}")
+            return 0
+        return 1
+
     def PlayTEst(self):
         spot.PlaySong(user.Songs1[0])
+
+
+    #def VerifyTexture(self):
+
 
     def DateSelect(self):
         datese = self.calendario.get_date()
