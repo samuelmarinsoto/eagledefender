@@ -143,9 +143,9 @@ round_1 = False
 round_2 = False
 
 player_1_points = 0
-plsyer_2_points = 0
+player_2_points = 0
 
-
+nombre_cancion = "BALLSKIN"
 
 
 
@@ -183,7 +183,7 @@ def draw_color_boxes(screen, max_boxes, madera_count, acero_count, concreto_coun
     screen.blit(concreto_textsurf, (margin, screen.get_height() - 2 * margin - concreto_textsurf.get_height()))
 
 
-spot.SearchSong("BALLSKIN")
+spot.SearchSong(nombre_cancion)
 spot.PlaySong(spot.Song1)
 
 duracion = spot.GetSongDuration(spot.Song1All['duration_ms'])
@@ -221,9 +221,9 @@ while True:
                 cronometro_activo = True  # Reinicia el cronómetro
                 start_time = pygame.time.get_ticks()  # Actualiza el tiempo de inicio
                 cronometro_duration = int(duracion) * 1000
-                print(1)
+
                 tiempo_restante = cronometro_duration
-            elif round_1 == True or round_2 == True:
+            elif round_1 == True:
                 texto_cronometro = "ROUND 2"
                 round_1 = False
                 round_2 = True
@@ -231,6 +231,10 @@ while True:
                 start_time = pygame.time.get_ticks()  # Actualiza el tiempo de inicio
                 cronometro_duration = int(duracion) * 1000
                 tiempo_restante = cronometro_duration
+            elif round_2 == True:
+                pygame.quit()
+                print(f"player2: {player_2_points}, player 1: {player_1_points}")
+
 
 
 
@@ -299,7 +303,9 @@ while True:
             player_angle -= 6
 
         if key_input[pygame.K_k] and tiempo_defensor == False:
+
             if bullet is None:
+                player_1_points += 1
                 bullet = {
                     'fuerza': 10,
                     'x': GoblinRect.x + cubo_original.get_width() / 2,
@@ -308,6 +314,7 @@ while True:
                     'dy': -bullet_speed * math.sin(math.radians(player_angle)),
                     'color': GREEN  # Cambia el color de la bola a verde, tierra (bomba)
                 }
+
 
         if key_input[pygame.K_j] and tiempo_defensor == False :
             if bullet is None:
@@ -441,6 +448,7 @@ while True:
                     }
                     cuadrados.append(nuevo_cuadro)
                     aguila += 1
+                player_2_points +=1
         else:
             # Restablecer el estado de la tecla "q" cuando se suelta
             q_key_held = False
