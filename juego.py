@@ -234,7 +234,11 @@ while True:
                 tiempo_restante = cronometro_duration
             elif round_2 == True:
                 ganador_ventada = GameWindow(400,200)
-                ganador_ventada.mostrar_ganador("holi")
+                if player_1_points>player_2_points:
+                    ganador_ventada.mostrar_ganador("player1")
+                else:
+                    ganador_ventada.mostrar_ganador("player2")
+
                 ganador_ventada.run()
                 pygame.quit()
                 print(f"player2: {player_2_points}, player 1: {player_1_points}")
