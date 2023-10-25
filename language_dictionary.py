@@ -28,7 +28,7 @@ def changeLanguage(lang):
 #____________________Diccionario de palabras en español, ingles y frances_______________________
 
 Login = Word('INICIAR SESION','LOG IN','SE CONNECTER')
-Login3 = Word('Iniciar sesion','Log in','Se connecter')
+Login3 = Word('Iniciar sesión','Log in','Se connecter')
 Login2 = Word('Iniciar','Log in','Se connecter')
 Play = Word('JUGAR','PLAY','JOUER')
 WithoutAcc = Phrase('No tiene cuenta?', 'Dont have account?','Vous n` avez pas de compte ?')
@@ -61,7 +61,7 @@ Music = Word('Musica','Music','Musique')
 Texture = Word('Texturas','Texture','Textures')
 Palettes = Word('Paletas de color', 'Color palettes','Palettes de couleurs')
 Facial = Word('LogFace','','')
-
+Member = Word('Member','','')
 
 
 

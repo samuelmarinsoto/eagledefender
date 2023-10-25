@@ -1,13 +1,13 @@
-
 import customtkinter
 from PIL import Image, ImageTk
-from tkinter import PhotoImage
 import language_dictionary as dic
-import datauser as user
 import registro
-from customtkinter import CTkImage
+from customtkinter import CTkImage, CTkLabel
+from tkinter import Label, PhotoImage
+from PIL import ImageTk
+import warnings
 
-
+warnings.simplefilter(action='ignore', category=UserWarning)
 
 
 # customtkinter.set_appearance_mode("System")  # Modes: "System" (standard), "Dark", "Light"
@@ -43,7 +43,7 @@ class Menu_principal(customtkinter.CTk):
         green = "#245953"
         green_light = "#408E91"
         pink = "#E49393"
-        grey = "#D8D8D8"
+        grey = "#000000"
         super().__init__()
 
         ScreenRes = f"{900}x{500}"
@@ -65,22 +65,15 @@ class Menu_principal(customtkinter.CTk):
         self.title("CustomTkinter complex_example.py")
         self.geometry(ScreenRes)
         self.current_screen = None
+        self.imagen = Image.open("logo agle_sinfondo.png")
 
-
-        # Open the image
-        imagen = Image.open("logo agle_sinfondo.png")
-
-        # Resize the image to 200x200 pixels
-        resized_imagen = imagen.resize((200, 200))
-
-        # Convert to CTkImage
-        self.foto_logo_image = CTkImage(resized_imagen)
-
-        # Set the image to the CTkLabel
-        self.foto_logo_image.configure(image=self.foto_logo_image)
+        self.foto_logo_image = ImageTk.PhotoImage(self.imagen)
+        self.foto_logo = CTkLabel(self, image=self.foto_logo_image, text=None,
+                               fg_color="transparent", bg_color="transparent")  # Use the background color of your main window here.
+        self.foto_logo.place(relx=0.5, rely=0.3, anchor='center')
 
         self.sidebar_button_1 = customtkinter.CTkButton(self, command=self.sidebar_button_event, text=dic.Play[dic.language],fg_color=green_light,hover_color=green, width=250, height=50)
-        self.sidebar_button_1.place(relx=0.25, rely=0.5, anchor=customtkinter.CENTER)
+        self.sidebar_button_1.place(relx=0.5, rely=0.6, anchor=customtkinter.CENTER)
 
         # imagen = Image.open("assets/flags/Avatar-Profile.png")
         # imagen.thumbnail((100, 100))
@@ -106,11 +99,11 @@ class Menu_principal(customtkinter.CTk):
         self.languageSelector = customtkinter.CTkComboBox(self, values=["English", "Español", "Français"])
         self.languageSelector.place(relx=0.02,rely=0.05)
 
-        self.AplayChanges= customtkinter.CTkButton(self, text="AplyChanges",command=lambda: [dic.changeLanguage(self.languageSelector.get()), self.ejecutar_principal()],width=5,fg_color=green)
-        self.AplayChanges.place(relx=0.02, rely=0.19)#, anchor=customtkinter.CENTER)
+        self.ApplyChanges= customtkinter.CTkButton(self, text="ApplyChanges",command=lambda: [dic.changeLanguage(self.languageSelector.get()), self.ejecutar_principal()],width=5,fg_color=green)
+        self.ApplyChanges.place(relx=0.02, rely=0.19)#, anchor=customtkinter.CENTER)
 
         self.sidebar_button_3 = customtkinter.CTkButton(self, text=dic.Login[dic.language],fg_color=green_light,hover_color=green, command= self.ejecutar_login, width=250, height=50)
-        self.sidebar_button_3.place(relx=0.25, rely=0.7, anchor=customtkinter.CENTER)
+        self.sidebar_button_3.place(relx=0.5, rely=0.8, anchor=customtkinter.CENTER)
         #
         # self.foto_label = customtkinter.CTkLabel(self, corner_radius=60)
         # self.foto_label.place(relx=1, rely=0.009, anchor=customtkinter.NE)
@@ -124,32 +117,35 @@ class Menu_principal(customtkinter.CTk):
         self.LoginWindow.logo_label.place(relx=0.5, rely=0.2, anchor=customtkinter.CENTER)
 
         self.LoginWindow.username = customtkinter.CTkLabel(self.LoginWindow, text=dic.Username[dic.language], anchor="w")
-        self.LoginWindow.username.place(relx=0.5, rely=0.3, anchor=customtkinter.CENTER)
+        self.LoginWindow.username.place(relx=0.5, rely=0.25, anchor=customtkinter.CENTER)
 
         self.LoginWindow.entry_Username = customtkinter.CTkEntry(self.LoginWindow)
-        self.LoginWindow.entry_Username.place(relx=0.5, rely=0.4, anchor=customtkinter.CENTER)
+        self.LoginWindow.entry_Username.place(relx=0.5, rely=0.3, anchor=customtkinter.CENTER)
 
         self.LoginWindow.contra = customtkinter.CTkLabel(self.LoginWindow, text=dic.Password[dic.language], anchor="w")
-        self.LoginWindow.contra.place(relx=0.5, rely=0.5, anchor=customtkinter.CENTER)
+        self.LoginWindow.contra.place(relx=0.5, rely=0.4, anchor=customtkinter.CENTER)
 
         self.LoginWindow.entry_Contra = customtkinter.CTkEntry(self.LoginWindow, show="◊")
-        self.LoginWindow.entry_Contra.place(relx=0.5, rely=0.6, anchor=customtkinter.CENTER)
+        self.LoginWindow.entry_Contra.place(relx=0.5, rely=0.45, anchor=customtkinter.CENTER)
 
         self.LoginWindow.back = customtkinter.CTkButton(self.LoginWindow, text="←", fg_color=green_light, hover_color=green,
                                             command=self.back_menu,width=30, height=30)
         self.LoginWindow.back.place(relx=0.001, rely=0.001, anchor=customtkinter.NW)
 
+        self.LoginWindow.incio_facial = customtkinter.CTkButton(self.LoginWindow, text="Inicio facial",
+                                                                fg_color=green_light,
+                                                                hover_color=green, command=print("self.login_facial"))
+        self.LoginWindow.incio_facial.place(relx=0.5, rely=0.53, anchor=customtkinter.CENTER)
+
         self.LoginWindow.sidebar_button_1 = customtkinter.CTkButton(self.LoginWindow, text=dic.Login2[dic.language], fg_color=green_light,
                                                         hover_color=green)
-        self.LoginWindow.sidebar_button_1.place(relx=0.5, rely=0.8, anchor=customtkinter.CENTER)
+        self.LoginWindow.sidebar_button_1.place(relx=0.5, rely=0.6, anchor=customtkinter.CENTER)
 
         self.LoginWindow.sidebar_button_3 = customtkinter.CTkButton(self.LoginWindow, text=dic.Register[dic.language], fg_color=green_light,
-                                                        hover_color=green, command=self.members_select)
-        self.LoginWindow.sidebar_button_3.place(relx=0.5, rely=0.9, anchor=customtkinter.CENTER)
+                                                        hover_color=green, command=self.RegisterUser)
+        self.LoginWindow.sidebar_button_3.place(relx=0.5, rely=0.67, anchor=customtkinter.CENTER)
 
-        self.LoginWindow.incio_facial = customtkinter.CTkButton(self.LoginWindow, text="Inicio facial", fg_color=green_light,
-                                                    hover_color=green, command=print("self.login_facial"))
-        self.LoginWindow.incio_facial.place(relx=0.5, rely=0.7, anchor=customtkinter.CENTER)
+
 
         """_________________________________________________________________________________________________________________"""
 
@@ -254,8 +250,7 @@ class Menu_principal(customtkinter.CTk):
         self.withdraw()
         self.MembersWindow.withdraw()
         self.PayWindow.deiconify()
-    def MemberChange(self):
-        user.Member = True
+
     def members_select(self):
         self.withdraw()
         self.LoginWindow.withdraw()

@@ -106,6 +106,7 @@ class Registro(customtkinter.CTk):
         self.tabview.add(dic.Music[dic.language])
         self.tabview.add(dic.Palettes[dic.language])
         self.tabview.add(dic.Texture[dic.language])
+        self.tabview.add(dic.Member[dic.language])
         self.tabview.tab(dic.Data[dic.language]).grid_columnconfigure(0, weight=1)  # configure grid of individual tabs
         self.tabview.tab(dic.Game[dic.language]).grid_columnconfigure(0, weight=1)
 
@@ -355,7 +356,7 @@ class Registro(customtkinter.CTk):
                                                    image=blockCement,
                                                    fg_color=grey, command=lambda: user.selectTexture("Cement"), width=100,
                                                    height=100)
-
+#-----------------------------------------------------------------------------------------------------------------------------------
 
         # Coloca los botones en la ventana
         self.buttonRed.place(relx=0.5, rely=0.10)
@@ -511,6 +512,14 @@ class Registro(customtkinter.CTk):
 
     def on_register_button_click(self):
         # Comprobación de la imagen personalizada
+
+
+        missing_fields, missing_tabs = self.check_fields_filled()
+        if missing_fields:
+            # Mostrar un mensaje de error con los campos y las pestañas que faltan
+            missing_info = ', '.join([f"{field} ({tab})" for field, tab in zip(missing_fields, missing_tabs)])
+            tkinter.messagebox.showerror("Error", f"Faltan los siguientes campos: {missing_info}")
+            return
         if self.selected_photo_path == "assets/flags/Avatar-Profile.png":
             respuesta = tkinter.messagebox.askyesno("Confirmación",
                                                     "¿Seguro que no quieres tener una foto personalizada?")
@@ -520,14 +529,6 @@ class Registro(customtkinter.CTk):
                 # Si el usuario decide no tener una foto personalizada, establece una imagen predeterminada.
                 # (Asegúrate de reemplazar "ruta/de/imagen/predeterminada.png" con la ruta real de la imagen que quieras usar.)
                 self.selected_photo_path = "ruta/de/imagen/predeterminada.png"
-
-        missing_fields, missing_tabs = self.check_fields_filled()
-        if missing_fields:
-            # Mostrar un mensaje de error con los campos y las pestañas que faltan
-            missing_info = ', '.join([f"{field} ({tab})" for field, tab in zip(missing_fields, missing_tabs)])
-            tkinter.messagebox.showerror("Error", f"Faltan los siguientes campos: {missing_info}")
-            return
-
         # Convertir el nombre de usuario a minúsculas para la verificación
         username = self.entry_Username.get().lower()
 
