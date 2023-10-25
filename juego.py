@@ -31,6 +31,14 @@ BROWN = (139, 69, 19)
 
 # Cronómetro
 start_time = pygame.time.get_ticks()  # Obtener el tiempo de inicio en milisegundos
+
+bomba_sprite = pygame.image.load("bomba.png")
+bomba_sprite = pygame.transform.scale(bomba_sprite, (screen.get_height()//50, screen.get_height()//50))
+fuego_sprite = pygame.image.load("fuego.png")
+fuego_sprite = pygame.transform.scale(fuego_sprite, (screen.get_height()//50, screen.get_height()//50))
+agua_sprite = pygame.image.load("agua.png")
+agua_sprite = pygame.transform.scale(agua_sprite, (screen.get_height()//50, screen.get_height()//50))
+
 g1 = pygame.image.load("goblinSpriteWalk/tile000.png")
 g1 = pygame.transform.scale(g1, (screen.get_height()//20 * 3, screen.get_height()//20 * 3))
 
@@ -285,18 +293,6 @@ while True:
                     GoblinRect.y += GoblinSpeed
                     GoblinMovin = True
 
-        
-        """
-        if key_input[pygame.K_UP] and rojoy > 0 and tiempo_restante <= 0:
-            rojoy -= 4
-        if key_input[pygame.K_DOWN] and rojoy + cubo_original.get_height() < rio.get_height() and tiempo_restante <= 0:
-            rojoy += 4
-        if key_input[pygame.K_LEFT] and rojox > 0 and tiempo_restante <= 0 and rojox>screen.get_width()/2:
-            rojox -= 4
-        if key_input[
-            pygame.K_RIGHT] and rojox + cubo_original.get_width() < screen.get_width() and tiempo_restante <= 0 :
-            rojox += 4"""
-
         # Movemos el punto con las teclas W, A, S y D
         if key_input[pygame.K_w] and point_y > 0 :
             point_y -= 7
@@ -356,16 +352,11 @@ while True:
         rotated_cubo = pygame.transform.rotate(cubo_original, player_angle)
         player_rect = rotated_cubo.get_rect(center=(player_x, player_y))
 
-        # screen.fill((255, 255, 255))
-        # screen.blit(rio, ((pygame.display.get_surface().get_width() // 2) - 10, 0))
 
         # Dibujar una línea más grande que indica la dirección del frente del cuadrado
         front_x = player_x + line_length * math.cos(math.radians(player_angle))
         front_y = player_y - line_length * math.sin(math.radians(player_angle))
         pygame.draw.line(screen, (255, 0, 0), (player_x, player_y), (front_x, front_y), line_width)
-
-        # Utilizamos el cuadro original sin cambios de tamaño
-        #screen.blit(rotated_cubo, player_rect.topleft)
 
         # Dibujamos el punto
         pygame.draw.circle(screen, (0, 0, 255), (int(point_x), int(point_y)), 5)
@@ -373,7 +364,14 @@ while True:
         if bullet:
             bullet['x'] += bullet['dx']
             bullet['y'] += bullet['dy']
-            pygame.draw.circle(screen, bullet["color"], (int(bullet['x']), int(bullet['y'])), 5)
+            if bullet['color'] == GREEN:
+                screen.blit(bomba_sprite, (int(bullet['x']), int(bullet['y'])))
+            elif bullet['color'] == RED:
+                screen.blit(fuego_sprite, (int(bullet['x']), int(bullet['y'])))
+            elif bullet['color'] == BLUE:
+                screen.blit(agua_sprite, (int(bullet['x']), int(bullet['y'])))
+                
+            # pygame.draw.circle(screen, bullet["color"], (int(bullet['x']), int(bullet['y'])), 5)
 
             # Comprobar colisión entre la bala y los cuadrados
             for cuadrado in cuadrados:
@@ -411,20 +409,6 @@ while True:
         for cuadrado in cuadrados:
             cuadrado_surface = cuadrado['surface'].copy()
             screen.blit(cuadrado_surface, (cuadrado['x'], cuadrado['y']))
-
-            # esto esta repetido
-            # try:
-            #     # Comprobar colisión entre la bala y los cuadrados
-            #     cuadrado_rect = cuadrado['surface'].get_rect(topleft=(cuadrado['x'], cuadrado['y']))
-            #     if cuadrado_rect.collidepoint(int(bullet['x']), int(bullet['y'])):
-            #         cuadrado['vida'] -= bullet['fuerza']
-            #         bullet = None
-            #         if cuadrado['vida'] <= 0:
-            #             cuadrados.remove(cuadrado)
-            # except:
-            #     None
-
-
 
         if key_input[pygame.K_q]:
             # Si la tecla "q" se presiona y no está siendo mantenida presionada
