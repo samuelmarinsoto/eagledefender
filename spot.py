@@ -58,8 +58,6 @@ def GetSongDuration(Duration):
     
     duration_ms = Duration
     duration_s = duration_ms / 1000
-    print(duration_s)
-    
 
     #duration_minutes = duration_ms // 60000
     #duration_seconds = (duration_ms // 1000) % 60
@@ -68,9 +66,9 @@ def GetSongDuration(Duration):
     return duration_s
     
 
-SearchSong("Sepultura Territory")
-GetSongDuration(Song1All['duration_ms'])
-PlaySong(Song1)
+
+# GetSongDuration(Song1All['duration_ms'])
+
 
 
 

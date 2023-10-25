@@ -26,6 +26,8 @@ GREEN = (0, 255, 0)
 PINK = (255, 182, 193)  # Color rosa
 BROWN = (139, 69, 19)
 
+
+
 # Cronómetro
 start_time = pygame.time.get_ticks()  # Obtener el tiempo de inicio en milisegundos
 g1 = pygame.image.load("goblinSpriteWalk/tile000.png")
@@ -134,6 +136,16 @@ pausa_text_y = (screen.get_height() - pausa_text_height) // 2
 pausa_text_color = RED
 pausado = False
 
+texto_cronometro = "Haz tu estrategia"
+
+tiempo_defensor = True
+round_1 = False
+round_2 = False
+
+player_1_points = 0
+plsyer_2_points = 0
+
+
 
 def draw_color_boxes(screen, max_boxes, madera_count, acero_count, concreto_count, seleccion):
     box_size = 30
@@ -168,19 +180,21 @@ def draw_color_boxes(screen, max_boxes, madera_count, acero_count, concreto_coun
     screen.blit(concreto_textsurf, (margin, screen.get_height() - 2 * margin - concreto_textsurf.get_height()))
 
 
-spot.SearchSong("The Less I Know The Better")
+spot.SearchSong("BALLSKIN")
 spot.PlaySong(spot.Song1)
+
+duracion = spot.GetSongDuration(spot.Song1All['duration_ms'])
 
 
 
 
 left_mask = pygame.Surface((screen.get_width() // 2, screen.get_height()))
 left_mask.set_alpha(50)  # Ajusta la transparencia
-left_mask.fill((0, 0, 255))  # Azul
+left_mask.fill(PINK)  # Azul
 
 right_mask = pygame.Surface((screen.get_width() // 2, screen.get_height()))
 right_mask.set_alpha(50)  # Ajusta la transparencia
-right_mask.fill((255, 0, 0))  # Rojo
+right_mask.fill(GREEN)  # Rojo
 
 
 
@@ -196,17 +210,28 @@ while True:
         pausado = not pausado
     if not pausado:
 
-
-
-        
-        
         if tiempo_restante == 0:
-            texto_espera_turno = fuente_espera_turno.render(espera_turno_texto, True, (0, 0, 0))
-            screen.blit(texto_espera_turno, (screen.get_width() - 200, 10))
+            if tiempo_defensor == True:
+                texto_cronometro = "ROUND 1"
+                tiempo_defensor = False
+                round_1 = True
+                cronometro_activo = True  # Reinicia el cronómetro
+                start_time = pygame.time.get_ticks()  # Actualiza el tiempo de inicio
+                tiempo_restante = cronometro_duration
+            elif round_1 == True or round_2 == True:
+                texto_cronometro = "ROUND 2"
+                round_1 = False
+                round_2 = True
+                cronometro_activo = True  # Reinicia el cronómetro
+                start_time = pygame.time.get_ticks()  # Actualiza el tiempo de inicio
+                tiempo_restante = cronometro_duration
+
+
 
         # Movemos el cuadrado con las teclas de flecha
 
         now = pygame.time.get_ticks()
+
 
         if GoblinMovin:
             if now -lastUpdate > GoblinAnimationSpeed * 1000:
@@ -224,18 +249,18 @@ while True:
             GoblinLeft = False
             GoblinRight = False
           
-        if key_input[pygame.K_LEFT] and GoblinRect.x> screen.get_width()/2 and tiempo_restante<=0:
+        if key_input[pygame.K_LEFT] and GoblinRect.x> screen.get_width()/2  and tiempo_defensor == False:
                     GoblinRect.x -= GoblinSpeed
                     GoblinMovin = True
                     GoblinLeft = True
-        if key_input[pygame.K_RIGHT] and GoblinRect.x<screen.get_width() -70 and tiempo_restante<=0:
+        if key_input[pygame.K_RIGHT] and GoblinRect.x<screen.get_width() -70 and tiempo_defensor == False:
                     GoblinRect.x += GoblinSpeed
                     GoblinMovin = True
                     GoblinRight = True
-        if key_input[pygame.K_UP]and GoblinRect.y>5 and tiempo_restante<=0:
+        if key_input[pygame.K_UP]and GoblinRect.y>5 and tiempo_defensor == False:
                     GoblinRect.y -= GoblinSpeed
                     GoblinMovin = True
-        if key_input[pygame.K_DOWN] and GoblinRect.y < screen.get_height()-70 and tiempo_restante<=0:
+        if key_input[pygame.K_DOWN] and GoblinRect.y < screen.get_height()-70 and tiempo_defensor == False:
                     GoblinRect.y += GoblinSpeed
                     GoblinMovin = True
 
@@ -261,13 +286,13 @@ while True:
         if key_input[pygame.K_d] and point_x < screen.get_width() and point_x<screen.get_width()/2:
             point_x += 7
 
-        if key_input[pygame.K_l] and tiempo_restante <= 0 and tiempo_restante<=0:
+        if key_input[pygame.K_l]  and tiempo_defensor == False:
             player_angle += 6
         
-        if key_input[pygame.K_o] and tiempo_restante <= 0 and tiempo_restante<=0:
+        if key_input[pygame.K_o]  and tiempo_defensor == False:
             player_angle -= 6
 
-        if key_input[pygame.K_k] and tiempo_restante <= 0:
+        if key_input[pygame.K_k] and tiempo_defensor == False:
             if bullet is None:
                 bullet = {
                     'fuerza': 10,
@@ -278,7 +303,7 @@ while True:
                     'color': GREEN  # Cambia el color de la bola a verde, tierra (bomba)
                 }
 
-        if key_input[pygame.K_j] and tiempo_restante<=0:
+        if key_input[pygame.K_j] and tiempo_defensor == False :
             if bullet is None:
                 bullet = {
                     'fuerza': 3,
@@ -289,7 +314,7 @@ while True:
                     'color': BLUE  # Cambia el color de la bola a azul, agua
                 }
 
-        if key_input[pygame.K_h] and tiempo_restante<=0:
+        if key_input[pygame.K_h] and tiempo_defensor == False:
             if bullet is None:
                 bullet = {
                     'fuerza': 5,
@@ -470,7 +495,7 @@ while True:
 
         # Mostrar el tiempo restante en la pantalla
         tiempo_mostrar = tiempo_restante // 1000  # Convertir a segundos
-        texto_tiempo = fuente.render(f"haz tu estrategia: {tiempo_mostrar} s", True, (0,0,0))
+        texto_tiempo = fuente.render(f"{texto_cronometro}: {tiempo_mostrar} s", True, (0,0,0))
         screen.blit(texto_tiempo, (10, 10))
 
         draw_color_boxes(screen, max_cubos_por_color, cubos_azules, cubos_verdes, cubos_rosados, cuadro_color)
