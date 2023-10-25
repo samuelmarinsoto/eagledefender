@@ -87,28 +87,39 @@ class Registro(customtkinter.CTk):
         self.imagen_seleccionada = None
         super().__init__()
 
+        # Crear un CTkLabel para contener la imagen de fondo
+        # Crear un CTkLabel para contener la imagen de fondo
+
+
         # configure window
         # self.attributes("-fullscreen", True)
         self.title(dic.Registration[dic.language])
-        self.geometry(f"{800}x{800}")
+        self.geometry(f"{1024}x{1024}")
         self.selected_photo_path = "assets/flags/Avatar-Profile.png"
-
+        self.background_label = customtkinter.CTkLabel(self, width=1024, height=1024, text=None)
+        # Establecer la imagen de fondo al CTkLabel
+        self.background_image = ImageTk.PhotoImage(Image.open("assets/BackGround/Black.png"))
+        self.background_label.configure(image=self.background_image)
+        self.background_label.image = self.background_image  # mantener una referencia a la imagen
+        self.background_label.place(relx=0.5, rely=0.5, anchor=customtkinter.CENTER)
         # configure grid layout (4x4)
 
-        # create sidebar frame with widgets
-
-        self.tabview = customtkinter.CTkTabview(self, width=800, height=800, fg_color=grey,
+        self.tabview = customtkinter.CTkTabview(self.background_label, width=600, height=600, fg_color="transparent",
                                                 segmented_button_selected_color=green,
-                                                segmented_button_selected_hover_color=pink)
+                                                segmented_button_selected_hover_color=pink,
+                                                bg_color="transparent")  # Set bg_color to transparent
+
+        # Asegúrate de mantener una referencia a la imagen para evitar que sea recolectada por el recolector de basura de Python
         self.tabview.place(relx=0.5, rely=0.5, anchor=customtkinter.CENTER)
         self.tabview.add(dic.Data[dic.language])
         self.tabview.add(dic.Game[dic.language])
         self.tabview.add(dic.Music[dic.language])
         self.tabview.add(dic.Palettes[dic.language])
         self.tabview.add(dic.Texture[dic.language])
-        self.tabview.add(dic.Member[dic.language])
+        self.tabview.add(dic.Members[dic.language])
         self.tabview.tab(dic.Data[dic.language]).grid_columnconfigure(0, weight=1)  # configure grid of individual tabs
         self.tabview.tab(dic.Game[dic.language]).grid_columnconfigure(0, weight=1)
+        self.tabview.tab(dic.Data[dic.language]).configure(bg_color="transparent", fg_color="transparent")
 
         self.logo_label = customtkinter.CTkLabel(self.tabview.tab(dic.Data[dic.language]),
                                                  text=dic.Registration[dic.language],

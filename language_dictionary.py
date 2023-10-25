@@ -2,7 +2,7 @@ from collections import namedtuple
 language = 0
 Word = namedtuple('Word',['es','en','fr'])
 Phrase = namedtuple('Phrase',['es','en','fr'])
-Member = 0
+Member: int = 0
 def changeLanguage(lang):
     """
         Cambia la variable global de idioma
@@ -61,7 +61,7 @@ Music = Word('Musica','Music','Musique')
 Texture = Word('Texturas','Texture','Textures')
 Palettes = Word('Paletas de color', 'Color palettes','Palettes de couleurs')
 Facial = Word('LogFace','','')
-Member = Word('Member','','')
+Members = Word('Member','','')
 
 
 
