@@ -21,6 +21,7 @@ picture = "assets/flags/Avatar-Profile.png"
 picpassword = "NONE"
 Songs1 = ["","",""]
 Palette = "WHITE"
+Texture = "METAL"
 
 
 def LoggedComprobation():
@@ -93,13 +94,23 @@ def RegisterComprobationGold():
     else:
         return 1
         
-    
+
 
 def selecPalett(Color):
     global Palette
     if isinstance(Color, str):
         Palette = Color
         print(Color)
+    else:
+        return 0
+
+
+
+def selectTexture(TEXTURE):
+    global Texture
+    if isinstance(Texture, str):
+        Texture = TEXTURE
+        return 1
     else:
         return 0
     

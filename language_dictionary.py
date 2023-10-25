@@ -60,7 +60,7 @@ System = Word('Sistema', 'System', 'Système')
 Music = Word('Musica','Music','Musique')
 Texture = Word('Texturas','Texture','Textures')
 Palettes = Word('Paletas de color', 'Color palettes','Palettes de couleurs')
-
+Facial = Word('LogFace','','')
 
 
 

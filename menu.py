@@ -5,7 +5,7 @@ from tkinter import PhotoImage
 import language_dictionary as dic
 import datauser as user
 import registro
-
+from customtkinter import CTkImage
 
 
 
@@ -65,23 +65,43 @@ class Menu_principal(customtkinter.CTk):
         self.title("CustomTkinter complex_example.py")
         self.geometry(ScreenRes)
         self.current_screen = None
-        # create sidebar frame with widgets
-        self.foto_logo = customtkinter.CTkLabel(self, corner_radius=60, text=None)
-        self.foto_logo.place(relx=0.5, rely=0.2, anchor=customtkinter.CENTER)
-        self.foto_logo.configure(image= PhotoImage(file="logo agle_sinfondo.png"))
+
+
+        # Open the image
+        imagen = Image.open("logo agle_sinfondo.png")
+
+        # Resize the image to 200x200 pixels
+        resized_imagen = imagen.resize((200, 200))
+
+        # Convert to CTkImage
+        self.foto_logo_image = CTkImage(resized_imagen)
+
+        # Set the image to the CTkLabel
+        self.foto_logo_image.configure(image=self.foto_logo_image)
 
         self.sidebar_button_1 = customtkinter.CTkButton(self, command=self.sidebar_button_event, text=dic.Play[dic.language],fg_color=green_light,hover_color=green, width=250, height=50)
         self.sidebar_button_1.place(relx=0.25, rely=0.5, anchor=customtkinter.CENTER)
 
-        imagen = Image.open("assets/flags/Avatar-Profile.png")
-        imagen.thumbnail((100, 100))
-        imagen_tk = ImageTk.PhotoImage(imagen)
+        # imagen = Image.open("assets/flags/Avatar-Profile.png")
+        # imagen.thumbnail((100, 100))
+        # self.imagen_thumbnail_tk = ImageTk.PhotoImage(imagen)
 
-        Es_btn = PhotoImage(file="assets/flags/Flag_of_Es.png").subsample(23, 28)
-        En_btn = PhotoImage(file="assets/flags/Flag_of_En.png").subsample(20, 25)
-        Fr_btn = PhotoImage(file="assets/flags/Flag_of_Fr.png").subsample(10, 15)
+        imagen_es = Image.open("assets/flags/Flag_of_Es.png")
+        imagen_es_resized = imagen_es.resize(
+            (int(23 / 100 * imagen_es.width), int(28 / 100 * imagen_es.height)), Image.ANTIALIAS)
+        Es_btn_image = CTkImage(imagen_es_resized)
 
+        # Para 'En_btn_image'
+        imagen_en = Image.open("assets/flags/Flag_of_En.png")
+        imagen_en_resized = imagen_en.resize(
+            (int(20 / 100 * imagen_en.width), int(25 / 100 * imagen_en.height)), Image.ANTIALIAS)
+        En_btn_image = CTkImage(imagen_en_resized)
 
+        # Para 'Fr_btn_image'
+        imagen_fr = Image.open("assets/flags/Flag_of_Fr.png")
+        imagen_fr_resized = imagen_fr.resize(
+            (int(100 / 100 * imagen_fr.width), int(100/ 100 * imagen_fr.height)), Image.ANTIALIAS)
+        Fr_btn_image = CTkImage(imagen_fr_resized)
 
         self.languageSelector = customtkinter.CTkComboBox(self, values=["English", "Español", "Français"])
         self.languageSelector.place(relx=0.02,rely=0.05)
@@ -91,11 +111,11 @@ class Menu_principal(customtkinter.CTk):
 
         self.sidebar_button_3 = customtkinter.CTkButton(self, text=dic.Login[dic.language],fg_color=green_light,hover_color=green, command= self.ejecutar_login, width=250, height=50)
         self.sidebar_button_3.place(relx=0.25, rely=0.7, anchor=customtkinter.CENTER)
-        
-        self.foto_label = customtkinter.CTkLabel(self, corner_radius=60, text=None)
-        self.foto_label.place(relx=1, rely=0.009, anchor=customtkinter.NE)
-        self.foto_label.configure(image=imagen_tk)
-        self.foto_label.configure()
+        #
+        # self.foto_label = customtkinter.CTkLabel(self, corner_radius=60)
+        # self.foto_label.place(relx=1, rely=0.009, anchor=customtkinter.NE)
+        # self.foto_label.configure(image=self.imagen_thumbnail_tk)
+        # self.foto_label.configure()
 
         """_______________________________________________________________________________________________________________________"""
 

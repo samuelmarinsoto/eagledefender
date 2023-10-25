@@ -70,7 +70,7 @@ def GetSongDuration(Duration):
 
 SearchSong("Sepultura Territory")
 GetSongDuration(Song1All['duration_ms'])
-PlaySong(Song1)
+
 
 
 
