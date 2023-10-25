@@ -1,6 +1,8 @@
+
 import spotipy
 import spotipy.util as util
 import datauser as user
+from PIL import Image, ImageTk
 
 SPOTIPY_CLIENT_ID = '5b219ea7c93c475db3fa7acd846af046'
 SPOTIPY_CLIENT_SECRET = '372adbb3af4d4a03a935d894cd5f2af5'
@@ -91,7 +93,7 @@ class Registro(customtkinter.CTk):
         # self.attributes("-fullscreen", True)
         self.title(dic.Registration[dic.language])
         self.geometry(f"{800}x{800}")
-        self.selected_photo_path = "assets/flags/Avatar-Profile.png"
+        
 
         # configure grid layout (4x4)
 
@@ -197,9 +199,18 @@ class Registro(customtkinter.CTk):
         #     fg_color="transparent"  # Texto transparente
         # )
         # self.facial_label.place(relx=0.55, rely=0.23, anchor=customtkinter.CENTER)
-        default_image_path = "assets/flags/Avatar-Profile.png"
+        self.selected_photo_path = "assets/flags/Avatar-Profile.png"
+        #default_image_path = "assets/flags/Avatar-Profile.png"
+        default_image = Image.open(self.selected_photo_path)
+        default_image = default_image.resize((100, 100), Image.ANTIALIAS)
+        default_imageop = ImageTk.PhotoImage(default_image)
 
-        self.display_avatar_in_circle(default_image_path, self.tabview.tab(dic.Game[dic.language]), 0.5, 0.19)
+
+
+        self.avatar_label = customtkinter.CTkLabel(self.tabview.tab(dic.Game[dic.language]),image=default_imageop,corner_radius=60,text="")
+        self.avatar_label.place(relx=0.5, rely=0.19, anchor=customtkinter.CENTER)
+
+        #self.display_avatar_in_circle(default_image_path, self.tabview.tab(dic.Game[dic.language]), 0.5, 0.19)
         # Botón para subir foto
         self.subir_Foto = customtkinter.CTkButton(
             self.tabview.tab(dic.Game[dic.language]),
@@ -672,17 +683,23 @@ class Registro(customtkinter.CTk):
 
     def abrir_archivo(self):
         archivo = filedialog.askopenfilename(filetypes=[(dic.Photo[dic.language], "*.png *.jpg *.jpeg *.gif *.bmp")])
-        self.selected_photo_path = archivo
+        
         if archivo:
-            user.picture = archivo
+            self.selected_photo_path  = archivo
             # Cargar la imagen
             imagen = Image.open(archivo)
-            usuario_img = self.entry_Username.get()
-            img_path = os.path.join("ProfilePics", usuario_img + ".jpg")
-            imagen.save(img_path)
-            self.display_avatar_in_circle(self.selected_photo_path, self.tabview.tab(dic.Game[dic.language]), 0.5, 0.7)
+            imagen = imagen.resize((100, 100), Image.ANTIALIAS)
+            circular = self.make_circle_image(imagen)
+            Imagentk = ImageTk.PhotoImage(circular)
+            self.avatar_label.configure(image=Imagentk)
+            self.avatar_label.image = Imagentk
 
-    def display_avatar_in_circle(self, image_path, parent, relx, rely):
+            #usuario_img = self.entry_Username.get()
+            #img_path = os.path.join("ProfilePics", usuario_img + ".jpg")
+            #imagen.save(img_path)
+            #self.display_avatar_in_circle(self.selected_photo_path, self.tabview.tab(dic.Game[dic.language]), 0.5, 0.19)
+
+    """def display_avatar_in_circle(self, image_path, parent, relx, rely):
         # Cargar la imagen
         img = Image.open(image_path)
         # Redimensionar la imagen a 100x100
@@ -695,7 +712,7 @@ class Registro(customtkinter.CTk):
         self.avatar_label = tkinter.Label(parent, image=imagen_tk, bg=parent["bg"])
         self.avatar_label.image = imagen_tk  # ¡Importante! Mantener una referencia a la imagen
         self.avatar_label.place(relx=relx, rely=rely, anchor=customtkinter.CENTER)
-
+        """
     @staticmethod
     def make_circle_image(img):
         """
@@ -713,9 +730,9 @@ class Registro(customtkinter.CTk):
         draw.ellipse((0, 0, width, height), fill=255)
 
         # Apply the mask to the image
-        circular_img = Image.composite(img, mask, mask)
+        circular_img = Image.composite(img, Image.new("RGBA", img.size, (255, 255, 255, 0)), mask)
         return circular_img
-
+    """
     def make_circle_image_from_img(self, img):
         # Asegurarse de que la imagen tiene un canal alfa
         img = img.convert("RGBA")
@@ -728,7 +745,7 @@ class Registro(customtkinter.CTk):
         # Usar la máscara para recortar la imagen original
         result = Image.composite(img, Image.new("RGBA", img.size, (0, 0, 0, 0)), mask)
 
-        return result
+        return result"""
 
     def iniciar(self):
         self.destroy()
