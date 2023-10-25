@@ -106,11 +106,14 @@ textura_concreto = pygame.transform.scale(textura_concreto, (screen.get_height()
 textura_agila = pygame.image.load("assets/agila.png")
 textura_agila = pygame.transform.scale(textura_agila, (screen.get_height()//20, screen.get_height()//20))
 
-
-
 background = pygame.image.load("Scenary/Arena Tileset Template Verde.png")
 background = pygame.transform.scale(background, (screen.get_width(), screen.get_height()))
 
+# sonidos
+fuego_sonido = pygame.mixer.Sound("fuego.opus")
+agua_sonido = pygame.mixer.Sound("agua.opus")
+bomba_sonido = pygame.mixer.Sound("bomba.opus")
+aguila_sonido = pygame.mixer.Sound("aguila.opus")
 
 tiempo_actual = pygame.time.get_ticks()
 
@@ -184,11 +187,11 @@ def draw_color_boxes(screen, max_boxes, madera_count, acero_count, concreto_coun
     screen.blit(concreto_textsurf, (margin, screen.get_height() - 2 * margin - concreto_textsurf.get_height()))
 
 
-spot.SearchSong(nombre_cancion)
-spot.PlaySong(spot.Song1)
+# spot.SearchSong(nombre_cancion)
+# spot.PlaySong(spot.Song1)
 
-duracion = spot.GetSongDuration(spot.Song1All['duration_ms'])
-
+# duracion = spot.GetSongDuration(spot.Song1All['duration_ms'])
+duracion = 60
 
 
 
@@ -378,8 +381,19 @@ while True:
                 try:
                     if cuadrado_rect.collidepoint(int(bullet['x']), int(bullet['y'])):
                         cuadrado['vida'] -= bullet['fuerza']
+
+                        if bullet['color'] == RED:
+                            fuego_sonido.play()
+                        elif bullet['color'] == BLUE:
+                            agua_sonido.play()
+                        elif bullet['color'] == GREEN:
+                            bomba_sonido.play()
+
+                        if cuadrado['color'] == BROWN:
+                            aguila_sonido.play()
+                            
                         bullet = None
-                        if cuadrado['vida'] < 0:
+                        if cuadrado['vida'] <= 0:
                             cuadrados.remove(cuadrado)  # Eliminar el cuadrado si hay colisión
                 except:
                     None
@@ -397,16 +411,18 @@ while True:
         for cuadrado in cuadrados:
             cuadrado_surface = cuadrado['surface'].copy()
             screen.blit(cuadrado_surface, (cuadrado['x'], cuadrado['y']))
-            try:
-                # Comprobar colisión entre la bala y los cuadrados
-                cuadrado_rect = cuadrado['surface'].get_rect(topleft=(cuadrado['x'], cuadrado['y']))
-                if cuadrado_rect.collidepoint(int(bullet['x']), int(bullet['y'])):
-                    cuadrado['vida'] -= bullet['fuerza']
-                    bullet = None
-                    if cuadrado['vida'] < 0:
-                        cuadrados.remove(cuadrado)
-            except:
-                None
+
+            # esto esta repetido
+            # try:
+            #     # Comprobar colisión entre la bala y los cuadrados
+            #     cuadrado_rect = cuadrado['surface'].get_rect(topleft=(cuadrado['x'], cuadrado['y']))
+            #     if cuadrado_rect.collidepoint(int(bullet['x']), int(bullet['y'])):
+            #         cuadrado['vida'] -= bullet['fuerza']
+            #         bullet = None
+            #         if cuadrado['vida'] <= 0:
+            #             cuadrados.remove(cuadrado)
+            # except:
+            #     None
 
 
 
