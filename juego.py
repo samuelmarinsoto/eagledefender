@@ -195,12 +195,10 @@ def draw_color_boxes(screen, max_boxes, madera_count, acero_count, concreto_coun
     screen.blit(concreto_textsurf, (margin, screen.get_height() - 2 * margin - concreto_textsurf.get_height()))
 
 
-# spot.SearchSong(nombre_cancion)
-# spot.PlaySong(spot.Song1)
+spot.SearchSong(nombre_cancion)
+spot.PlaySong(spot.Song1)
 
-# duracion = spot.GetSongDuration(spot.Song1All['duration_ms'])
-duracion = 60
-
+duracion = spot.GetSongDuration(spot.Song1All['duration_ms'])
 
 
 left_mask = pygame.Surface((screen.get_width() // 2, screen.get_height()))
