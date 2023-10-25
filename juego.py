@@ -147,6 +147,9 @@ plsyer_2_points = 0
 
 
 
+
+
+
 def draw_color_boxes(screen, max_boxes, madera_count, acero_count, concreto_count, seleccion):
     box_size = 30
     margin = 10
@@ -217,6 +220,8 @@ while True:
                 round_1 = True
                 cronometro_activo = True  # Reinicia el cronómetro
                 start_time = pygame.time.get_ticks()  # Actualiza el tiempo de inicio
+                cronometro_duration = int(duracion) * 1000
+                print(1)
                 tiempo_restante = cronometro_duration
             elif round_1 == True or round_2 == True:
                 texto_cronometro = "ROUND 2"
@@ -224,6 +229,7 @@ while True:
                 round_2 = True
                 cronometro_activo = True  # Reinicia el cronómetro
                 start_time = pygame.time.get_ticks()  # Actualiza el tiempo de inicio
+                cronometro_duration = int(duracion) * 1000
                 tiempo_restante = cronometro_duration
 
 

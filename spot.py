@@ -58,11 +58,6 @@ def GetSongDuration(Duration):
     
     duration_ms = Duration
     duration_s = duration_ms / 1000
-
-    #duration_minutes = duration_ms // 60000
-    #duration_seconds = (duration_ms // 1000) % 60
-    #print(duration_ms)
-    #print("Minutes:",duration_minutes,":",duration_seconds) #Es para darlo en minutos y segundos exacti
     return duration_s
     
 
