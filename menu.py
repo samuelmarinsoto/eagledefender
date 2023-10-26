@@ -10,6 +10,8 @@ warnings.simplefilter(action='ignore', category=UserWarning)
 from login import Login
 import tkinter.messagebox
 import DataBaseLocal as DataBase
+import juego
+import juegoAI
 
 # customtkinter.set_appearance_mode("System")  # Modes: "System" (standard), "Dark", "Light"
 # customtkinter.set_default_color_theme("green")  # Themes: "blue" (standard), "green", "dark-blue"
@@ -191,10 +193,10 @@ class Menu_principal(customtkinter.CTk):
         self.PlayWindow.logo_label = customtkinter.CTkLabel( self.PlayWindow, text=dic.SelectModegame[dic.language],font=customtkinter.CTkFont(size=20, weight="bold"))
         self.PlayWindow.logo_label.place(relx=0.5, rely=0.2, anchor=customtkinter.CENTER)
 
-        self.PlayWindow.Oneplayer = customtkinter.CTkButton( self.PlayWindow, text=dic.OnePlayer[dic.language],image=phOne,fg_color=green_light,hover_color=green,command=self.ejecutar_Game_OnePlayer)
+        self.PlayWindow.Oneplayer = customtkinter.CTkButton( self.PlayWindow, text=dic.OnePlayer[dic.language],image=phOne,fg_color=green_light,hover_color=green,command=juegoAI.iniciar)
         self.PlayWindow.Oneplayer.place(relx=0.25, rely=0.5, anchor=customtkinter.CENTER)
         
-        self.PlayWindow.Twoplayer = customtkinter.CTkButton( self.PlayWindow, text=dic.MultiplayerLocal[dic.language],image=phTwo,fg_color=green_light,hover_color=green,command=self.ejecutar_Game_Multiplayer)
+        self.PlayWindow.Twoplayer = customtkinter.CTkButton( self.PlayWindow, text=dic.MultiplayerLocal[dic.language],image=phTwo,fg_color=green_light,hover_color=green,command=juego.iniciar)
         self.PlayWindow.Twoplayer.place(relx=0.75, rely=0.5, anchor=customtkinter.CENTER)
 
 
@@ -314,16 +316,7 @@ class Menu_principal(customtkinter.CTk):
 
 
     def ejecutar_Game_Multiplayer(self):
-        """
-        Example
-        if Logged1(Player) and Logged1(Player2):
-            self.destroy()
-            pygame.init()
-        else:
-            self.PlayWindow.withdraw()
-            self.LoginWindow.deiconify()
-            
-       """
+        juego.iniciar()
         
     def ejecutar_Game_OnePlayer(self):
         """
