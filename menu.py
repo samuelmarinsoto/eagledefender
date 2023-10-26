@@ -7,6 +7,7 @@ from tkinter import Label, PhotoImage
 import warnings
 
 warnings.simplefilter(action='ignore', category=UserWarning)
+from login import Login
 
 
 # customtkinter.set_appearance_mode("System")  # Modes: "System" (standard), "Dark", "Light"
@@ -133,7 +134,7 @@ class Menu_principal(customtkinter.CTk):
 
         self.LoginWindow.incio_facial = customtkinter.CTkButton(self.LoginWindow, text="Inicio facial",
                                                                 fg_color=green_light,
-                                                                hover_color=green, command=print("self.login_facial"))
+                                                                hover_color=green, command=self.start_facial_login)
         self.LoginWindow.incio_facial.place(relx=0.5, rely=0.53, anchor=customtkinter.CENTER)
 
         self.LoginWindow.sidebar_button_1 = customtkinter.CTkButton(self.LoginWindow, text=dic.Login2[dic.language], fg_color=green_light,
@@ -209,7 +210,9 @@ class Menu_principal(customtkinter.CTk):
         #self.destroy()
         #nuevo =Login()
        #nuevo.mainloop()
-
+    def start_facial_login(self):
+        login_window = Login()  # crea una instancia de la clase Login
+        login_window.login_facial()  # llama a la función login_facial
     def ejecutar_principal(self):
         """Handle the 'Ejecutar Principal' button click event.
                 This method is called when the 'Ejecutar Principal' button is clicked.
