@@ -270,11 +270,11 @@ class Registro(customtkinter.CTk):
                                                text=dic.FavoriteSongs[dic.language], anchor="w")
         self.username.place(relx=0.5, rely=0.2, anchor=customtkinter.CENTER)
         # ---------------------------------------------------------------------------------------------
-        self.SaveuserSpot = customtkinter.CTkButton(self.tabview.tab(dic.Music[dic.language]),
-                                                    text="Save Spotify User",
-                                                    fg_color=green_light, hover_color=green,
-                                                    command=self.UserSpotSelect)
-        self.SaveuserSpot.place(relx=0.8, rely=0.2, anchor=customtkinter.CENTER)
+        # self.SaveuserSpot = customtkinter.CTkButton(self.tabview.tab(dic.Music[dic.language]),
+        #                                             text="Save Spotify User",
+        #                                             fg_color=green_light, hover_color=green,
+        #                                             command=self.UserSpotSelect)
+        # self.SaveuserSpot.place(relx=0.8, rely=0.2, anchor=customtkinter.CENTER)
 
 
 
@@ -316,11 +316,11 @@ class Registro(customtkinter.CTk):
 
 
 
-        self.testPlay = customtkinter.CTkButton(self.tabview.tab(dic.Music[dic.language]),
-                                                text="Play text",
-                                                fg_color=green_light, hover_color=green,
-                                                command=self.PlayTEst)
-        self.testPlay.place(relx=0.9, rely=0.9, anchor=customtkinter.CENTER)
+        # self.testPlay = customtkinter.CTkButton(self.tabview.tab(dic.Music[dic.language]),
+        #                                         text="Play text",
+        #                                         fg_color=green_light, hover_color=green,
+        #                                         command=self.PlayTEst)
+        # self.testPlay.place(relx=0.9, rely=0.9, anchor=customtkinter.CENTER)
 
         # --------------------------------------------------------------------------------------------------------------------------------
         # ...
