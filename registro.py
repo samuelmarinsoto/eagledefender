@@ -97,7 +97,7 @@ class Registro(customtkinter.CTk):
         self.title(dic.Registration[dic.language])
         self.geometry(f"{1024}x{1024}")
         self.selected_photo_path = "assets/flags/Avatar-Profile.png"
-        self.background_label = customtkinter.CTkLabel(self, width=1024, height=1024, text=None)
+        self.background_label = customtkinter.CTkLabel(self, width=1024, height=1024, text=None, bg_color="WHITE")
         # Establecer la imagen de fondo al CTkLabel
         self.background_image = ImageTk.PhotoImage(Image.open("assets/BackGround/pattern.png"))
         self.background_label.configure(image=self.background_image)
@@ -105,10 +105,10 @@ class Registro(customtkinter.CTk):
         self.background_label.place(relx=0.5, rely=0.5, anchor=customtkinter.CENTER)
         # configure grid layout (4x4)
 
-        self.tabview = customtkinter.CTkTabview(self.background_label, width=600, height=600, fg_color="#000000",
+        self.tabview = customtkinter.CTkTabview(self.background_label, width=400, height=600, fg_color="#000000",
                                                 segmented_button_selected_color=green,
                                                 segmented_button_selected_hover_color=pink,
-                                                bg_color="#000000")  # Set bg_color to transparent
+                                                bg_color="transparent",corner_radius=50)  # Set bg_color to transparent
 
         # Asegúrate de mantener una referencia a la imagen para evitar que sea recolectada por el recolector de basura de Python
         self.tabview.place(relx=0.5, rely=0.5, anchor=customtkinter.CENTER)
@@ -345,35 +345,32 @@ class Registro(customtkinter.CTk):
 
 
         # --------------------------------------------------------------------------------------------------------------------------------
-        paletteRed = PhotoImage(file="assets/Palettes/Red.png").subsample(4, 4)
-        paletteWhite = PhotoImage(file="assets/Palettes/White.png").subsample(4, 4)
-        paletteGreen = PhotoImage(file="assets/Palettes/Green.png").subsample(4, 4)
-        paletteBlack = PhotoImage(file="assets/Palettes/Black.png").subsample(4, 4)
-        paletteBlue = PhotoImage(file="assets/Palettes/Blue.png").subsample(4, 4)
+        paletteRed = PhotoImage(file="assets/Palettes/Red.png").subsample(5,5)
+        paletteWhite = PhotoImage(file="assets/Palettes/White.png").subsample(5, 5)
+        paletteGreen = PhotoImage(file="assets/Palettes/Green.png").subsample(5, 5)
+        paletteBlack = PhotoImage(file="assets/Palettes/Black.png").subsample(5, 5)
+        paletteBlue = PhotoImage(file="assets/Palettes/Blue.png").subsample(5, 5)
 
         self.buttonRed = customtkinter.CTkButton(self.tabview.tab(dic.Palettes[dic.language]), text="",
                                                  image=paletteRed, fg_color=grey,
-                                                 command=lambda: user.selecPalett("RED"), width=100, height=100)
-        self.switch_var = customtkinter.StringVar(value="off")
-        self.switch = customtkinter.CTkSwitch(self.tabview.tab(dic.Palettes[dic.language]), text=None, command=None,
-                                         variable=self.switch_var, onvalue="on", offvalue="off", fg_color="Red" ,button_color="Black",  button_hover_color="WHite", progress_color="Green")
-        self.switch.place(relx=0.01, rely=0.4)
+                                                 command=lambda: user.selecPalett("RED"), width=70, height=70)
+
         self.buttonWhite = customtkinter.CTkButton(self.tabview.tab(dic.Palettes[dic.language]), text="",
                                                    image=paletteWhite,
-                                                   fg_color=grey, command=lambda: user.selecPalett("WHITE"), width=100,
-                                                   height=100)
+                                                   fg_color=grey, command=lambda: user.selecPalett("WHITE"), width=70,
+                                                   height=70)
         self.buttonGreen = customtkinter.CTkButton(self.tabview.tab(dic.Palettes[dic.language]), text="",
                                                    image=paletteGreen,
-                                                   fg_color=grey, command=lambda: user.selecPalett("GREEN"), width=100,
-                                                   height=100)
+                                                   fg_color=grey, command=lambda: user.selecPalett("GREEN"), width=70,
+                                                   height=70)
         self.buttonBlack = customtkinter.CTkButton(self.tabview.tab(dic.Palettes[dic.language]), text="",
                                                    image=paletteBlack,
-                                                   fg_color=grey, command=lambda: user.selecPalett("BLACK"), width=100,
-                                                   height=100)
+                                                   fg_color=grey, command=lambda: user.selecPalett("BLACK"), width=70,
+                                                   height=70)
         self.buttonBlue = customtkinter.CTkButton(self.tabview.tab(dic.Palettes[dic.language]), text="",
                                                   image=paletteBlue,
-                                                  fg_color=grey, command=lambda: user.selecPalett("BLUE"), width=100,
-                                                  height=100)
+                                                  fg_color=grey, command=lambda: user.selecPalett("BLUE"), width=40,
+                                                  height=40)
 
         # Coloca los botones en la ventana
         self.buttonRed.place(relx=0.01, rely=0.5)
@@ -385,8 +382,33 @@ class Registro(customtkinter.CTk):
         self.switchVarRed = customtkinter.StringVar(value="off")
         self.switchRed = customtkinter.CTkSwitch(self.tabview.tab(dic.Palettes[dic.language]), text=None, command=None,
                                               variable=self.switchVarRed, onvalue="on", offvalue="off", fg_color="Red",
-                                              button_color="Black", button_hover_color="WHite", progress_color="Green")
-        self.switchRed.place(relx=0.01, rely=0.4)
+                                              button_color="#AFAFAF", button_hover_color="WHite", progress_color="Green")
+        self.switchRed.place(relx=0.08, rely=0.4)
+        self.switchVarWhite = customtkinter.StringVar(value="off")
+        self.switchWhite = customtkinter.CTkSwitch(self.tabview.tab(dic.Palettes[dic.language]), text=None, command=None,
+                                                variable=self.switchVarWhite, onvalue="on", offvalue="off",
+                                                fg_color="Red", button_color="#AFAFAF", button_hover_color="WHite",
+                                                progress_color="Green")
+        self.switchWhite.place(relx=0.25, rely=0.4)
+        self.switchVarGreen = customtkinter.StringVar(value="off")
+        self.switchGreen = customtkinter.CTkSwitch(self.tabview.tab(dic.Palettes[dic.language]), text=None, command=None,
+                                                variable=self.switchVarGreen, onvalue="on", offvalue="off",
+                                                fg_color="Red", button_color="#AFAFAF", button_hover_color="WHite",
+                                                progress_color="Green")
+        self.switchGreen.place(relx=0.450, rely=0.4)
+        self.switchVarBlack = customtkinter.StringVar(value="off")
+        self.switchBlack = customtkinter.CTkSwitch(self.tabview.tab(dic.Palettes[dic.language]), text=None, command=None,
+                                                variable=self.switchVarBlack, onvalue="on", offvalue="off",
+                                                fg_color="Red", button_color="#AFAFAF", button_hover_color="WHite",
+                                                progress_color="Green")
+        self.switchBlack.place(relx=0.650, rely=0.4)
+        self.switchVarBlue = customtkinter.StringVar(value="off")
+        self.switchBlue = customtkinter.CTkSwitch(self.tabview.tab(dic.Palettes[dic.language]), text=None, command=None,
+                                                  variable=self.switchVarBlue, onvalue="on", offvalue="off",
+                                                    fg_color="Red", button_color="#AFAFAF", button_hover_color="WHite",
+                                                    progress_color="Green")
+        self.switchBlue.place(relx=0.85, rely=0.4)
+
         # --------------------------------------------------------------------------------------------------------------------------------
         # --------------------------------------------------------------------------------------------------------------------------------
         block1Metal= PhotoImage(file="assets/Blocks/bloquemetal.png").subsample(6, 6)
