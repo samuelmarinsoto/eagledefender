@@ -1164,7 +1164,7 @@ class Registro(customtkinter.CTk):
         self.selected_photo_path = img_path
 
         # Guardamos la ultima caputra del video como imagen y asignamos el nombre del usuario
-        self.selected_picpassword = usuario_img + ".jpg"
+        self.selected_picpassword = "ProfilePics" + usuario_img + ".jpg"
         cap.release()  # Cerramos
         cv2.destroyAllWindows()
         self.displayPhoto(usuario_img)

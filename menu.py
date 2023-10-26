@@ -221,11 +221,11 @@ class Menu_principal(customtkinter.CTk):
             # Aquí puedes agregar el código que quieres ejecutar si el inicio facial es exitoso.
             # Por ejemplo, puedes mostrar la ventana principal o mostrar un mensaje de éxito.
             self.PlayWindow.deiconify()  # Solo un ejemplo
+            tkinter.messagebox.showinfo(title='Inicio facial exitoso', message='Inicio facial exitoso')
         else:
             # Aquí puedes agregar el código que quieres ejecutar si el inicio facial falla.
-            # Por ejemplo, puedes mostrar un mensaje de error.
-            tkinter.messagebox.showerror("Error",
-                                         f"Inicio facial fallido")
+            tkinter.messagebox.showerror(title='Error', message='Inicio facial fallido. Por favor, inténtalo de nuevo.')
+
 
     def login_with_username_and_password(self):
         username = self.LoginWindow.entry_Username.get()  # Obtiene el nombre de usuario del widget de entrada

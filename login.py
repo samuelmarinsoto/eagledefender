@@ -1,6 +1,8 @@
 import tkinter
 import tkinter.messagebox
 import customtkinter
+
+import DataBaseLocal as DataBase
 from registro import Registro
 import language_dictionary as dic
 import menu
@@ -40,8 +42,8 @@ class Login(customtkinter.CTk):
         self.username.place(relx=0.5, rely=0.3, anchor=customtkinter.CENTER)
 
 
-
         self.entry_Username = customtkinter.CTkEntry(self)
+        # insertar un valor predeterminado
         self.entry_Username.place(relx=0.5, rely=0.4, anchor=customtkinter.CENTER)
 
         self.contra = customtkinter.CTkLabel(self, text=dic.Password[dic.language], anchor="w")
@@ -73,7 +75,6 @@ class Login(customtkinter.CTk):
 
     def ejecutar_Ventana(self):
         self.destroy()
-        nuevo = members.Membership()
         nuevo.mainloop()
     def verificacion_login(self):
         global pantalla
@@ -94,19 +95,8 @@ class Login(customtkinter.CTk):
         else:
             print("Usuario no encontrado")
 
-
     def login_facial(self):
-        print("Usuario encontrado")
-
         # ------------------------------Vamos a capturar el rostro-----------------------------------------------------
-        usuario_login = self.entry_Username.get()
-
-        # Verificar si el usuario existe en la base de datos
-        if not is_username_registered(usuario_login):
-            tkinter.messagebox.showerror("Error",
-                                         f"Usuario no encontrado, por favor registrese")
-            return
-        print("Usuario encontrado")
         cap = cv2.VideoCapture(0)  # Elegimos la camara con la que vamos a hacer la deteccion
         while (True):
             ret, frame = cap.read()  # Leemos el video
@@ -120,7 +110,6 @@ class Login(customtkinter.CTk):
         cap.release()  # Cerramos
         cv2.destroyAllWindows()
 
-
         # ----------------- Funcion para guardar el rostro --------------------------
 
         def log_rostro(img, lista_resultados):
@@ -133,13 +122,13 @@ class Login(customtkinter.CTk):
                 cara_reg = data[y1:y2, x1:x2]
                 cara_reg = cv2.resize(cara_reg, (150, 200),
                                       interpolation=cv2.INTER_CUBIC)  # Guardamos la imagen 150x200
-                cv2.imwrite("ProfilePics", usuario_login + "LOG.jpg", cara_reg)
+                cv2.imwrite(usuario_login + "LOG.jpg", cara_reg)
                 return pyplot.imshow(data[y1:y2, x1:x2])
             pyplot.show()
 
         # -------------------------- Detectamos el rostro-------------------------------------------------------
 
-        img = "ProfilePics", usuario_login + "LOG.jpg"
+        img = usuario_login + "LOG.jpg"
         pixeles = pyplot.imread(img)
         detector = MTCNN()
         caras = detector.detect_faces(pixeles)
@@ -167,17 +156,18 @@ class Login(customtkinter.CTk):
 
         im_archivos = os.listdir()  # Vamos a importar la lista de archivos con la libreria os
         if usuario_login + ".jpg" in im_archivos:  # Comparamos los archivos con el que nos interesa
-            rostro_reg = cv2.imread("ProfilePics", usuario_login + ".jpg", 0)  # Importamos el rostro del registro
-            rostro_log = cv2.imread("ProfilePics", usuario_login + "LOG.jpg", 0)  # Importamos el rostro del inicio de sesion
+            rostro_reg = cv2.imread(usuario_login + ".jpg", 0)  # Importamos el rostro del registro
+            rostro_log = cv2.imread(usuario_login + "LOG.jpg", 0)  # Importamos el rostro del inicio de sesion
             similitud = orb_sim(rostro_reg, rostro_log)
             if similitud >= 0.98:
-
                 print("Bienvenido al sistema usuario: ", usuario_login)
                 print("Compatibilidad con la foto del registro: ", similitud)
+                return True  # Devolvemos True en caso de éxito
             else:
                 print("Rostro incorrecto, Cerifique su usuario")
                 print("Compatibilidad con la foto del registro: ", similitud)
+                return False  # Devolvemos False si la similitud no es suficiente
 
         else:
             print("Usuario no encontrado")
-
+            return False

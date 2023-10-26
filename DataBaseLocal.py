@@ -276,6 +276,31 @@ def is_username_registered(username):
         return False
 
 
+def is_username_registered2(username):
+    """Verifica si un nombre de usuario ya está registrado en la base de datos."""
+    user = get_user_by_username(username)
+    return user is not None
+
+def get_user_by_username(username):
+    """Returns the details of a user based on their username.
+
+    Args:
+        username (str): The username of the user.
+
+    Returns:
+        tuple: User details retrieved from the database, or None if an error occurred.
+    """
+    try:
+        conn = connect()
+        cursor = conn.cursor()
+        cursor.execute(
+            'SELECT UserID, Username, Password, FirstName, LastName, Email, Age, Photo, SpotifyUser, Song1, Song2, Song3, NúmeroDeTarjeta, FechaDeVencimiento, CVC FROM '
+            'Users WHERE Username = ?', (username,))
+        usuario = cursor.fetchone()
+        return usuario
+    except Exception as e:
+        print(f"Ocurrió un error al obtener el usuario por nombre de usuario: {e}")
+        return None
 
 
 # def confirm_email(email, entered_code):
