@@ -5,9 +5,13 @@ import registro
 from customtkinter import CTkImage, CTkLabel
 from tkinter import Label, PhotoImage
 import warnings
-
+import tkinter
 warnings.simplefilter(action='ignore', category=UserWarning)
-
+from login import Login
+import tkinter.messagebox
+import DataBaseLocal as DataBase
+import juego
+import juegoAI
 
 # customtkinter.set_appearance_mode("System")  # Modes: "System" (standard), "Dark", "Light"
 # customtkinter.set_default_color_theme("green")  # Themes: "blue" (standard), "green", "dark-blue"
@@ -133,11 +137,14 @@ class Menu_principal(customtkinter.CTk):
 
         self.LoginWindow.incio_facial = customtkinter.CTkButton(self.LoginWindow, text="Inicio facial",
                                                                 fg_color=green_light,
-                                                                hover_color=green, command=print("self.login_facial"))
+                                                                hover_color=green, command=self.start_facial_login)
         self.LoginWindow.incio_facial.place(relx=0.5, rely=0.53, anchor=customtkinter.CENTER)
 
-        self.LoginWindow.sidebar_button_1 = customtkinter.CTkButton(self.LoginWindow, text=dic.Login2[dic.language], fg_color=green_light,
-                                                        hover_color=green)
+        self.LoginWindow.sidebar_button_1 = customtkinter.CTkButton(self.LoginWindow, text=dic.Login2[dic.language],
+                                                                    fg_color=green_light,
+                                                                    hover_color=green,
+                                                                    command=self.login_with_username_and_password)
+
         self.LoginWindow.sidebar_button_1.place(relx=0.5, rely=0.6, anchor=customtkinter.CENTER)
 
         self.LoginWindow.sidebar_button_3 = customtkinter.CTkButton(self.LoginWindow, text=dic.Register[dic.language], fg_color=green_light,
@@ -186,10 +193,10 @@ class Menu_principal(customtkinter.CTk):
         self.PlayWindow.logo_label = customtkinter.CTkLabel( self.PlayWindow, text=dic.SelectModegame[dic.language],font=customtkinter.CTkFont(size=20, weight="bold"))
         self.PlayWindow.logo_label.place(relx=0.5, rely=0.2, anchor=customtkinter.CENTER)
 
-        self.PlayWindow.Oneplayer = customtkinter.CTkButton( self.PlayWindow, text=dic.OnePlayer[dic.language],image=phOne,fg_color=green_light,hover_color=green,command=self.ejecutar_Game_OnePlayer)
+        self.PlayWindow.Oneplayer = customtkinter.CTkButton( self.PlayWindow, text=dic.OnePlayer[dic.language],image=phOne,fg_color=green_light,hover_color=green,command=juegoAI.iniciar)
         self.PlayWindow.Oneplayer.place(relx=0.25, rely=0.5, anchor=customtkinter.CENTER)
         
-        self.PlayWindow.Twoplayer = customtkinter.CTkButton( self.PlayWindow, text=dic.MultiplayerLocal[dic.language],image=phTwo,fg_color=green_light,hover_color=green,command=self.ejecutar_Game_Multiplayer)
+        self.PlayWindow.Twoplayer = customtkinter.CTkButton( self.PlayWindow, text=dic.MultiplayerLocal[dic.language],image=phTwo,fg_color=green_light,hover_color=green,command=juego.iniciar)
         self.PlayWindow.Twoplayer.place(relx=0.75, rely=0.5, anchor=customtkinter.CENTER)
 
 
@@ -209,6 +216,30 @@ class Menu_principal(customtkinter.CTk):
         #self.destroy()
         #nuevo =Login()
        #nuevo.mainloop()
+    def start_facial_login(self):
+        login_instance = Login()  # crea una instancia de la clase Login
+        success = login_instance.login_facial()
+        if success:
+            # Aquí puedes agregar el código que quieres ejecutar si el inicio facial es exitoso.
+            # Por ejemplo, puedes mostrar la ventana principal o mostrar un mensaje de éxito.
+            self.PlayWindow.deiconify()  # Solo un ejemplo
+            tkinter.messagebox.showinfo(title='Inicio facial exitoso', message='Inicio facial exitoso')
+        else:
+            # Aquí puedes agregar el código que quieres ejecutar si el inicio facial falla.
+            tkinter.messagebox.showerror(title='Error', message='Inicio facial fallido. Por favor, inténtalo de nuevo.')
+
+
+    def login_with_username_and_password(self):
+        username = self.LoginWindow.entry_Username.get()  # Obtiene el nombre de usuario del widget de entrada
+        password = self.LoginWindow.entry_Contra.get()  # Obtiene la contraseña del widget de entrada
+
+        if DataBase.validate_user(username, password):
+            # Si el inicio de sesión es exitoso
+            self.PlayWindow.deiconify()
+            self.LoginWindow.withdraw()
+        else:
+            # Si el inicio de sesión falla
+            tkinter.messagebox.showerror("Error", "Nombre de usuario o contraseña incorrectos")
 
     def ejecutar_principal(self):
         """Handle the 'Ejecutar Principal' button click event.
@@ -285,16 +316,7 @@ class Menu_principal(customtkinter.CTk):
 
 
     def ejecutar_Game_Multiplayer(self):
-        """
-        Example
-        if Logged1(Player) and Logged1(Player2):
-            self.destroy()
-            pygame.init()
-        else:
-            self.PlayWindow.withdraw()
-            self.LoginWindow.deiconify()
-            
-       """
+        juego.iniciar()
         
     def ejecutar_Game_OnePlayer(self):
         """
