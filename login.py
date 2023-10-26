@@ -96,6 +96,8 @@ class Login(customtkinter.CTk):
 
 
     def login_facial(self):
+        print("Usuario encontrado")
+
         # ------------------------------Vamos a capturar el rostro-----------------------------------------------------
         usuario_login = self.entry_Username.get()
 
@@ -104,6 +106,7 @@ class Login(customtkinter.CTk):
             tkinter.messagebox.showerror("Error",
                                          f"Usuario no encontrado, por favor registrese")
             return
+        print("Usuario encontrado")
         cap = cv2.VideoCapture(0)  # Elegimos la camara con la que vamos a hacer la deteccion
         while (True):
             ret, frame = cap.read()  # Leemos el video
@@ -130,13 +133,13 @@ class Login(customtkinter.CTk):
                 cara_reg = data[y1:y2, x1:x2]
                 cara_reg = cv2.resize(cara_reg, (150, 200),
                                       interpolation=cv2.INTER_CUBIC)  # Guardamos la imagen 150x200
-                cv2.imwrite(usuario_login + "LOG.jpg", cara_reg)
+                cv2.imwrite("ProfilePics", usuario_login + "LOG.jpg", cara_reg)
                 return pyplot.imshow(data[y1:y2, x1:x2])
             pyplot.show()
 
         # -------------------------- Detectamos el rostro-------------------------------------------------------
 
-        img = usuario_login + "LOG.jpg"
+        img = "ProfilePics", usuario_login + "LOG.jpg"
         pixeles = pyplot.imread(img)
         detector = MTCNN()
         caras = detector.detect_faces(pixeles)
@@ -164,8 +167,8 @@ class Login(customtkinter.CTk):
 
         im_archivos = os.listdir()  # Vamos a importar la lista de archivos con la libreria os
         if usuario_login + ".jpg" in im_archivos:  # Comparamos los archivos con el que nos interesa
-            rostro_reg = cv2.imread(usuario_login + ".jpg", 0)  # Importamos el rostro del registro
-            rostro_log = cv2.imread(usuario_login + "LOG.jpg", 0)  # Importamos el rostro del inicio de sesion
+            rostro_reg = cv2.imread("ProfilePics", usuario_login + ".jpg", 0)  # Importamos el rostro del registro
+            rostro_log = cv2.imread("ProfilePics", usuario_login + "LOG.jpg", 0)  # Importamos el rostro del inicio de sesion
             similitud = orb_sim(rostro_reg, rostro_log)
             if similitud >= 0.98:
 
@@ -178,16 +181,3 @@ class Login(customtkinter.CTk):
         else:
             print("Usuario no encontrado")
 
-
-
-
-
-
-
-
-    def change_appearance_mode_event(self, new_appearance_mode: str):
-        customtkinter.set_appearance_mode(new_appearance_mode)
-
-    def change_scaling_event(self, new_scaling: str):
-        new_scaling_float = int(new_scaling.replace("%", "")) / 100
-        customtkinter.set_widget_scaling(new_scaling_float)

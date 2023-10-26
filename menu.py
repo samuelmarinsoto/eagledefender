@@ -5,10 +5,11 @@ import registro
 from customtkinter import CTkImage, CTkLabel
 from tkinter import Label, PhotoImage
 import warnings
-
+import tkinter
 warnings.simplefilter(action='ignore', category=UserWarning)
 from login import Login
-
+import tkinter.messagebox
+import DataBaseLocal as DataBase
 
 # customtkinter.set_appearance_mode("System")  # Modes: "System" (standard), "Dark", "Light"
 # customtkinter.set_default_color_theme("green")  # Themes: "blue" (standard), "green", "dark-blue"
@@ -137,8 +138,11 @@ class Menu_principal(customtkinter.CTk):
                                                                 hover_color=green, command=self.start_facial_login)
         self.LoginWindow.incio_facial.place(relx=0.5, rely=0.53, anchor=customtkinter.CENTER)
 
-        self.LoginWindow.sidebar_button_1 = customtkinter.CTkButton(self.LoginWindow, text=dic.Login2[dic.language], fg_color=green_light,
-                                                        hover_color=green)
+        self.LoginWindow.sidebar_button_1 = customtkinter.CTkButton(self.LoginWindow, text=dic.Login2[dic.language],
+                                                                    fg_color=green_light,
+                                                                    hover_color=green,
+                                                                    command=self.login_with_username_and_password)
+
         self.LoginWindow.sidebar_button_1.place(relx=0.5, rely=0.6, anchor=customtkinter.CENTER)
 
         self.LoginWindow.sidebar_button_3 = customtkinter.CTkButton(self.LoginWindow, text=dic.Register[dic.language], fg_color=green_light,
@@ -211,8 +215,30 @@ class Menu_principal(customtkinter.CTk):
         #nuevo =Login()
        #nuevo.mainloop()
     def start_facial_login(self):
-        login_window = Login()  # crea una instancia de la clase Login
-        login_window.login_facial()  # llama a la función login_facial
+        login_instance = Login()  # crea una instancia de la clase Login
+        success = login_instance.login_facial()
+        if success:
+            # Aquí puedes agregar el código que quieres ejecutar si el inicio facial es exitoso.
+            # Por ejemplo, puedes mostrar la ventana principal o mostrar un mensaje de éxito.
+            self.PlayWindow.deiconify()  # Solo un ejemplo
+        else:
+            # Aquí puedes agregar el código que quieres ejecutar si el inicio facial falla.
+            # Por ejemplo, puedes mostrar un mensaje de error.
+            tkinter.messagebox.showerror("Error",
+                                         f"Inicio facial fallido")
+
+    def login_with_username_and_password(self):
+        username = self.LoginWindow.entry_Username.get()  # Obtiene el nombre de usuario del widget de entrada
+        password = self.LoginWindow.entry_Contra.get()  # Obtiene la contraseña del widget de entrada
+
+        if DataBase.validate_user(username, password):
+            # Si el inicio de sesión es exitoso
+            self.PlayWindow.deiconify()
+            self.LoginWindow.withdraw()
+        else:
+            # Si el inicio de sesión falla
+            tkinter.messagebox.showerror("Error", "Nombre de usuario o contraseña incorrectos")
+
     def ejecutar_principal(self):
         """Handle the 'Ejecutar Principal' button click event.
                 This method is called when the 'Ejecutar Principal' button is clicked.
