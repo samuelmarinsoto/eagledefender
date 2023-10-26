@@ -104,7 +104,7 @@ class Registro(customtkinter.CTk):
         self.background_label.place(relx=0.5, rely=0.5, anchor=customtkinter.CENTER)
         # configure grid layout (4x4)
 
-        self.tabview = customtkinter.CTkTabview(self.background_label, width=400, height=600)
+        self.tabview = customtkinter.CTkTabview(self.background_label, width=500, height=600)
         # Asegúrate de mantener una referencia a la imagen para evitar que sea recolectada por el recolector de basura de Python
         self.tabview.place(relx=0.5, rely=0.5, anchor=customtkinter.CENTER)
         self.tabview.add(dic.Data[dic.language])
@@ -226,8 +226,7 @@ class Registro(customtkinter.CTk):
         self.avatar_label = customtkinter.CTkLabel(self.tabview.tab(dic.Game[dic.language]),image=default_imageop,corner_radius=60,text="")
         self.avatar_label.place(relx=0.5, rely=0.5, anchor=customtkinter.CENTER)
 
-        self.cameraActive = customtkinter.CTkLabel(self.tabview.tab(dic.Game[dic.language]), text="", corner_radius=60)
-        self.cameraActive.place(relx=0.65, rely=0.5, anchor=customtkinter.CENTER)
+
 
         #self.display_avatar_in_circle(default_image_path, self.tabview.tab(dic.Game[dic.language]), 0.5, 0.19)
         # Botón para subir foto
@@ -348,7 +347,7 @@ class Registro(customtkinter.CTk):
         self.card_number_entry.place(relx=0.5, rely=0.25, anchor=customtkinter.CENTER)
 
         self.switchVarMembresia = customtkinter.StringVar(value="on")
-
+        print(self.switchVarMembresia.get())
         self.switchMembresia = customtkinter.CTkSwitch(
             self.tabview.tab(dic.Members[dic.language]), text=None,
             variable=self.switchVarMembresia, onvalue="on", offvalue="off",
@@ -367,21 +366,10 @@ class Registro(customtkinter.CTk):
         self.card_cvc_entry.place(relx=0.5, rely=0.45, anchor=customtkinter.CENTER)
         # Agrega un rastreo al switch de membresía para llamar a la función cuando cambie
 
-        def toggle_tabs_access():
-            if self.switchVarMembresia.get() == "off":
-                # Si el switch de membresía está "off", desactiva los widgets en las pestañas
-                for widget in self.tabview.tab(dic.Palettes[dic.language]).winfo_children():
-                    widget.configure(state="disabled")
-                for widget in self.tabview.tab(dic.Texture[dic.language]).winfo_children():
-                    widget.configure(state="disabled")
-            else:
-                # Si el switch de membresía está "on", activa los widgets en las pestañas
-                for widget in self.tabview.tab(dic.Palettes[dic.language]).winfo_children():
-                    widget.configure(state="normal")
-                for widget in self.tabview.tab(dic.Texture[dic.language]).winfo_children():
-                    widget.configure(state="normal")
 
-        self.switchVarMembresia.trace("w", lambda *args: toggle_tabs_access())
+
+
+        self.switchVarMembresia.trace("w", lambda *args: self.toggle_tabs_access())
 
 
         # self.card_number_entry = customtkinter.CTkEntry(self.tabview.tab(dic.Members[dic.language]),
@@ -591,6 +579,7 @@ class Registro(customtkinter.CTk):
             self.card_submit_button.configure(state="disabled")
         else:
             self.card_submit_button.configure(state="normal")
+        self.toggle_tabs_access()
 
     #---------------------------------------------------------------------------------------------------------------------------------
         # # Coloca los botones en la ventana
@@ -622,7 +611,38 @@ class Registro(customtkinter.CTk):
         self.card_icon_label.configure(image=card_image)
         self.card_icon_label.image = card_image  # mantener referencia a la imagen
 
+    def toggle_tabs_access(self):
+        if self.switchVarMembresia.get() == "off":
+            # Desactiva los widgets en las pestañas excepto el switch de membresía
+            for widget in self.tabview.tab(dic.Members[dic.language]).winfo_children():
+                if widget != self.switchMembresia:
+                    widget.configure(state="disabled")
+            for widget in self.tabview.tab(dic.Palettes[dic.language]).winfo_children():
+                widget.configure(state="disabled")
+            for widget in self.tabview.tab(dic.Texture[dic.language]).winfo_children():
+                widget.configure(state="disabled")
+        else:
+            # Activa todos los widgets en las pestañas
+            for widget in self.tabview.tab(dic.Members[dic.language]).winfo_children():
+                widget.configure(state="normal")
+            for widget in self.tabview.tab(dic.Palettes[dic.language]).winfo_children():
+                widget.configure(state="normal")
+            for widget in self.tabview.tab(dic.Texture[dic.language]).winfo_children():
+                widget.configure(state="normal")
+    def disable_widgets_except_switch(self, tab_name, switch_variable):
+        # Obtiene la lista de widgets en la pestaña especificada
+        tab_widgets = self.tabview.tab(tab_name).winfo_children()
 
+        # Desactiva todos los widgets excepto el switch
+        for widget in tab_widgets:
+            if widget != switch_variable:
+                widget.configure(state="disabled")
+
+    def enable_all_widgets(self, tab_name):
+        # Activa todos los widgets en la pestaña especificada
+        tab_widgets = self.tabview.tab(tab_name).winfo_children()
+        for widget in tab_widgets:
+            widget.configure(state="normal")
     def iniciar(self):
         self.destroy()
         menu.Menu_principal().mainloop()
@@ -710,7 +730,6 @@ class Registro(customtkinter.CTk):
 
     #def VerifyTexture(self):
 
-
     def DateSelect(self):
         datese = self.calendario.get_date()
         date_part = datese.split("/")
@@ -721,15 +740,12 @@ class Registro(customtkinter.CTk):
         elif 30 <= int(date_part[2]) <= 99:
             year = int("19" + date_part[2])
         dateborn = date(year, month, day)
-        age = date.today().year - dateborn.year
-
-        if age < 13:  # Comprobación de edad
+        self.age = date.today().year - dateborn.year  # Guarda la edad en una variable de instancia
+        print(self.age)
+        if self.age < 13:  # Comprobación de edad
             tkinter.messagebox.showerror("Error", "Debes tener al menos 13 años para registrarte.")
             return
-
-        user.age = age
-        self.update_edad_label(age)
-
+        self.update_edad_label(self.age)
     def validar_usuario(usuario):
         """
         Valida que el nombre de usuario no contenga obscenidades.
@@ -749,7 +765,6 @@ class Registro(customtkinter.CTk):
             # El código es correcto, procede con el registro
             self.registrar_usuario()
             self.temp_verification_code = None
-            tkinter.messagebox.showinfo(title="Registro", message="El usuario se ha registrado exitosamente.")
         else:
             # El código es incorrecto, muestra un mensaje de error
             tkinter.messagebox.showerror("Error", "Código de verificación incorrecto.")
@@ -783,7 +798,7 @@ class Registro(customtkinter.CTk):
         nombre = self.entry_Nombre.get()
         apellido = self.entry_Apellido.get()
         correo = self.entry_Correo.get()
-        edad = user.age
+        edad = self.age  # Accede a la edad desde la variable de instancia
         membresia = self.switchVarMembresia.get()
         spotify_user1 = self.userSpot.get()
         song1 = self.cancion1.get()
@@ -792,12 +807,14 @@ class Registro(customtkinter.CTk):
         card = self.card_number_entry.get()
         expiration = self.card_expiry_entry.get()
         cvc = self.card_cvc_entry.get()
-
+        paleta = self.get_active_palettes()
+        textura = self.get_active_textures()
         # cancion = self.cancion1.get()
         usuario_img = self.entry_Username.get()
         imagen_ruta = 'ProfilePics/' + usuario_img + ".jpg"  # Ruta de la imagen guardada
 
-        # Validaciones antes de insertar el usuario
+        edad = self.age  # Accede a la edad desde la variable de instancia
+
         if edad < 13:
             tkinter.messagebox.showerror("Error", "El usuario debe tener al menos 13 años para registrarse.")
             return
@@ -809,22 +826,34 @@ class Registro(customtkinter.CTk):
         if DataBase.is_email_registered(correo):
             tkinter.messagebox.showerror("Error", "Este correo ya está registrado.")
             return
-        if self.switchVarMembresia == "on":
+        if self.switchVarMembresia.get() == "on":
             # Llama a la función para insertar los datos en la base de datos
             try:
                 DataBase.insert_user(usuario, contra, nombre, apellido, correo, edad, imagen_ruta, "Yes",
                                      spotify_user1, song1, song2, song3, card, expiration, cvc)
+                print(DataBase.insert_user(usuario, contra, nombre, apellido, correo, edad, imagen_ruta, "Yes",
+                                     spotify_user1, song1, song2, song3, card, expiration, cvc))
+
+                DataBase.insert_personalization_option(usuario, paleta, textura)
+                print(DataBase.insert_personalization_option(usuario, paleta, textura))
+                tkinter.messagebox.showinfo(title="Registro", message="El usuario GOLD se ha registrado exitosamente.")
+
             # Nota: No mostramos el mensaje de éxito aquí.
             except Exception as e:
-                print("Error", f"Ocurrió un error al registrar al usuario: {e}")
+                print("Error", f"Ocurrió un error al registrar al usuario GOLD: {e}")
                 return False  # Retornamos False para indicar que el registro no fue exitoso
-        if self.switchVarMembresia == "off":
+        if self.switchVarMembresia.get() == "off":
             try:
                 DataBase.insert_user(usuario, contra, nombre, apellido, correo, edad, imagen_ruta, "No" ,
                                      spotify_user1, song1, song2, song3, None, None, None)
+
+                print( DataBase.insert_user(usuario, contra, nombre, apellido, correo, edad, imagen_ruta, "No" ,
+                                     spotify_user1, song1, song2, song3, None, None, None))
+                tkinter.messagebox.showinfo(title="Registro", message="El usuario BASE se ha registrado exitosamente.")
+
                 # Nota: No mostramos el mensaje de éxito aquí.
             except Exception as e:
-                print("Error", f"Ocurrió un error al registrar al usuario: {e}")
+                print("Error", f"Ocurrió un error al registrar al usuario BASE: {e}")
                 return False  # Retornamos False para indicar que el registro no fue exitoso
 
         # try:
@@ -837,26 +866,62 @@ class Registro(customtkinter.CTk):
         # except Exception as e:
         #     print("Error", f"1Ocurrió un error al registrar al usuario: {e}")
         #     return False  # Retornamos False para indicar que el registro no fue exitoso
+        print("retornamos true")
         return True  # Retornamos True para indicar que el registro fue exitoso
 
+    def get_active_palettes(self):
+        active_palettes = []
+
+        # Verifica el estado de cada switch de paleta y agrega la paleta activa a la lista
+        if self.switchVarRed.get() == "on":
+            active_palettes.append("Red")
+
+        if self.switchVarWhite.get() == "on":
+            active_palettes.append("White")
+
+        if self.switchVarGreen.get() == "on":
+            active_palettes.append("Green")
+
+        if self.switchVarBlack.get() == "on":
+            active_palettes.append("Black")
+
+        if self.switchVarBlue.get() == "on":
+            active_palettes.append("Blue")
+
+        return active_palettes
+
+    def get_active_textures(self):
+        active_textures = []
+
+        # Verifica el estado de cada switch de textura y agrega la textura activa a la lista
+        if self.switchVarPack1.get() == "on":
+            active_textures.append("Textura 1")
+
+        if self.switchVarPack2.get() == "on":
+            active_textures.append("Textura 2")
+
+        if self.switchVarPack3.get() == "on":
+            active_textures.append("Textura 3")
+
+        # Agrega más texturas según sea necesario
+
+        return active_textures
     def on_register_button_click(self):
 
-
+        error_occurred = False
         missing_fields, missing_tabs = self.check_fields_filled()
         if missing_fields:
             # Mostrar un mensaje de error con los campos y las pestañas que faltan
             missing_info = ', '.join([f"{field} ({tab})" for field, tab in zip(missing_fields, missing_tabs)])
             tkinter.messagebox.showerror("Error", f"Faltan los siguientes campos: {missing_info}")
             return
-        if self.selected_photo_path == "assets/flags/Avatar-Profile.png":
+        if self.selected_photo_path is None or self.selected_photo_path == "assets/flags/Avatar-Profile.png":
             respuesta = tkinter.messagebox.askyesno("Confirmación",
                                                     "¿Seguro que no quieres tener una foto personalizada?")
             if respuesta == "no":
                 return
             else:
-                # Si el usuario decide no tener una foto personalizada, establece una imagen predeterminada.
-                # (Asegúrate de reemplazar "ruta/de/imagen/predeterminada.png" con la ruta real de la imagen que quieras usar.)
-                self.selected_photo_path = "ruta/de/imagen/predeterminada.png"
+                self.selected_photo_path = "assets/flags/Avatar-Profile.png"
         # Convertir el nombre de usuario a minúsculas para la verificación
         ## Comprobar si el switch de membresía está activo
         if self.switchVarMembresia.get() == "on":
@@ -874,6 +939,7 @@ class Registro(customtkinter.CTk):
                 tkinter.messagebox.showerror("Error",
                                              f"Hace falta seleccionar una textura en {dic.Texture[dic.language]}")
                 return
+
         username = self.entry_Username.get().lower()
 
         # Verifica si el correo electrónico o el nombre de usuario ya están registrados
@@ -892,25 +958,36 @@ class Registro(customtkinter.CTk):
             return
         self.temp_verification_code = DataBase.generate_confirmation_code()
         print(f"Código de confirmación generado: {self.temp_verification_code}")
-        if not self.check_membership_fields_filled():
-            respuesta = tkinter.messagebox.askyesno("Confirmación", "¿Seguro que no quieres ser miembro?")
-            if respuesta:
-                # Guarda en la base de datos que el usuario decidió no ser miembro
-                DataBase.insert_membership_status(self.entry_Username.get(), False)
-                DataBase.update_membership_status(self.entry_Username.get(), "No")
+        try:
+            # Intenta guardar los datos en la base de datos y enviar el correo electrónico
+            if not self.check_membership_fields_filled():
+                respuesta = tkinter.messagebox.askyesno("Confirmación", "¿Seguro que no quieres ser miembro?")
+                if respuesta:
+                    # Guarda en la base de datos que el usuario decidió no ser miembro
+                    DataBase.insert_membership_status(self.entry_Username.get(), False)
+                    DataBase.update_membership_status(self.entry_Username.get(), "No")
+                else:
+                    # Redirige al usuario a la pestaña de membresía
+                    self.select_tab(dic.Members[dic.language])
+                    error_occurred = True  # Marca que ocurrió un error
             else:
-                # Redirige al usuario a la pestaña de membresía
-                self.select_tab(dic.Members[dic.language])
-                return
+                # Guarda en la base de datos que el usuario decidió ser miembro y los detalles correspondientes
+                DataBase.insert_membership_status(self.entry_Username.get(), True)
+                DataBase.update_membership_status(self.entry_Username.get(), "Yes")
+                DataBase.insert_membership_details(self.entry_Username.get(), self.card_number_var.get(),
+                                                   self.card_expiry_entry.get(), self.card_cvc_entry.get())
 
-        else:
-            # Guarda en la base de datos que el usuario decidió ser miembro y los detalles correspondientes
-            DataBase.insert_membership_status(self.entry_Username.get(), True)
-            DataBase.update_membership_status(self.entry_Username.get(), "Yes")
-            DataBase.insert_membership_details(self.entry_Username.get(), self.card_number_var.get(),
-                                               self.card_expiry_entry.get(), self.card_cvc_entry.get())
-        DataBase.send_confirmation_email(self.entry_Correo.get(), self.temp_verification_code)
-        self.solicitar_verificacion()
+            # Intenta enviar el correo electrónico
+            DataBase.send_confirmation_email(self.entry_Correo.get(), self.temp_verification_code)
+
+        except Exception as e:
+            tkinter.messagebox.showerror("Error",
+                                         f"Error al guardar los datos o enviar el correo electrónico: {str(e)}")
+            error_occurred = True  # Marca que ocurrió un error
+
+            # Si no ocurrió ningún error, realiza la verificación
+        if not error_occurred:
+            self.solicitar_verificacion()
 
     def solicitar_verificacion(self):
         # Aquí puedes abrir una nueva ventana o usar la actual para solicitar el código al usuario.
@@ -1082,6 +1159,10 @@ class Registro(customtkinter.CTk):
         img_path2 = os.path.join("ProfilePics", usuario_img + ".png")
         cv2.imwrite(img_path, frame)
         cv2.imwrite(img_path2, frame)
+
+        # Actualiza self.selected_photo_path al path de la imagen capturada
+        self.selected_photo_path = img_path
+
         # Guardamos la ultima caputra del video como imagen y asignamos el nombre del usuario
         self.selected_picpassword = usuario_img + ".jpg"
         cap.release()  # Cerramos
@@ -1095,8 +1176,8 @@ class Registro(customtkinter.CTk):
         imagen = imagen.resize((100, 100), Image.ANTIALIAS)
         circular = self.make_circle_image(imagen)
         Imagentk = ImageTk.PhotoImage(circular)
-        self.cameraActive.configure(image=Imagentk)
-        self.cameraActive.image = Imagentk
+        self.avatar_label.configure(image=Imagentk)
+        self.avatar_label.image = Imagentk
 
         pixeles = pyplot.imread(img)
         detector = MTCNN()

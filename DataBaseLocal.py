@@ -10,6 +10,7 @@ Este script permite al usuario realizar las siguientes acciones:
 Además, utiliza una base de datos para almacenar información del usuario y Google API para enviar correos electrónicos
 de confirmación.
 """
+import re
 import random
 import bcrypt
 from datetime import datetime, timedelta
@@ -51,24 +52,28 @@ def get_credentials():
     return creds
 
 
+def is_valid_email(email):
+    if isinstance(email, str):
+        if re.search(r'@', email):
+            email_split = email.split("@")
+            valid_domains = ["gmail.com", "hotmail.com", "outlook.com", "yahoo.com", "icloud.com", "live.com", "estudiantec.cr"]
+            if email_split[1] in valid_domains:
+                return True
+    return False
+
 def send_email(sender, to, subject, message_text):
-    """
-    Sends an email using the Gmail API.
+    if is_valid_email(to):
+        creds = get_credentials()
+        service = build('gmail', 'v1', credentials=creds)
 
-    Args:
-        sender (str): Email address of the sender.
-        to (str): Email address of the recipient.
-        subject (str): Subject of the email.
-        message_text (str): Body of the email.
-    """
-    creds = get_credentials()
-    service = build('gmail', 'v1', credentials=creds)
-
-    raw_msg = base64.urlsafe_b64encode(f"Subject: {subject}\nTo: {to}\n\n{message_text}".encode('utf-8')).decode(
-        'utf-8')
-    message = {'raw': raw_msg}
-    sent_message = service.users().messages().send(userId=sender, body=message).execute()
-    print(f"Message sent. Id: {sent_message['id']}")
+        raw_msg = base64.urlsafe_b64encode(f"Subject: {subject}\nTo: {to}\n\n{message_text}".encode('utf-8')).decode('utf-8')
+        message = {'raw': raw_msg}
+        sent_message = service.users().messages().send(userId=sender, body=message).execute()
+        print(f"Message sent. Id: {sent_message['id']}")
+    else:
+	    tkinter.messagebox.showerror("Error", "Email not valid. Please use a valid email address. "
+	                                          "Accepted domains are: gmail.com, hotmail.com, outlook.com, yahoo.com,"
+	                                          " icloud.com, live.com, estudiantec.cr")
 
 def connect():
     """
@@ -186,7 +191,7 @@ def insert_user(username, password, first_name, last_name, email, age, photo,mem
         cursor = conn.cursor()
         cursor.execute("""
             INSERT INTO Users (Username, Password, FirstName, LastName, Email, Age, Photo, Membresía, SpotifyUser, Song1, Song2, Song3, NúmeroDeTarjeta, FechaDeVencimiento, CVC)
-            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
         """, (username, hashed_pass, first_name, last_name, email, age, photo, membresia, spotify_user, song1, song2, song3,
               card_number, expiry_date, cvc))
         conn.commit()
@@ -199,7 +204,24 @@ def insert_user(username, password, first_name, last_name, email, age, photo,mem
         cursor.close()
         conn.close()
     return False
+def insert_personalization_option(user_id, paleta_de_colores, textura):
+    try:
+        # Conectarse a la base de datos (reemplaza 'nombre_de_tu_base_de_datos.db' con el nombre real)
+        conn = sqlite3.connect('nombre_de_tu_base_de_datos.db')
+        cursor = conn.cursor()
 
+        # Insertar la nueva opción de personalización en la tabla Personalizaciones
+        cursor.execute("INSERT INTO Personalizaciones (UserID, PaletaDeColores, Textura) VALUES (?, ?, ?)",
+                       (user_id, paleta_de_colores, textura))
+
+        # Confirmar la transacción
+        conn.commit()
+
+        # Cerrar la conexión
+        conn.close()
+
+    except sqlite3.Error as e:
+        print("Error al insertar la opción de personalización:", e)
 
 def validate_user(username, password):
 	"""Validates user credentials against the database.
