@@ -260,15 +260,15 @@ class Menu_principal(customtkinter.CTk):
         self.destroy()
         registro.Registro().mainloop()
 
-    def change_appearance_mode_event(self, new_appearance_mode: str):
-        """Change the appearance mode of the GUI.
-               This method is called to change the appearance mode of the GUI.
-               Args:
-                   new_appearance_mode (str): The new appearance mode to set.
-               Returns:
-                   None
-               """
-        customtkinter.set_appearance_mode(new_appearance_mode)
+    # def change_appearance_mode_event(self, new_appearance_mode: str):
+    #     """Change the appearance mode of the GUI.
+    #            This method is called to change the appearance mode of the GUI.
+    #            Args:
+    #                new_appearance_mode (str): The new appearance mode to set.
+    #            Returns:
+    #                None
+    #            """
+    #     customtkinter.set_appearance_mode(new_appearance_mode)
     def change_scaling_event(self, new_scaling: str):
         """Change the scaling of widgets in the GUI.
                This method is called to change the scaling of widgets in the GUI.
