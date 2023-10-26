@@ -4,7 +4,6 @@ import language_dictionary as dic
 import registro
 from customtkinter import CTkImage, CTkLabel
 from tkinter import Label, PhotoImage
-from PIL import ImageTk
 import warnings
 
 warnings.simplefilter(action='ignore', category=UserWarning)
@@ -55,9 +54,9 @@ class Menu_principal(customtkinter.CTk):
         self.MembersWindow = customtkinter.CTkToplevel(self)
         self.MembersWindow.withdraw()
         self.MembersWindow.geometry(ScreenRes)
-        self.PayWindow = customtkinter.CTkToplevel(self)
-        self.PayWindow.withdraw()
-        self.PayWindow.geometry(ScreenRes)
+        self.PlayWindow = customtkinter.CTkToplevel(self)
+        self.PlayWindow.withdraw()
+        self.PlayWindow.geometry(ScreenRes)
         """__________________________________________________________________________________________________________"""
         # configure window
 
@@ -72,7 +71,7 @@ class Menu_principal(customtkinter.CTk):
                                fg_color="transparent", bg_color="transparent")  # Use the background color of your main window here.
         self.foto_logo.place(relx=0.5, rely=0.3, anchor='center')
 
-        self.sidebar_button_1 = customtkinter.CTkButton(self, command=self.sidebar_button_event, text=dic.Play[dic.language],fg_color=green_light,hover_color=green, width=250, height=50)
+        self.sidebar_button_1 = customtkinter.CTkButton(self, command=self.ejecutar_play, text=dic.Play[dic.language],fg_color=green_light,hover_color=green, width=250, height=50)
         self.sidebar_button_1.place(relx=0.5, rely=0.6, anchor=customtkinter.CENTER)
 
         # imagen = Image.open("assets/flags/Avatar-Profile.png")
@@ -168,38 +167,34 @@ class Menu_principal(customtkinter.CTk):
 
         """______________________________________________________________________________________________________________________"""
 
-        self.PayWindow.logo_label = customtkinter.CTkLabel( self.PayWindow, text="Transaccion",
-                                                 font=customtkinter.CTkFont(size=20, weight="bold"))
-        self.PayWindow.logo_label.place(relx=0.5, rely=0.1, anchor=customtkinter.CENTER)
 
-        self.PayWindow.logo_label = customtkinter.CTkLabel( self.PayWindow, text="Numero de tarjeta",
-                                                 font=customtkinter.CTkFont(size=20, weight="bold"))
-        self.PayWindow.logo_label.place(relx=0.5, rely=0.2, anchor=customtkinter.CENTER)
-
-        self.PayWindow.entry_Tarjeta_Numero = customtkinter.CTkEntry( self.PayWindow)
-        self.PayWindow.entry_Tarjeta_Numero.place(relx=0.5, rely=0.3, anchor=customtkinter.CENTER)
-
-        self.PayWindow.logo_label = customtkinter.CTkLabel( self.PayWindow, text="fecha de vencimiento",
-                                                 font=customtkinter.CTkFont(size=20, weight="bold"))
-        self.PayWindow.logo_label.place(relx=0.5, rely=0.4, anchor=customtkinter.CENTER)
-
-        self.PayWindow.entry_Fecha = customtkinter.CTkEntry( self.PayWindow)
-        self.PayWindow.entry_Fecha.place(relx=0.5, rely=0.5, anchor=customtkinter.CENTER)
-
-        self.PayWindow.logo_label = customtkinter.CTkLabel( self.PayWindow, text="numero de seguridad",
-                                                 font=customtkinter.CTkFont(size=20, weight="bold"))
-        self.PayWindow.logo_label.place(relx=0.5, rely=0.6, anchor=customtkinter.CENTER)
-
-        self.PayWindow.entry_seguridad = customtkinter.CTkEntry( self.PayWindow)
-        self.PayWindow.entry_seguridad.place(relx=0.5, rely=0.7, anchor=customtkinter.CENTER)
-
-        self.PayWindow.sidebar_button_3 = customtkinter.CTkButton( self.PayWindow, text="Ejecutar Transaccion", fg_color=green_light,
-                                                        hover_color=green, command= lambda:[self.MemberChange(),self.RegisterUser()])
-        self.PayWindow.sidebar_button_3.place(relx=0.5, rely=0.8, anchor=customtkinter.CENTER)
-
-        self.PayWindow.back = customtkinter.CTkButton( self.PayWindow, text="←", fg_color=green_light, hover_color=green,
+        self.PlayWindow.back = customtkinter.CTkButton( self.PlayWindow, text="←", fg_color=green_light, hover_color=green,
                                             command=self.back_menu,width=30, height=30)
-        self.PayWindow.back.place(relx=0.001, rely=0.001, anchor=customtkinter.NW)
+        self.PlayWindow.back.place(relx=0.001, rely=0.001, anchor=customtkinter.NW)
+
+
+        imagenOne = Image.open("assets/Windows aux/OnePlayer.png")
+        imagenOne_resized = imagenOne.resize((250,250), Image.ANTIALIAS)
+        phOne = ImageTk.PhotoImage(imagenOne_resized)
+
+
+        imagenTwo = Image.open("assets/Windows aux/TwoPlayer.png")
+        imagenTwo_resized =  imagenTwo.resize((250,250), Image.ANTIALIAS)
+        phTwo = ImageTk.PhotoImage(imagenTwo_resized)
+
+
+        self.PlayWindow.logo_label = customtkinter.CTkLabel( self.PlayWindow, text=dic.SelectModegame[dic.language],font=customtkinter.CTkFont(size=20, weight="bold"))
+        self.PlayWindow.logo_label.place(relx=0.5, rely=0.2, anchor=customtkinter.CENTER)
+
+        self.PlayWindow.Oneplayer = customtkinter.CTkButton( self.PlayWindow, text=dic.OnePlayer[dic.language],image=phOne,fg_color=green_light,hover_color=green,command=self.ejecutar_Game_OnePlayer)
+        self.PlayWindow.Oneplayer.place(relx=0.25, rely=0.5, anchor=customtkinter.CENTER)
+        
+        self.PlayWindow.Twoplayer = customtkinter.CTkButton( self.PlayWindow, text=dic.MultiplayerLocal[dic.language],image=phTwo,fg_color=green_light,hover_color=green,command=self.ejecutar_Game_Multiplayer)
+        self.PlayWindow.Twoplayer.place(relx=0.75, rely=0.5, anchor=customtkinter.CENTER)
+
+
+
+
     def ejecutar_login(self):
         """Handle the 'Login' button click event.
                This method is called when the 'Login' button is clicked.
@@ -229,7 +224,7 @@ class Menu_principal(customtkinter.CTk):
 
     def back_menu(self):
         self.LoginWindow.withdraw()
-        self.PayWindow.withdraw()
+        self.PlayWindow.withdraw()
         self.MembersWindow.withdraw()
         self.deiconify()
 
@@ -249,7 +244,7 @@ class Menu_principal(customtkinter.CTk):
                 """
         self.withdraw()
         self.MembersWindow.withdraw()
-        self.PayWindow.deiconify()
+        self.PlayWindow.deiconify()
 
     def members_select(self):
         self.withdraw()
@@ -280,14 +275,37 @@ class Menu_principal(customtkinter.CTk):
         new_scaling_float = int(new_scaling.replace("%", "")) / 100
         customtkinter.set_widget_scaling(new_scaling_float)
 
-    def sidebar_button_event(self):
-        """Handle the sidebar button click event.
-               This method is called when a sidebar button is clicked.
-               Args:
-                   None
-               Returns:
-                   None
-               """
-        print("sidebar_button click")
+    def ejecutar_play(self):
+        #if Logged1(Player):
+        self.withdraw()
+        self.PlayWindow.deiconify()
+        #else:
+            #self.PlayWindow.withdraw()
+            #self.LoginWindow.deiconify()
+
+
+    def ejecutar_Game_Multiplayer(self):
+        """
+        Example
+        if Logged1(Player) and Logged1(Player2):
+            self.destroy()
+            pygame.init()
+        else:
+            self.PlayWindow.withdraw()
+            self.LoginWindow.deiconify()
+            
+       """
+        
+    def ejecutar_Game_OnePlayer(self):
+        """
+        Example
+        if Logged1(Player):
+            self.destroy()
+            pygame.init()
+        else:
+            self.PlayWindow.withdraw()
+            self.LoginWindow.deiconify()
+            
+       """
 
 
