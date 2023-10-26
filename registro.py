@@ -79,9 +79,9 @@ Userspotify = spot.userSpot
 
 class Registro(customtkinter.CTk):
     def __init__(self):
-        green = "#245953"
-        green_light = "#408E91"
-        pink = "#E49393"
+        green = "GREEN"
+        green_light = "GREEN"
+        pink = "PINK"
         grey = "#000000"
         font_style = ('consolas', 20)
         self.imagen_seleccionada = None
@@ -104,48 +104,53 @@ class Registro(customtkinter.CTk):
         self.background_label.place(relx=0.5, rely=0.5, anchor=customtkinter.CENTER)
         # configure grid layout (4x4)
 
-        self.tabview = customtkinter.CTkTabview(self.background_label, width=600, height=600, fg_color="transparent",
+        self.tabview = customtkinter.CTkTabview(self.background_label, width=600, height=600, fg_color="#000000",
                                                 segmented_button_selected_color=green,
                                                 segmented_button_selected_hover_color=pink,
-                                                bg_color="transparent")  # Set bg_color to transparent
+                                                bg_color="#000000")  # Set bg_color to transparent
 
         # Asegúrate de mantener una referencia a la imagen para evitar que sea recolectada por el recolector de basura de Python
         self.tabview.place(relx=0.5, rely=0.5, anchor=customtkinter.CENTER)
         self.tabview.add(dic.Data[dic.language])
         self.tabview.add(dic.Game[dic.language])
         self.tabview.add(dic.Music[dic.language])
+        self.tabview.add(dic.Members[dic.language])
         self.tabview.add(dic.Palettes[dic.language])
         self.tabview.add(dic.Texture[dic.language])
-        self.tabview.add(dic.Members[dic.language])
         self.tabview.tab(dic.Data[dic.language]).grid_columnconfigure(0, weight=1)  # configure grid of individual tabs
         self.tabview.tab(dic.Game[dic.language]).grid_columnconfigure(0, weight=1)
         self.tabview.tab(dic.Data[dic.language]).configure(bg_color="transparent", fg_color="transparent")
+        self.tabview.tab(dic.Music[dic.language]).configure(bg_color="transparent", fg_color="transparent")
+        self.tabview.tab(dic.Game[dic.language]).configure(bg_color="transparent", fg_color="transparent")
+        self.tabview.tab(dic.Palettes[dic.language]).configure(bg_color="transparent", fg_color="transparent")
+        self.tabview.tab(dic.Texture[dic.language]).configure(bg_color="transparent", fg_color="transparent")
+        self.tabview.tab(dic.Members[dic.language]).configure(bg_color="transparent", fg_color="transparent")
 
         self.logo_label = customtkinter.CTkLabel(self.tabview.tab(dic.Data[dic.language]),
                                                  text=dic.Registration[dic.language],
                                                  font=customtkinter.CTkFont(size=20, weight="bold"))
         self.logo_label.place(relx=0.5, rely=0.1, anchor=customtkinter.CENTER)
 
-        self.nombre = customtkinter.CTkLabel(self.tabview.tab(dic.Data[dic.language]), text=dic.Name[dic.language],
-                                             anchor="w")
-        self.nombre.place(relx=0.5, rely=0.2, anchor=customtkinter.CENTER)
+        # self.nombre = customtkinter.CTkLabel(self.tabview.tab(dic.Data[dic.language]), text=dic.Name[dic.language],
+        #                                      anchor="w")
+        # self.nombre.place(relx=0.5, rely=0.2, anchor=customtkinter.CENTER)
 
-        self.entry_Nombre = customtkinter.CTkEntry(self.tabview.tab(dic.Data[dic.language]))
-        self.entry_Nombre.place(relx=0.5, rely=0.25, anchor=customtkinter.CENTER)
+        self.entry_Nombre = customtkinter.CTkEntry(self.tabview.tab(dic.Data[dic.language]), placeholder_text=dic.Name[dic.language])
+        self.entry_Nombre.place(relx=0.5, rely=0.2, anchor=customtkinter.CENTER)
 
-        self.apellido = customtkinter.CTkLabel(self.tabview.tab(dic.Data[dic.language]), text=dic.Surname[dic.language],
-                                               anchor="w")
-        self.apellido.place(relx=0.5, rely=0.3, anchor=customtkinter.CENTER)
+        # self.apellido = customtkinter.CTkLabel(self.tabview.tab(dic.Data[dic.language]), text=dic.Surname[dic.language],
+        #                                        anchor="w")
+        # self.apellido.place(relx=0.5, rely=0.3, anchor=customtkinter.CENTER)
 
-        self.entry_Apellido = customtkinter.CTkEntry(self.tabview.tab(dic.Data[dic.language]))
-        self.entry_Apellido.place(relx=0.5, rely=0.35, anchor=customtkinter.CENTER)
+        self.entry_Apellido = customtkinter.CTkEntry(self.tabview.tab(dic.Data[dic.language]), placeholder_text=dic.Surname[dic.language])
+        self.entry_Apellido.place(relx=0.5, rely=0.27, anchor=customtkinter.CENTER)
 
-        self.correo = customtkinter.CTkLabel(self.tabview.tab(dic.Data[dic.language]), text=dic.Email[dic.language],
-                                             anchor="w")
-        self.correo.place(relx=0.5, rely=0.4, anchor=customtkinter.CENTER)
+        # self.correo = customtkinter.CTkLabel(self.tabview.tab(dic.Data[dic.language]), text=dic.Email[dic.language],
+        #                                      anchor="w")
+        # self.correo.place(relx=0.5, rely=0.4, anchor=customtkinter.CENTER)
 
-        self.entry_Correo = customtkinter.CTkEntry(self.tabview.tab(dic.Data[dic.language]))
-        self.entry_Correo.place(relx=0.5, rely=0.45, anchor=customtkinter.CENTER)
+        self.entry_Correo = customtkinter.CTkEntry(self.tabview.tab(dic.Data[dic.language]), placeholder_text=dic.Email[dic.language])
+        self.entry_Correo.place(relx=0.5, rely=0.34, anchor=customtkinter.CENTER)
 
         self.edad_label = customtkinter.CTkLabel(self.tabview.tab(dic.Data[dic.language]),
                                                  text=dic.Age[dic.language] + ": 0")
@@ -343,11 +348,11 @@ class Registro(customtkinter.CTk):
                                                   height=100)
 
         # Coloca los botones en la ventana
-        self.buttonRed.place(relx=0.5, rely=0.10)
-        self.buttonWhite.place(relx=0.5, rely=0.25)
-        self.buttonGreen.place(relx=0.5, rely=0.40)
-        self.buttonBlack.place(relx=0.5, rely=0.55)
-        self.buttonBlue.place(relx=0.5, rely=0.70)
+        self.buttonRed.place(relx=0.01, rely=0.5)
+        self.buttonWhite.place(relx=0.2, rely=0.5)
+        self.buttonGreen.place(relx=0.40, rely=0.5)
+        self.buttonBlack.place(relx=0.60, rely=0.5)
+        self.buttonBlue.place(relx=0.80, rely=0.5)
         # --------------------------------------------------------------------------------------------------------------------------------
         # --------------------------------------------------------------------------------------------------------------------------------
         block1Metal= PhotoImage(file="assets/Blocks/bloquemetal.png").subsample(6, 6)
