@@ -63,6 +63,11 @@ Palettes = Word('Paletas de color', 'Color palettes','Palettes de couleurs')
 Facial = Word('LogFace','','')
 Members = Word('Member','','')
 VerifyPassword = Word('Verificar contraseña', 'Verify password', 'Vérifier le mot de passe')
+SelectModegame = Word('Seleccionar modo de juego', 'Select Game Mode', 'Sélectionner le mode de jeu')
+OnePlayer = Word('Un jugador', 'One player', 'Un joueur')
+MultiplayerLocal = Word('Multijugador Local', 'Multiplayer Local', 'Multijoueur Local')
+
+
 
 
 
