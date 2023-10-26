@@ -200,6 +200,7 @@ class Registro(customtkinter.CTk):
         # )
         # self.facial_label.place(relx=0.55, rely=0.23, anchor=customtkinter.CENTER)
         self.selected_photo_path = "assets/flags/Avatar-Profile.png"
+        self.selected_picpasword = ""
         #default_image_path = "assets/flags/Avatar-Profile.png"
         default_image = Image.open(self.selected_photo_path)
         default_image = default_image.resize((100, 100), Image.ANTIALIAS)
@@ -208,7 +209,10 @@ class Registro(customtkinter.CTk):
 
 
         self.avatar_label = customtkinter.CTkLabel(self.tabview.tab(dic.Game[dic.language]),image=default_imageop,corner_radius=60,text="")
-        self.avatar_label.place(relx=0.5, rely=0.19, anchor=customtkinter.CENTER)
+        self.avatar_label.place(relx=0.35, rely=0.19, anchor=customtkinter.CENTER)
+
+        self.cameraActive = customtkinter.CTkLabel(self.tabview.tab(dic.Game[dic.language]), text="", corner_radius=60)
+        self.cameraActive.place(relx=0.65, rely=0.19, anchor=customtkinter.CENTER)
 
         #self.display_avatar_in_circle(default_image_path, self.tabview.tab(dic.Game[dic.language]), 0.5, 0.19)
         # Botón para subir foto
@@ -766,26 +770,7 @@ class Registro(customtkinter.CTk):
         new_scaling_float = int(new_scaling.replace("%", "")) / 100
         customtkinter.set_widget_scaling(new_scaling_float)
 
-    def registro_facial(self):
-
-        # Vamos a capturar el rostro
-        cap = cv2.VideoCapture(0)  # Elegimos la camara con la que vamos a hacer la deteccion
-        while (True):
-            ret, frame = cap.read()  # Leemos el video
-            frame = np.flip(frame, axis=1)
-            cv2.imshow(dic.FacialRegistration[dic.language], frame)  # Mostramos el video en pantalla
-            if cv2.waitKey(1) == 27:  # Cuando oprimamos "Escape" rompe el video
-                break
-        usuario_img = self.entry_Username.get()
-        img_path = os.path.join("ProfilePics", usuario_img + ".jpg")
-        cv2.imwrite(img_path, frame)
-        # Guardamos la ultima caputra del video como imagen y asignamos el nombre del usuario
-        self.selected_photo_path = usuario_img + ".jpg"
-        cap.release()  # Cerramos
-        cv2.destroyAllWindows()
-        self.display_avatar_in_circle(self.selected_photo_path, None, None, None, self.avatar_label)
-
-        def reg_rostro(img, lista_resultados):
+    def reg_rostro(self,img, lista_resultados, usuario_img):
             data = pyplot.imread(img)
             for i in range(len(lista_resultados)):
                 x1, y1, ancho, alto = lista_resultados[i]['box']
@@ -796,11 +781,47 @@ class Registro(customtkinter.CTk):
                 cara_reg = cv2.resize(cara_reg, (150, 200),
                                       interpolation=cv2.INTER_CUBIC)  # Guardamos la imagen con un tamaño de 150x200
                 cv2.imwrite("ProfilePics", usuario_img + ".jpg", cara_reg)
-                pyplot.imshow(data[y1:y2, x1:x2])
+                pyplot.imshow(data[y1:y2, x1:x2])       
+
+
+    def registro_facial(self):
+        # Vamos a capturar el rostro
+        cap = cv2.VideoCapture(0)  # Elegimos la camara con la que vamos a hacer la deteccion
+        while (True):
+            ret, frame = cap.read()  # Leemos el video
+            frame = np.flip(frame, axis=1)
+            cv2.imshow(dic.FacialRegistration[dic.language], frame)  # Mostramos el video en pantalla
+            if cv2.waitKey(1) == 27:  # Cuando oprimamos "Escape" rompe el video
+                break
+        usuario_img = self.entry_Username.get()
+        img_path = os.path.join("ProfilePics", usuario_img + ".jpg")
+        img_path2 = os.path.join("ProfilePics", usuario_img + ".png")
+        cv2.imwrite(img_path, frame)
+        cv2.imwrite(img_path2, frame)
+        # Guardamos la ultima caputra del video como imagen y asignamos el nombre del usuario
+        self.selected_picpasword = usuario_img + ".jpg"
+        cap.release()  # Cerramos
+        cv2.destroyAllWindows()
+        self.displayPhoto(usuario_img)
+        
+
+    def displayPhoto(self,usuario_img):
 
         img = usuario_img + ".jpg"
+        imgpng = "ProfilePics/"+ usuario_img+ ".png"
+        imagen = Image.open(imgpng)
+        imagen = imagen.resize((100, 100), Image.ANTIALIAS)
+        circular = self.make_circle_image(imagen)
+        Imagentk = ImageTk.PhotoImage(circular)
+        self.cameraActive.configure(image=Imagentk)
+        self.cameraActive.image = Imagentk
+        
         pixeles = pyplot.imread(img)
         detector = MTCNN()
         caras = detector.detect_faces(pixeles)
-        reg_rostro(img, caras)
+        self.reg_rostro(img, caras,usuario_img)
+
+
+ 
+
 # self.iniciar()
