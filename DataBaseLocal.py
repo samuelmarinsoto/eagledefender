@@ -15,6 +15,8 @@ import bcrypt
 from datetime import datetime, timedelta
 import base64
 import os
+
+import pyodbc
 from google.oauth2.credentials import Credentials
 from google_auth_oauthlib.flow import InstalledAppFlow
 from googleapiclient.discovery import build
@@ -384,59 +386,3 @@ def generate_confirmation_code():
 	"""Genera un código de confirmación aleatorio de 6 dígitos y lo retorna."""
 	return str(random.randint(100000, 999999))
 
-def main():
-    """
-    Main function. Manages interaction with the user, allowing them to register, login, or confirm their email.
-    """
-    create_tables()
-    option = input("Do you want to register (R), login (L), or confirm your email (C)? ").upper()
-
-    # Registration
-    if option == "R":
-        name = input("Enter your name: ")
-        email = input("Enter your email: ")
-        age = int(input("Enter your age: "))
-        password = input("Enter your password: ")
-
-        # Check if the email is already registered
-        if is_email_registered(email):
-            print("This email is already registered.")
-            return
-
-        # Generate and save the confirmation code
-        confirmation_code = generate_confirmation_code()
-        insert_user(name, password, None, None, email, age, None)
-        # Send the confirmation code via email
-        send_confirmation_email(email, confirmation_code)
-        print("User successfully registered. Please check your email and confirm here.")
-
-    # Login
-    elif option == "L":
-        email = input("Enter your email: ")
-        password = input("Enter your password: ")
-        user = get_user(email)
-
-        if user and verify_password(password, user[2]):
-            print("Login successful.")
-        else:
-            print("Incorrect email or password.")
-
-    # Confirm email
-    elif option == "C":
-        email = input("Enter the email you registered with: ")
-        # Generate and save a new confirmation code
-        confirmation_code = generate_and_save_code(email)
-        if confirmation_code:
-            send_confirmation_email(email, confirmation_code)
-            print("A new confirmation code has been sent to your email.")
-        else:
-            print("There was a problem generating a new confirmation code.")
-        # Verify the code entered by the user
-        entered_code = input("Enter the confirmation code you received by email: ")
-        if confirm_email(email, entered_code):
-            print("Thank you for confirming your email!")
-        else:
-            print("There was a problem confirming your email. Make sure the code is correct.")
-
-if __name__ == "__main__":
-    main()

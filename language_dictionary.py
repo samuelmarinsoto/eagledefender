@@ -2,7 +2,7 @@ from collections import namedtuple
 language = 0
 Word = namedtuple('Word',['es','en','fr'])
 Phrase = namedtuple('Phrase',['es','en','fr'])
-Member = 0
+Member: int = 0
 def changeLanguage(lang):
     """
         Cambia la variable global de idioma
@@ -12,11 +12,23 @@ def changeLanguage(lang):
             None
      """
     global language
-    language = lang
+    if isinstance(lang,str):
+        if lang == "Español":
+            language = 0
+        elif lang == "English":
+            language = 1
+        elif lang == "Français":
+            language = 2
+    else:
+        return 0
+
+
+
+
 #____________________Diccionario de palabras en español, ingles y frances_______________________
 
 Login = Word('INICIAR SESION','LOG IN','SE CONNECTER')
-Login3 = Word('Iniciar sesion','Log in','Se connecter')
+Login3 = Word('Iniciar sesión','Log in','Se connecter')
 Login2 = Word('Iniciar','Log in','Se connecter')
 Play = Word('JUGAR','PLAY','JOUER')
 WithoutAcc = Phrase('No tiene cuenta?', 'Dont have account?','Vous n` avez pas de compte ?')
@@ -48,5 +60,14 @@ System = Word('Sistema', 'System', 'Système')
 Music = Word('Musica','Music','Musique')
 Texture = Word('Texturas','Texture','Textures')
 Palettes = Word('Paletas de color', 'Color palettes','Palettes de couleurs')
+Facial = Word('LogFace','','')
+Members = Word('Member','','')
+VerifyPassword = Word('Verificar contraseña', 'Verify password', 'Vérifier le mot de passe')
+SelectModegame = Word('Seleccionar modo de juego', 'Select Game Mode', 'Sélectionner le mode de jeu')
+OnePlayer = Word('Un jugador', 'One player', 'Un joueur')
+MultiplayerLocal = Word('Multijugador Local', 'Multiplayer Local', 'Multijoueur Local')
+
+
+
 
 
