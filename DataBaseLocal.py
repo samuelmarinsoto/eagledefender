@@ -102,7 +102,14 @@ def create_tables():
                 Email TEXT NOT NULL UNIQUE,
                 Age INTEGER,
                 Photo TEXT,
-                Membresía TEXT
+                Membresía TEXT,
+                SpotifyUser TEXT,
+                Song1 TEXT,
+                Song2 TEXT,
+                Song3 TEXT,
+                NúmeroDeTarjeta TEXT,
+                FechaDeVencimiento DATE,
+                CVC INTEGER
             )
         """)
 
@@ -112,25 +119,11 @@ def create_tables():
                 ID INTEGER PRIMARY KEY AUTOINCREMENT,
                 UserID INTEGER,
                 PaletaDeColores TEXT,
-                SpotifyUser TEXT,
-                Song1 TEXT,
-                Song2 TEXT,
-                Song3 TEXT,
+                Textura TEXT,
                 FOREIGN KEY (UserID) REFERENCES Users(UserID)
             )
         """)
 
-        # Tabla de Membresía
-        cursor.execute("""
-            CREATE TABLE IF NOT EXISTS MembresíaTabla (
-                ID INTEGER PRIMARY KEY AUTOINCREMENT,
-                UserID INTEGER,
-                NúmeroDeTarjeta TEXT,
-                FechaDeVencimiento DATE,
-                CVC INTEGER,
-                FOREIGN KEY (UserID) REFERENCES Users(UserID)
-            )
-        """)
 
         conn.commit()
 
@@ -171,48 +164,41 @@ def verify_password(password, hashed_from_db):
 	return bcrypt.checkpw(password.encode('utf-8'), hashed_from_db)
 
 
-def insert_user(username, password, first_name, last_name, email, age, photo):
+def insert_user(username, password, first_name, last_name, email, age, photo,membresia, spotify_user, song1, song2, song3, card_number, expiry_date, cvc):
+    """
+    Inserts a new user into the database with the provided information.
 
-	"""Inserts a new user into the database with the provided information.
+    Args:
+        ... [same as before, plus the new fields] ...
 
-	Args:
-		username (str): Desired username.
-		password (str): Desired password.
-		first_name (str): User's first name.
-		last_name (str): User's last name.
-		email (str): User's email address.
-		age (int): User's age.
-		photo (str): Link or path to user's photo.
-		code (str): Generated verification code.
+    Returns:
+        bool: True if the user was inserted successfully, False otherwise.
+    """
+    username = username.lower()
+    if age < 13:
+        tkinter.messagebox.showerror("Error", "The user must be at least 13 years old to register.")
+        return False
 
-	Returns:
-		bool: True if the user was inserted successfully, False otherwise.
-	"""
-	username = username.lower()
-	if age < 13:
-		tkinter.messagebox.showerror("Error", "The user must be at least 13 years old to register.")
-		return False
+    hashed_pass = hash_password(password)
 
-
-	hashed_pass = hash_password(password)
-
-	try:
-		conn = connect()
-		cursor = conn.cursor()
-		cursor.execute("""
-	            INSERT INTO Users (Username, Password, FirstName, LastName, Email, Age, Photo)
-	            VALUES (?, ?, ?, ?, ?, ?, ?)
-	        """, (username, hashed_pass, first_name, last_name, email, age, photo))
-		conn.commit()
-		return True
-	except sqlite3.IntegrityError:
-		print("The email or username is already registered.")
-	except Exception as e:
-		print(f"An error occurred while inserting the user: {e}")
-	finally:
-		cursor.close()
-		conn.close()
-	return False
+    try:
+        conn = connect()
+        cursor = conn.cursor()
+        cursor.execute("""
+            INSERT INTO Users (Username, Password, FirstName, LastName, Email, Age, Photo, Membresía, SpotifyUser, Song1, Song2, Song3, NúmeroDeTarjeta, FechaDeVencimiento, CVC)
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+        """, (username, hashed_pass, first_name, last_name, email, age, photo, membresia, spotify_user, song1, song2, song3,
+              card_number, expiry_date, cvc))
+        conn.commit()
+        return True
+    except sqlite3.IntegrityError:
+        print("The email or username is already registered.")
+    except Exception as e:
+        print(f"An error occurred while inserting the user: {e}")
+    finally:
+        cursor.close()
+        conn.close()
+    return False
 
 
 def validate_user(username, password):
@@ -320,26 +306,25 @@ def is_username_registered(username):
 
 
 def get_user(email):
-	"""Returns the details of a user based on their email address.
+    """Returns the details of a user based on their email address.
 
-	    Args:
-	        email (str): The email address of the user.
+        Args:
+            email (str): The email address of the user.
 
-	    Returns:
-	        tuple: User details retrieved from the database, or None if an error occurred.
-	    """
-	try:
-		conn = connect()
-		cursor = conn.cursor()
-		cursor.execute(
-			'SELECT UserID, Username, Password, FirstName, LastName, Email, Age, Photo FROM '
-			'Users WHERE Email = ?', (email,))
-		usuario = cursor.fetchone()
-		return usuario
-	except Exception as e:
-		print(f"Ocurrió un error al obtener el usuario: {e}")
-		return None
-
+        Returns:
+            tuple: User details retrieved from the database, or None if an error occurred.
+        """
+    try:
+        conn = connect()
+        cursor = conn.cursor()
+        cursor.execute(
+            'SELECT UserID, Username, Password, FirstName, LastName, Email, Age, Photo, SpotifyUser, Song1, Song2, Song3, NúmeroDeTarjeta, FechaDeVencimiento, CVC FROM '
+            'Users WHERE Email = ?', (email,))
+        usuario = cursor.fetchone()
+        return usuario
+    except Exception as e:
+        print(f"Ocurrió un error al obtener el usuario: {e}")
+        return None
 
 
 def is_email_registered(email):
@@ -386,3 +371,104 @@ def generate_confirmation_code():
 	"""Genera un código de confirmación aleatorio de 6 dígitos y lo retorna."""
 	return str(random.randint(100000, 999999))
 
+
+def insert_membership_status(username, is_member):
+	"""
+	Inserts the membership status of a user into the database.
+
+	Args:
+		username (str): The username of the user.
+		is_member (bool): True if the user wants to be a member, False otherwise.
+
+	Returns:
+		bool: True if the operation was successful, False otherwise.
+	"""
+	try:
+		conn = connect()
+		cursor = conn.cursor()
+
+		# Convert boolean to a recognizable string representation
+		membership_status = "Yes" if is_member else "No"
+
+		cursor.execute("""
+            UPDATE Users SET Membresía = ? WHERE Username = ?
+        """, (membership_status, username))
+		conn.commit()
+		return True
+	except Exception as e:
+		print(f"An error occurred while inserting the membership status: {e}")
+		return False
+	finally:
+		cursor.close()
+		conn.close()
+
+
+def insert_membership_details(username, card_number, expiry_date, cvc):
+	"""
+	Inserts the card details of a user into the database.
+
+	Args:
+		username (str): The username of the user.
+		card_number (str): The card number of the user.
+		expiry_date (str): The expiry date of the card.
+		cvc (int): The CVC of the card.
+
+	Returns:
+		bool: True if the operation was successful, False otherwise.
+	"""
+	try:
+		conn = connect()
+		cursor = conn.cursor()
+
+		cursor.execute("""
+            UPDATE Users 
+            SET NúmeroDeTarjeta = ?, FechaDeVencimiento = ?, CVC = ? 
+            WHERE Username = ?
+        """, (card_number, expiry_date, cvc, username))
+		conn.commit()
+		return True
+	except Exception as e:
+		print(f"An error occurred while inserting the card details: {e}")
+		return False
+	finally:
+		cursor.close
+
+
+def update_membership_status(username, membership_status):
+	"""
+	Updates the membership status of a user in the database.
+
+	Args:
+		username (str): The username of the user.
+		membership_status (str): The new membership status. For example, "Yes" for members, "No" for non-members.
+
+	Returns:
+		bool: True if the update was successful, False otherwise.
+	"""
+	try:
+		conn = connect()
+		cursor = conn.cursor()
+		cursor.execute("""
+            UPDATE Users 
+            SET Membresía = ? 
+            WHERE Username = ?
+        """, (membership_status, username.lower()))
+		conn.commit()
+		return True
+	except Exception as e:
+		print(f"An error occurred while updating membership status: {e}")
+	finally:
+		cursor.close()
+		conn.close()
+	return False
+
+
+def is_user_member(username):
+    user = get_user(username)
+    if user and user["Membresía"] == "Yes":
+        return True
+    return False
+def main():
+	create_tables()
+if __name__ == "__main__":
+	main()
