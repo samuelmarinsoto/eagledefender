@@ -62,6 +62,7 @@ Texture = Word('Texturas','Texture','Textures')
 Palettes = Word('Paletas de color', 'Color palettes','Palettes de couleurs')
 Facial = Word('LogFace','','')
 Members = Word('Member','','')
+VerifyPassword = Word('Verificar contraseña', 'Verify password', 'Vérifier le mot de passe')
 
 
 

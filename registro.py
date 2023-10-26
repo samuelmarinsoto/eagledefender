@@ -99,7 +99,7 @@ class Registro(customtkinter.CTk):
         self.selected_photo_path = "assets/flags/Avatar-Profile.png"
         self.background_label = customtkinter.CTkLabel(self, width=1024, height=1024, text=None)
         # Establecer la imagen de fondo al CTkLabel
-        self.background_image = ImageTk.PhotoImage(Image.open("assets/BackGround/Black.png"))
+        self.background_image = ImageTk.PhotoImage(Image.open("assets/BackGround/pattern.png"))
         self.background_label.configure(image=self.background_image)
         self.background_label.image = self.background_image  # mantener una referencia a la imagen
         self.background_label.place(relx=0.5, rely=0.5, anchor=customtkinter.CENTER)
@@ -165,6 +165,11 @@ class Registro(customtkinter.CTk):
                                                    hover_color=green,
                                                    command=lambda: [self.DateSelect(), self.toggle_calendar()])
         self.edad_button.place_forget()
+        self.calendario_button = customtkinter.CTkButton(self.tabview.tab(dic.Data[dic.language]),
+                                                         text="Whats your birthday?",
+                                                         fg_color=green_light, hover_color=green,
+                                                         command=self.toggle_calendar)
+        self.calendario_button.place(relx=0.5, rely=0.55, anchor=customtkinter.CENTER)
         # -------------------------------------------------------------------------------
 
         self.logo_label = customtkinter.CTkLabel(self.tabview.tab(dic.Game[dic.language]),
@@ -172,23 +177,23 @@ class Registro(customtkinter.CTk):
                                                  font=customtkinter.CTkFont(size=20, weight="bold"))
         self.logo_label.place(relx=0.5, rely=0.1, anchor=customtkinter.CENTER)
 
-        self.username = customtkinter.CTkLabel(self.tabview.tab(dic.Game[dic.language]),
-                                               text=dic.Username[dic.language], anchor="w")
-        self.username.place(relx=0.5, rely=0.32, anchor=customtkinter.CENTER)
-        self.entry_Username = customtkinter.CTkEntry(self.tabview.tab(dic.Game[dic.language]))
-        self.entry_Username.place(relx=0.5, rely=0.35, anchor=customtkinter.CENTER)
-        self.contra = customtkinter.CTkLabel(self.tabview.tab(dic.Game[dic.language]), text=dic.Password[dic.language],
-                                             anchor="w")
-        self.contra.place(relx=0.5, rely=0.42, anchor=customtkinter.CENTER)
+        # self.username = customtkinter.CTkLabel(self.tabview.tab(dic.Game[dic.language]),
+        #                                        text=dic.Username[dic.language], anchor="w")
+        # self.username.place(relx=0.5, rely=0.32, anchor=customtkinter.CENTER)
+        self.entry_Username = customtkinter.CTkEntry(self.tabview.tab(dic.Game[dic.language]), placeholder_text=dic.Username[dic.language])
+        self.entry_Username.place(relx=0.5, rely=0.2, anchor=customtkinter.CENTER)
+        # self.contra = customtkinter.CTkLabel(self.tabview.tab(dic.Game[dic.language]), text=dic.Password[dic.language],
+        #                                      anchor="w")
+        # self.contra.place(relx=0.5, rely=0.42, anchor=customtkinter.CENTER)
 
-        self.entry_Contra = customtkinter.CTkEntry(self.tabview.tab(dic.Game[dic.language]), show="◊")
-        self.entry_Contra.place(relx=0.5, rely=0.45, anchor=customtkinter.CENTER)
-        self.contra_check = customtkinter.CTkLabel(self.tabview.tab(dic.Game[dic.language]),
-                                                   text="Verificar " + dic.Password[dic.language], anchor="w")
-        self.contra_check.place(relx=0.5, rely=0.52, anchor=customtkinter.CENTER)
+        self.entry_Contra = customtkinter.CTkEntry(self.tabview.tab(dic.Game[dic.language]), show="◊", placeholder_text=dic.Password[dic.language])
+        self.entry_Contra.place(relx=0.5, rely=0.27, anchor=customtkinter.CENTER)
+        # self.contra_check = customtkinter.CTkLabel(self.tabview.tab(dic.Game[dic.language]),
+        #                                            text="Verificar " + dic.Password[dic.language], anchor="w")
+        # self.contra_check.place(relx=0.5, rely=0.52, anchor=customtkinter.CENTER)
 
-        self.entry_Contra_check = customtkinter.CTkEntry(self.tabview.tab(dic.Game[dic.language]), show="◊")
-        self.entry_Contra_check.place(relx=0.5, rely=0.55, anchor=customtkinter.CENTER)
+        self.entry_Contra_check = customtkinter.CTkEntry(self.tabview.tab(dic.Game[dic.language]), show="◊", placeholder_text=dic.VerifyPassword[dic.language])
+        self.entry_Contra_check.place(relx=0.5, rely=0.34, anchor=customtkinter.CENTER)
 
         # self.foto = customtkinter.CTkFrame(self.tabview.tab("Juego"), fg_color=grey, corner_radius=100, height=80,width=80)
         # self.foto.place(relx=0.5, rely=0.7, anchor=customtkinter.CENTER)
@@ -215,7 +220,7 @@ class Registro(customtkinter.CTk):
         # )
         # self.facial_label.place(relx=0.55, rely=0.23, anchor=customtkinter.CENTER)
         self.selected_photo_path = "assets/flags/Avatar-Profile.png"
-        self.selected_picpasword = ""
+        self.selected_picpassword = ""
         #default_image_path = "assets/flags/Avatar-Profile.png"
         default_image = Image.open(self.selected_photo_path)
         default_image = default_image.resize((100, 100), Image.ANTIALIAS)
@@ -224,10 +229,10 @@ class Registro(customtkinter.CTk):
 
 
         self.avatar_label = customtkinter.CTkLabel(self.tabview.tab(dic.Game[dic.language]),image=default_imageop,corner_radius=60,text="")
-        self.avatar_label.place(relx=0.35, rely=0.19, anchor=customtkinter.CENTER)
+        self.avatar_label.place(relx=0.5, rely=0.5, anchor=customtkinter.CENTER)
 
         self.cameraActive = customtkinter.CTkLabel(self.tabview.tab(dic.Game[dic.language]), text="", corner_radius=60)
-        self.cameraActive.place(relx=0.65, rely=0.19, anchor=customtkinter.CENTER)
+        self.cameraActive.place(relx=0.65, rely=0.5, anchor=customtkinter.CENTER)
 
         #self.display_avatar_in_circle(default_image_path, self.tabview.tab(dic.Game[dic.language]), 0.5, 0.19)
         # Botón para subir foto
@@ -243,7 +248,7 @@ class Registro(customtkinter.CTk):
             bg_color="transparent",  # Fondo transparente
             command=self.abrir_archivo
         )
-        self.subir_Foto.place(relx=0.46, rely=0.27, anchor=customtkinter.CENTER)
+        self.subir_Foto.place(relx=0.46, rely=0.65, anchor=customtkinter.CENTER)
 
         # Botón de cámara
         self.camera_icon = ImageTk.PhotoImage(file="camera_icon.png")  # Cargar el ícono
@@ -258,7 +263,7 @@ class Registro(customtkinter.CTk):
             fg_color="transparent", # Fondo transparente
             command=self.registro_facial
         )
-        self.camera_button.place(relx=0.54, rely=0.27, anchor=customtkinter.CENTER)
+        self.camera_button.place(relx=0.54, rely=0.65, anchor=customtkinter.CENTER)
 
         # ----------------------------------------------------------------------------------------
 
@@ -271,15 +276,20 @@ class Registro(customtkinter.CTk):
                                                text=dic.FavoriteSongs[dic.language], anchor="w")
         self.username.place(relx=0.5, rely=0.4, anchor=customtkinter.CENTER)
         # ---------------------------------------------------------------------------------------------
-        self.userSpot = customtkinter.CTkEntry(self.tabview.tab(dic.Music[dic.language]))
-        self.userSpot.place(relx=0.5, rely=0.4, anchor=customtkinter.CENTER)
         self.SaveuserSpot = customtkinter.CTkButton(self.tabview.tab(dic.Music[dic.language]),
                                                     text="Save Spotify User",
                                                     fg_color=green_light, hover_color=green,
                                                     command=self.UserSpotSelect)
         self.SaveuserSpot.place(relx=0.75, rely=0.3, anchor=customtkinter.CENTER)
 
-        self.cancion1 = customtkinter.CTkEntry(self.tabview.tab(dic.Music[dic.language]))
+
+
+
+        self.userSpot = customtkinter.CTkEntry(self.tabview.tab(dic.Music[dic.language]), placeholder_text="Spotify User")
+        self.userSpot.place(relx=0.5, rely=0.3, anchor=customtkinter.CENTER)
+
+
+        self.cancion1 = customtkinter.CTkEntry(self.tabview.tab(dic.Music[dic.language]), placeholder_text="Song 1")
         self.cancion1.place(relx=0.5, rely=0.35, anchor=customtkinter.CENTER)
         self.song_button_1 = customtkinter.CTkButton(self.tabview.tab(dic.Music[dic.language]),
                                                      text="Search",
@@ -287,15 +297,15 @@ class Registro(customtkinter.CTk):
                                                      command=self.SongSelect1)
         self.song_button_1.place(relx=0.75, rely=0.35, anchor=customtkinter.CENTER)
 
-        self.cancion2 = customtkinter.CTkEntry(self.tabview.tab(dic.Music[dic.language]))
-        self.cancion2.place(relx=0.5, rely=0.3, anchor=customtkinter.CENTER)
+        self.cancion2 = customtkinter.CTkEntry(self.tabview.tab(dic.Music[dic.language]), placeholder_text="Song 2")
+        self.cancion2.place(relx=0.5, rely=0.4, anchor=customtkinter.CENTER)
         self.song_button_2 = customtkinter.CTkButton(self.tabview.tab(dic.Music[dic.language]),
                                                      text="Search",
                                                      fg_color=green_light, hover_color=green,
                                                      command=self.SongSelect2)
         self.song_button_2.place(relx=0.75, rely=0.4, anchor=customtkinter.CENTER)
 
-        self.cancion3 = customtkinter.CTkEntry(self.tabview.tab(dic.Music[dic.language]))
+        self.cancion3 = customtkinter.CTkEntry(self.tabview.tab(dic.Music[dic.language]), placeholder_text="Song 3")
         self.cancion3.place(relx=0.5, rely=0.45, anchor=customtkinter.CENTER)
         self.song_button_3 = customtkinter.CTkButton(self.tabview.tab(dic.Music[dic.language]),
                                                      text="Search",
@@ -322,17 +332,17 @@ class Registro(customtkinter.CTk):
             command=self.on_register_button_click)
         self.register_button_music.place(relx=0.5, rely=0.9, anchor=customtkinter.CENTER)
 
-        self.calendario_button = customtkinter.CTkButton(self.tabview.tab(dic.Data[dic.language]),
-                                                         text="Show/Hide Calendar",
-                                                         fg_color=green_light, hover_color=green,
-                                                         command=self.toggle_calendar)
-        self.calendario_button.place(relx=0.5, rely=0.55, anchor=customtkinter.CENTER)
+
 
         self.testPlay = customtkinter.CTkButton(self.tabview.tab(dic.Music[dic.language]),
                                                 text="Play text",
                                                 fg_color=green_light, hover_color=green,
                                                 command=self.PlayTEst)
         self.testPlay.place(relx=0.9, rely=0.9, anchor=customtkinter.CENTER)
+
+        # --------------------------------------------------------------------------------------------------------------------------------
+        """Aquí va la inserción de la tarjeta"""
+
 
         # --------------------------------------------------------------------------------------------------------------------------------
         paletteRed = PhotoImage(file="assets/Palettes/Red.png").subsample(4, 4)
@@ -344,6 +354,10 @@ class Registro(customtkinter.CTk):
         self.buttonRed = customtkinter.CTkButton(self.tabview.tab(dic.Palettes[dic.language]), text="",
                                                  image=paletteRed, fg_color=grey,
                                                  command=lambda: user.selecPalett("RED"), width=100, height=100)
+        self.switch_var = customtkinter.StringVar(value="off")
+        self.switch = customtkinter.CTkSwitch(self.tabview.tab(dic.Palettes[dic.language]), text=None, command=None,
+                                         variable=self.switch_var, onvalue="on", offvalue="off", fg_color="Red" ,button_color="Black",  button_hover_color="WHite", progress_color="Green")
+        self.switch.place(relx=0.01, rely=0.4)
         self.buttonWhite = customtkinter.CTkButton(self.tabview.tab(dic.Palettes[dic.language]), text="",
                                                    image=paletteWhite,
                                                    fg_color=grey, command=lambda: user.selecPalett("WHITE"), width=100,
@@ -367,6 +381,12 @@ class Registro(customtkinter.CTk):
         self.buttonGreen.place(relx=0.40, rely=0.5)
         self.buttonBlack.place(relx=0.60, rely=0.5)
         self.buttonBlue.place(relx=0.80, rely=0.5)
+
+        self.switchVarRed = customtkinter.StringVar(value="off")
+        self.switchRed = customtkinter.CTkSwitch(self.tabview.tab(dic.Palettes[dic.language]), text=None, command=None,
+                                              variable=self.switchVarRed, onvalue="on", offvalue="off", fg_color="Red",
+                                              button_color="Black", button_hover_color="WHite", progress_color="Green")
+        self.switchRed.place(relx=0.01, rely=0.4)
         # --------------------------------------------------------------------------------------------------------------------------------
         # --------------------------------------------------------------------------------------------------------------------------------
         block1Metal= PhotoImage(file="assets/Blocks/bloquemetal.png").subsample(6, 6)
@@ -814,7 +834,7 @@ class Registro(customtkinter.CTk):
         cv2.imwrite(img_path, frame)
         cv2.imwrite(img_path2, frame)
         # Guardamos la ultima caputra del video como imagen y asignamos el nombre del usuario
-        self.selected_picpasword = usuario_img + ".jpg"
+        self.selected_picpassword = usuario_img + ".jpg"
         cap.release()  # Cerramos
         cv2.destroyAllWindows()
         self.displayPhoto(usuario_img)
