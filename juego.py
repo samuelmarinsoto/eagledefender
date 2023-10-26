@@ -105,11 +105,11 @@ key_3_pressed = False
 
 # texturas
 
-textura_madera = pygame.image.load("assets/bloquemadera.png")
+textura_madera = pygame.image.load("assets/Blocks/bloquemadera.png")
 textura_madera = pygame.transform.scale(textura_madera, (screen.get_height()//20, screen.get_height()//20))
-textura_acero = pygame.image.load("assets/bloquemetal.png")
+textura_acero = pygame.image.load("assets/Blocks/bloquemetal.png")
 textura_acero = pygame.transform.scale(textura_acero, (screen.get_height()//20, screen.get_height()//20))
-textura_concreto = pygame.image.load("assets/bloqueconcreto.png")
+textura_concreto = pygame.image.load("assets/Blocks/bloqueconcreto.png")
 textura_concreto = pygame.transform.scale(textura_concreto, (screen.get_height()//20, screen.get_height()//20))
 textura_agila = pygame.image.load("assets/agila.png")
 textura_agila = pygame.transform.scale(textura_agila, (screen.get_height()//20, screen.get_height()//20))
