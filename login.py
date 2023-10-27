@@ -15,6 +15,7 @@ from mtcnn.mtcnn import MTCNN
 import numpy as np
 from DataBaseLocal import is_username_registered
 
+
 class Login(customtkinter.CTk):
     def __init__(self):
         green = "#245953"
@@ -63,7 +64,7 @@ class Login(customtkinter.CTk):
         self.sidebar_button_3.place(relx=0.5, rely=0.9, anchor=customtkinter.CENTER)
 
         self.incio_facial = customtkinter.CTkButton(self, text="Inicio facial", fg_color=green_light,
-                                                        hover_color=green, command=self.login_facial)
+                                                        hover_color=green)
         self.incio_facial.place(relx=0.5, rely=0.7, anchor=customtkinter.CENTER)
 
 
@@ -95,8 +96,11 @@ class Login(customtkinter.CTk):
         else:
             print("Usuario no encontrado")
 
-    def login_facial(self):
-        # ------------------------------Vamos a capturar el rostro-----------------------------------------------------
+
+
+        # ----------------- Funcion para guardar el rostro --------------------------
+    def login_f(self,username):
+            # ------------------------------Vamos a capturar el rostro-----------------------------------------------------
         cap = cv2.VideoCapture(0)  # Elegimos la camara con la que vamos a hacer la deteccion
         while (True):
             ret, frame = cap.read()  # Leemos el video
@@ -104,13 +108,16 @@ class Login(customtkinter.CTk):
             cv2.imshow('Login Facial', frame)  # Mostramos el video en pantalla
             if cv2.waitKey(1) == 27:  # Cuando oprimamos "Escape" rompe el video
                 break
-        usuario_login = self.entry_Username.get()  # Con esta variable vamos a guardar la foto pero con otro nombre para no sobreescribir
+        usuario_login = username  # Con esta variable vamos a guardar la foto pero con otro nombre para no sobreescribir
         cv2.imwrite(usuario_login + "LOG.jpg",
-                    frame)  # Guardamos la ultima caputra del video como imagen y asignamos el nombre del usuario
+                        frame)  # Guardamos la ultima caputra del video como imagen y asignamos el nombre del usuario
         cap.release()  # Cerramos
         cv2.destroyAllWindows()
 
-        # ----------------- Funcion para guardar el rostro --------------------------
+        # username.delete(0)  # Limpiamos los text variables
+        # self.entry_Username.delete(0)
+
+            # ----------------- Funcion para guardar el rostro --------------------------
 
         def log_rostro(img, lista_resultados):
             data = pyplot.imread(img)
@@ -121,21 +128,22 @@ class Login(customtkinter.CTk):
                 pyplot.axis('off')
                 cara_reg = data[y1:y2, x1:x2]
                 cara_reg = cv2.resize(cara_reg, (150, 200),
-                                      interpolation=cv2.INTER_CUBIC)  # Guardamos la imagen 150x200
-                cv2.imwrite(usuario_login + "LOG.jpg", cara_reg)
+                                        interpolation=cv2.INTER_CUBIC)  # Guardamos la imagen 150x200
+                cv2.imwrite(username + "LOG.jpg", cara_reg)
                 return pyplot.imshow(data[y1:y2, x1:x2])
             pyplot.show()
 
-        # -------------------------- Detectamos el rostro-------------------------------------------------------
+            # -------------------------- Detectamos el rostro-------------------------------------------------------
 
-        img = usuario_login + "LOG.jpg"
+        img = username + "LOG.jpg"
         pixeles = pyplot.imread(img)
         detector = MTCNN()
         caras = detector.detect_faces(pixeles)
         log_rostro(img, caras)
 
-        # -------------------------- Funcion para comparar los rostros --------------------------------------------
+            # -------------------------- Funcion para comparar los rostros --------------------------------------------
         def orb_sim(img1, img2):
+
             global pantalla
             orb = cv2.ORB_create()  # Creamos el objeto de comparacion
 
@@ -147,27 +155,38 @@ class Login(customtkinter.CTk):
             matches = comp.match(descr_a, descr_b)  # Aplicamos el comparador a los descriptores
 
             regiones_similares = [i for i in matches if
-                                  i.distance < 70]  # Extraemos las regiones similares en base a los puntos claves
+                                      i.distance < 70]  # Extraemos las regiones similares en base a los puntos claves
             if len(matches) == 0:
-                return 0
+                    return 0
             return len(regiones_similares) / len(matches)  # Exportamos el porcentaje de similitud
 
-        # ---------------------------- Importamos las imagenes y llamamos la funcion de comparacion ---------------------------------
+            # ---------------------------- Importamos las imagenes y llamamos la funcion de comparacion ---------------------------------
 
         im_archivos = os.listdir()  # Vamos a importar la lista de archivos con la libreria os
         if usuario_login + ".jpg" in im_archivos:  # Comparamos los archivos con el que nos interesa
-            rostro_reg = cv2.imread(usuario_login + ".jpg", 0)  # Importamos el rostro del registro
-            rostro_log = cv2.imread(usuario_login + "LOG.jpg", 0)  # Importamos el rostro del inicio de sesion
+            rostro_reg = cv2.imread(username + ".jpg", 0)  # Importamos el rostro del registro
+            rostro_log = cv2.imread(username + "LOG.jpg", 0)  # Importamos el rostro del inicio de sesion
             similitud = orb_sim(rostro_reg, rostro_log)
-            if similitud >= 0.98:
-                print("Bienvenido al sistema usuario: ", usuario_login)
+            if similitud >= 0.80:
+
                 print("Compatibilidad con la foto del registro: ", similitud)
-                return True  # Devolvemos True en caso de éxito
+                return True
+
             else:
                 print("Rostro incorrecto, Cerifique su usuario")
                 print("Compatibilidad con la foto del registro: ", similitud)
-                return False  # Devolvemos False si la similitud no es suficiente
+                return False
+
 
         else:
             print("Usuario no encontrado")
-            return False
+
+
+            # ----------------- Funcion para guardar el rostro --------------------------
+
+
+
+
+
+#_---------------------------------------------------------------------------------------
+

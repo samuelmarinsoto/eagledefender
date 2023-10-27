@@ -2,6 +2,8 @@ import spotipy
 import spotipy.util as util
 import datauser as user
 from PIL import Image, ImageTk
+import  menu
+
 
 SPOTIPY_CLIENT_ID = '5b219ea7c93c475db3fa7acd846af046'
 SPOTIPY_CLIENT_SECRET = '372adbb3af4d4a03a935d894cd5f2af5'
@@ -765,6 +767,11 @@ class Registro(customtkinter.CTk):
             # El código es correcto, procede con el registro
             self.registrar_usuario()
             self.temp_verification_code = None
+            self.destroy()
+            self.
+
+
+
         else:
             # El código es incorrecto, muestra un mensaje de error
             tkinter.messagebox.showerror("Error", "Código de verificación incorrecto.")
@@ -980,6 +987,7 @@ class Registro(customtkinter.CTk):
             # Intenta enviar el correo electrónico
             DataBase.send_confirmation_email(self.entry_Correo.get(), self.temp_verification_code)
 
+
         except Exception as e:
             tkinter.messagebox.showerror("Error",
                                          f"Error al guardar los datos o enviar el correo electrónico: {str(e)}")
@@ -1128,48 +1136,7 @@ class Registro(customtkinter.CTk):
     # def change_appearance_mode_event(self, new_appearance_mode: str):
     #     customtkinter.set_appearance_mode(new_appearance_mode)
 
-    def change_scaling_event(self, new_scaling: str):
-        new_scaling_float = int(new_scaling.replace("%", "")) / 100
-        customtkinter.set_widget_scaling(new_scaling_float)
-
-    def reg_rostro(self, img, lista_resultados, usuario_img):
-        data = pyplot.imread(img)
-        for i in range(len(lista_resultados)):
-            x1, y1, ancho, alto = lista_resultados[i]['box']
-            x2, y2 = x1 + ancho, y1 + alto
-            pyplot.subplot(1, len(lista_resultados), i + 1)
-            pyplot.axis('off')
-            cara_reg = data[y1:y2, x1:x2]
-            cara_reg = cv2.resize(cara_reg, (150, 200),
-                                  interpolation=cv2.INTER_CUBIC)  # Guardamos la imagen con un tamaño de 150x200
-            cv2.imwrite("ProfilePics", usuario_img + ".jpg", cara_reg)
-            pyplot.imshow(data[y1:y2, x1:x2])
-
-    def registro_facial(self):
-        # Vamos a capturar el rostro
-        cap = cv2.VideoCapture(0)  # Elegimos la camara con la que vamos a hacer la deteccion
-        while (True):
-            ret, frame = cap.read()  # Leemos el video
-            frame = np.flip(frame, axis=1)
-            cv2.imshow(dic.FacialRegistration[dic.language], frame)  # Mostramos el video en pantalla
-            if cv2.waitKey(1) == 27:  # Cuando oprimamos "Escape" rompe el video
-                break
-        usuario_img = self.entry_Username.get()
-        img_path = os.path.join("ProfilePics", usuario_img + ".jpg")
-        img_path2 = os.path.join("ProfilePics", usuario_img + ".png")
-        cv2.imwrite(img_path, frame)
-        cv2.imwrite(img_path2, frame)
-
-        # Actualiza self.selected_photo_path al path de la imagen capturada
-        self.selected_photo_path = img_path
-
-        # Guardamos la ultima caputra del video como imagen y asignamos el nombre del usuario
-        self.selected_picpassword = "ProfilePics" + usuario_img + ".jpg"
-        cap.release()  # Cerramos
-        cv2.destroyAllWindows()
-        self.displayPhoto(usuario_img)
-
-    def displayPhoto(self, usuario_img):
+    def displayPhoto(self,usuario_img):
         img = usuario_img + ".jpg"
         imgpng = "ProfilePics/" + usuario_img + ".png"
         imagen = Image.open(imgpng)
@@ -1184,4 +1151,50 @@ class Registro(customtkinter.CTk):
         caras = detector.detect_faces(pixeles)
         self.reg_rostro(img, caras, usuario_img)
 
-        # self.iniciar()
+    def registro_facial(self):
+        global usuario_img
+        cap = cv2.VideoCapture(0)  # Elegimos la camara con la que vamos a hacer la deteccion
+        while (True):
+            ret, frame = cap.read()  # Leemos el video
+            frame = np.flip(frame, axis=1)
+            cv2.imshow(dic.FacialRegistration[dic.language], frame)  # Mostramos el video en pantalla
+            if cv2.waitKey(1) == 27:  # Cuando oprimamos "Escape" rompe el video
+                break
+        usuario_img = self.entry_Username.get()
+        cv2.imwrite(usuario_img + ".jpg",
+                    frame)  # Guardamos la ultima caputra del video como imagen y asignamos el nombre del usuario
+        cap.release()  # Cerramos
+        cv2.destroyAllWindows()
+
+        img = self.entry_Username.get() + ".jpg"
+        pixeles = pyplot.imread(img)
+        detector = MTCNN()
+        caras = detector.detect_faces(pixeles)
+        self.reg_rostro(img, caras)
+
+    # Vamos a capturar el rostro
+
+
+    def reg_rostro(self,img, lista_resultados):
+        data = pyplot.imread(img)
+        for i in range(len(lista_resultados)):
+            x1, y1, ancho, alto = lista_resultados[i]['box']
+            x2, y2 = x1 + ancho, y1 + alto
+            pyplot.subplot(1, len(lista_resultados), i + 1)
+            pyplot.axis('off')
+            cara_reg = data[y1:y2, x1:x2]
+            cara_reg = cv2.resize(cara_reg, (150, 200),
+                                  interpolation=cv2.INTER_CUBIC)  # Guardamos la imagen con un tamaño de 150x200
+            cv2.imwrite(usuario_img + ".jpg", cara_reg)
+            pyplot.imshow(data[y1:y2, x1:x2])
+
+
+
+
+
+
+
+
+
+
+
