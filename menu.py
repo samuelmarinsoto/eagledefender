@@ -217,19 +217,24 @@ class Menu_principal(customtkinter.CTk):
         #nuevo =Login()
        #nuevo.mainloop()
     def start_facial_login(self):
+        username = self.LoginWindow.entry_Username.get()
         login_instance = Login()  # crea una instancia de la clase Login
-        success = login_instance.login_facial()
+        success = login_instance.login_f(username)
+
         if success:
             # Aquí puedes agregar el código que quieres ejecutar si el inicio facial es exitoso.
             # Por ejemplo, puedes mostrar la ventana principal o mostrar un mensaje de éxito.
-            self.PlayWindow.deiconify()  # Solo un ejemplo
+            self.PlayWindow.deiconify()
+            self.LoginWindow.withdraw()
             tkinter.messagebox.showinfo(title='Inicio facial exitoso', message='Inicio facial exitoso')
+
         else:
             # Aquí puedes agregar el código que quieres ejecutar si el inicio facial falla.
             tkinter.messagebox.showerror(title='Error', message='Inicio facial fallido. Por favor, inténtalo de nuevo.')
 
 
     def login_with_username_and_password(self):
+        global username
         username = self.LoginWindow.entry_Username.get()  # Obtiene el nombre de usuario del widget de entrada
         password = self.LoginWindow.entry_Contra.get()  # Obtiene la contraseña del widget de entrada
 
