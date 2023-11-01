@@ -2,10 +2,10 @@ import tkinter
 import tkinter.messagebox
 import customtkinter
 
-import DataBaseLocal as DataBase
-from registro import Registro
-import language_dictionary as dic
-import menu
+import database.DataBaseLocal as DataBase
+from logGUI.registro import Registro
+import auxiliar.language_dictionary as dic
+import logGUI.menu as menu
 # customtkinter.set_appearance_mode("System")  # Modes: "System" (standard), "Dark", "Light"
 # customtkinter.set_default_color_theme("green")  # Themes: "blue" (standard), "green", "dark-blue"
 import os
@@ -13,7 +13,7 @@ import cv2
 from matplotlib import pyplot
 from mtcnn.mtcnn import MTCNN
 import numpy as np
-from DataBaseLocal import is_username_registered
+from database.DataBaseLocal import is_username_registered
 
 
 class Login(customtkinter.CTk):

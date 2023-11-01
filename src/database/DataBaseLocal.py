@@ -24,7 +24,7 @@ from googleapiclient.discovery import build
 from google.auth.transport.requests import Request
 import tkinter.messagebox
 import sqlite3
-import VerificationCode
+import database.VerificationCode as VerificationCode
 # Configuración inicial para la API de Gmail
 SCOPES = ['https://www.googleapis.com/auth/gmail.send']
 CLIENT_SECRET_FILE = 'credentials.json'

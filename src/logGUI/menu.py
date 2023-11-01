@@ -1,17 +1,17 @@
 import customtkinter
 from PIL import Image, ImageTk
-import language_dictionary as dic
-import registro
+import auxiliar.language_dictionary as dic
+import logGUI.registro as registro
 from customtkinter import CTkImage, CTkLabel
 from tkinter import Label, PhotoImage
 import warnings
 import tkinter
 warnings.simplefilter(action='ignore', category=UserWarning)
-from login import Login
+from logGUI.login import Login
 import tkinter.messagebox
-import DataBaseLocal as DataBase
-import juego
-import juegoAI
+import database.DataBaseLocal as DataBase
+import game.juego as juego
+import game.juegoAI as juegoAI
 
 # customtkinter.set_appearance_mode("System")  # Modes: "System" (standard), "Dark", "Light"
 # customtkinter.set_default_color_theme("green")  # Themes: "blue" (standard), "green", "dark-blue"

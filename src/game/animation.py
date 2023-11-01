@@ -1,6 +1,7 @@
 import pygame
 import sys
 
+
 pygame.init()
 screen = pygame.display.set_mode((1024,720))
 pygame.display.set_caption("Example")

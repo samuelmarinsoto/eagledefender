@@ -1,7 +1,7 @@
 import time
 import pygame
 import math
-import spot
+import auxiliar.spot as spot
 import random
 
 current_angle = random.uniform(0, 2 * math.pi)

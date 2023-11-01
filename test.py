@@ -1,5 +1,5 @@
 import pygame
-from jugadorclase import Jugador
+from src.game.jugadorclase import Jugador
 
 pygame.init()
 screen = pygame.display.set_mode((pygame.display.Info().current_w/2,pygame.display.Info().current_h/2))

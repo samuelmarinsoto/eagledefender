@@ -1,8 +1,8 @@
 import spotipy
 import spotipy.util as util
-import datauser as user
+import src.database.datauser as user
 from PIL import Image, ImageTk
-import  menu
+import  logGUI.menu as menu
 
 
 SPOTIPY_CLIENT_ID = '5b219ea7c93c475db3fa7acd846af046'
@@ -58,17 +58,17 @@ import customtkinter
 import tkinter.filedialog as filedialog
 from tkinter import PhotoImage
 from PIL import Image, ImageTk
-import language_dictionary as dic
+import src.auxiliar.language_dictionary as dic
 import os
 import cv2
 from matplotlib import pyplot
 from mtcnn.mtcnn import MTCNN
 import numpy as np
-import menu
+import src.logGUI.menu as menu
 from tkcalendar import Calendar
 from datetime import date
-import spot
-import DataBaseLocal as DataBase
+import src.auxiliar.spot as spot
+import src.database.DataBaseLocal as DataBase
 import re
 from PIL import Image, ImageDraw
 Userspotify = spot.userSpot
@@ -768,7 +768,7 @@ class Registro(customtkinter.CTk):
             self.registrar_usuario()
             self.temp_verification_code = None
             self.destroy()
-            self.
+            
 
 
 
