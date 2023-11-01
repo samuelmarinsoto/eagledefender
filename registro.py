@@ -768,7 +768,6 @@ class Registro(customtkinter.CTk):
             self.registrar_usuario()
             self.temp_verification_code = None
             self.destroy()
-            self.
 
 
 
