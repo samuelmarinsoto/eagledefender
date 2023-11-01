@@ -479,6 +479,36 @@ def insert_membership_details(username, card_number, expiry_date, cvc):
 		return False
 	finally:
 		cursor.close
+            
+
+def update_songs(Song1, Song2,Song3):
+    """
+    Updates the songs of a user in the database.
+
+    Args:
+        Song1 (str): The song 1 of the user.
+        Song2 (str): The song 2 of the user.
+        Song3 (str): The song 3 of the user.
+
+    Returns:
+        bool: True if the update was successful, False otherwise.
+    """
+    try:
+        conn = connect()
+        cursor = conn.cursor()
+        cursor.execute("""
+            UPDATE Users 
+            SET Song1 = ?, Song2 = ?, Song3 = ?
+           
+        """, (Song1, Song2, Song3))
+        conn.commit()
+        return True
+    except Exception as e:
+        print(f"An error occurred while updating songs: {e}")
+    finally:
+        cursor.close()
+        conn.close()
+    return False
 
 
 def update_membership_status(username, membership_status):
