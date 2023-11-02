@@ -8,7 +8,7 @@ class Juego:
         self.pantalla = pygame.display.set_mode((pygame.display.Info().current_w // 1.5, pygame.display.Info().current_h // 1.5))
         pygame.display.set_caption('Eagle Defender')
 
-        img = pygame.image.load("Scenary/Arena Tileset Template Verde.png")
+        img = pygame.image.load("Scenary/Arena Tileset Template Verde.png").convert()
         self.fondo = pygame.transform.scale(img, (self.pantalla.get_width(), self.pantalla.get_height()))
         
         self.clock = pygame.time.Clock()
@@ -27,10 +27,11 @@ class Juego:
             for bala in self.balas.copy():
                 if barrera.sup.get_rect().colliderect(bala.sup.get_rect()):
                     barrera.vida -= bala.vida
-                    bala.sonido()
+                    bala.sonido.play()
                     self.balas.remove(bala)
 
                     if barrera.vida <= 0:
+                        barrera.sonido.play()
                         self.barreras.remove(barrera)
                         break
                         
@@ -40,9 +41,9 @@ class Juego:
 
     def blittodo(self):
         for bala in self.balas:
-            self.pantalla.blit(bala.sup, (bala.x, bala.y))
+            self.pantalla.blit(bala.sup, (bala.posx, bala.posy))
         for barrera in self.barreras:
-            self.pantalla.blit(barrera.sup, (barrera.x, barrera.y))
+            self.pantalla.blit(barrera.sup, (barrera.posx, barrera.posy))
         
     def partida(self):
         atacante = Jugador(1, self.pantalla)
@@ -71,12 +72,13 @@ class Juego:
             self.blittodo()
             self.pantalla.blit(defensor.sup, (defensor.posx, defensor.posy))
             self.pantalla.blit(atacante.sup, (atacante.posx, atacante.posy))
-            
+
+            print(self.clock.get_fps())
             self.clock.tick()
             pygame.display.update()
 
             # si se acaba el tiempo, cambiar de fase
-            self.cron -= dt
+            self.cron -= dt*1000
 
         self.cron = 10000
 
