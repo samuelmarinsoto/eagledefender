@@ -1,6 +1,6 @@
 import pygame
 import time
-from jugadorclase import Jugador
+from game.jugadorclase import Jugador
 
 class Juego:
     def __init__(self):
