@@ -19,6 +19,9 @@ class Juego:
         self.A = 0
         self.B = 0
 
+        self.puntosA = 0
+        self.puntosB = 0
+
         self.balas = []
         self.barreras = []
 
@@ -131,11 +134,11 @@ class Juego:
 
             self.cron -= dt
 
-        return atacante.puntaje, defensor.puntaje
+        
         
 
 juego = Juego()
 while True:
     juego.partida()
 # TODO:
-# animaciones, cronometro, musica, puntajes, datos de usuario
+# animaciones, musica, puntajes, datos de usuario, regeneracion con algoritmo de cocinero, rotacion de bloques

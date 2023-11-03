@@ -9,7 +9,13 @@ class Jugador:
         self.pantalla = pantalla
 
         self.angulo = 0
-        self.fecha_ultima_bala = time.time()*1000        
+        self.fecha_ultima_bala = time.time()*1000
+        
+        self.balasA = 10
+        self.balasB = 10
+        self.balasC = 10
+        self.balasX = 1
+                
         # rol es 0 o 1,
         # 0 == defensor, 1 == atacante
         self.rol = rol
@@ -80,25 +86,33 @@ class Jugador:
         if tecla[self.derecha] and self.limitexmax > self.posx + self.sup.get_width():
             self.posx += 300*dt
         if tecla[self.rotacion]:
-            self.angulo += 10
+            self.angulo += 5
         
     def disparar(self):
         tecla = pygame.key.get_pressed()
 
         if time.time()*1000 - self.fecha_ultima_bala > 200:
-            if tecla[self.disparoA]:
+        
+            if tecla[self.disparoA] and self.balasA > 0:
+                self.balasA -= 1
                 self.fecha_ultima_bala = time.time()*1000
                 bala = Bala(self.rol, 'A', self.pantalla, self.posx, self.posy, self.angulo)
                 return bala
-            elif tecla[self.disparoB]:
+                
+            elif tecla[self.disparoB] and self.balasB > 0:
+                self.balasB -= 1
                 self.fecha_ultima_bala = time.time()*1000
                 bala = Bala(self.rol, 'B', self.pantalla, self.posx, self.posy, self.angulo)
                 return bala
-            elif tecla[self.disparoC]:
+                
+            elif tecla[self.disparoC] and self.balasC > 0:
+                self.balasC -= 1
                 self.fecha_ultima_bala = time.time()*1000
                 bala = Bala(self.rol, 'C', self.pantalla, self.posx, self.posy, self.angulo)
                 return bala
-            elif tecla[self.disparoX]:
+                
+            elif tecla[self.disparoX] and self.balasX > 0:
+                self.balasX -= 1
                 self.fecha_ultima_bala = time.time()*1000
                 if self.rol == 0:
                     bala = Bala(self.rol, 'X', self.pantalla, self.posx, self.posy, self.angulo)
