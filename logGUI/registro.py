@@ -747,10 +747,7 @@ class Registro(customtkinter.CTk):
             self.registrar_usuario()
             self.temp_verification_code = None
             self.destroy()
-
-
-
-
+            
         else:
             # El código es incorrecto, muestra un mensaje de error
             tkinter.messagebox.showerror("Error", "Código de verificación incorrecto.")
