@@ -1,5 +1,5 @@
 import tkinter as tk
-import DataBase
+import database.DataBase as DataBase
 
 class VerificacionCodigo(tk.Toplevel):
 	def __init__(self, parent, email):

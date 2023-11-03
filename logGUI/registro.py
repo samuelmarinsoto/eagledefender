@@ -1,8 +1,8 @@
 import spotipy
 import spotipy.util as util
-import datauser as user
+import database.datauser as user
 from PIL import Image, ImageTk
-import  menu
+import  logGUI.menu as menu
 
 
 SPOTIPY_CLIENT_ID = '5b219ea7c93c475db3fa7acd846af046'
@@ -58,21 +58,20 @@ import customtkinter
 import tkinter.filedialog as filedialog
 from tkinter import PhotoImage
 from PIL import Image, ImageTk
-import language_dictionary as dic
+import Auxiliar.language_dictionary as dic
 import os
 import cv2
 from matplotlib import pyplot
 from mtcnn.mtcnn import MTCNN
 import numpy as np
-import menu
 from tkcalendar import Calendar
 from datetime import date
-import spot
-import DataBaseLocal as DataBase
+import Auxiliar.spot as spot
+import database.DataBaseLocal as DataBase
 import re
 from PIL import Image, ImageDraw
 Userspotify = spot.userSpot
-
+import logGUI.menu
 
 # customtkinter.set_appearance_mode("System")  # Modes: "System" (standard), "Dark", "Light"
 # customtkinter.set_default_color_theme("green")  # Themes: "blue" (standard), "green", "dark-blue"
@@ -80,7 +79,10 @@ Userspotify = spot.userSpot
 
 
 class Registro(customtkinter.CTk):
+
     def __init__(self):
+        self.active_palettes = "White"
+        self.active_textures = "Textura 1"
         green = "#E49393"
         green_light = "Green"
         pink = "PINK"
@@ -112,9 +114,9 @@ class Registro(customtkinter.CTk):
         self.tabview.add(dic.Data[dic.language])
         self.tabview.add(dic.Game[dic.language])
         self.tabview.add(dic.Music[dic.language])
-        self.tabview.add(dic.Members[dic.language])
         self.tabview.add(dic.Palettes[dic.language])
         self.tabview.add(dic.Texture[dic.language])
+        self.tabview.add(dic.Members[dic.language])
         self.tabview.tab(dic.Data[dic.language]).grid_columnconfigure(0, weight=1)  # configure grid of individual tabs
         self.tabview.tab(dic.Game[dic.language]).grid_columnconfigure(0, weight=1)
         self.tabview.tab(dic.Data[dic.language]).configure(bg_color="transparent", fg_color="transparent")
@@ -218,7 +220,7 @@ class Registro(customtkinter.CTk):
         # self.facial_label.place(relx=0.55, rely=0.23, anchor=customtkinter.CENTER)
         self.selected_photo_path = "assets/flags/Avatar-Profile.png"
         self.selected_picpassword = ""
-        #default_image_path = "assets/flags/Avatar-Profile.png"
+
         default_image = Image.open(self.selected_photo_path)
         default_image = default_image.resize((100, 100), Image.ANTIALIAS)
         default_imageop = ImageTk.PhotoImage(default_image)
@@ -296,6 +298,10 @@ class Registro(customtkinter.CTk):
         self.cancion3 = customtkinter.CTkEntry(self.tabview.tab(dic.Music[dic.language]), placeholder_text="Song 3")
         self.cancion3.place(relx=0.5, rely=0.41, anchor=customtkinter.CENTER)
 
+
+        self.confirmSongs = customtkinter.CTkButton(self.tabview.tab(dic.Music[dic.language]),text="Confirm Songs", fg_color=green_light, hover_color=green,command=self.confirm_Songs)
+        self.confirmSongs.place(relx=0.5, rely=0.58, anchor=customtkinter.CENTER)
+
         # ---------------------------------------------------------------------------------------------
         self.register_button_data = customtkinter.CTkButton(self.tabview.tab(dic.Data[dic.language]),
                                                             text=dic.Register[dic.language],
@@ -354,7 +360,7 @@ class Registro(customtkinter.CTk):
             self.tabview.tab(dic.Members[dic.language]), text=None,
             variable=self.switchVarMembresia, onvalue="on", offvalue="off",
             fg_color="Red", button_color="#AFAFAF", button_hover_color="WHite",
-            progress_color="Green",  command=self.update_submit_button_state)
+            progress_color="Green")
 
         self.switchMembresia.place(relx=0.555, rely=0.18, anchor=customtkinter.CENTER)
 
@@ -384,7 +390,7 @@ class Registro(customtkinter.CTk):
                                                           fg_color=green_light, hover_color=green,
                                                           command=self.on_register_button_click)
         self.card_submit_button.place(relx=0.5, rely=0.55, anchor=customtkinter.CENTER)
-        self.update_submit_button_state()
+
 
         # --------------------------------------------------------------------------------------------------------------------------------
         self.logo_label = customtkinter.CTkLabel(self.tabview.tab(dic.Palettes[dic.language]),
@@ -459,7 +465,12 @@ class Registro(customtkinter.CTk):
                                                           fg_color=green_light, hover_color=green,
                                                           command=self.on_register_button_click)
         self.card_submit_button.place(relx=0.5, rely=0.55, anchor=customtkinter.CENTER)
-        self.update_submit_button_state()
+        # Y luego asigna este método a los switches en su método de inicialización o en el lugar donde se crean
+        self.switchVarRed.trace('w', lambda *args: self.palette_switch_changed('switchVarRed'))
+        self.switchVarWhite.trace('w', lambda *args: self.palette_switch_changed('switchVarWhite'))
+        self.switchVarGreen.trace('w', lambda *args: self.palette_switch_changed('switchVarGreen'))
+        self.switchVarBlack.trace('w', lambda *args: self.palette_switch_changed('switchVarBlack'))
+        self.switchVarBlue.trace('w', lambda *args: self.palette_switch_changed('switchVarBlue'))
         # --------------------------------------------------------------------------------------------------------------------------------
         # --------------------------------------------------------------------------------------------------------------------------------
         self.logo_label = customtkinter.CTkLabel(self.tabview.tab(dic.Texture[dic.language]),
@@ -521,7 +532,10 @@ class Registro(customtkinter.CTk):
                                                           fg_color=green_light, hover_color=green,
                                                           command=self.on_register_button_click)
         self.card_submit_button.place(relx=0.5, rely=0.7, anchor=customtkinter.CENTER)
-        self.update_submit_button_state()
+        self.switchVarPack1.trace('w', lambda *args: self.switch_texture('switchVarPack1'))
+        self.switchVarPack2.trace('w', lambda *args: self.switch_texture('switchVarPack2'))
+        self.switchVarPack3.trace('w', lambda *args: self.switch_texture('switchVarPack3'))
+
         # paletteBlack = PhotoImage(file="assets/Palettes/Black.png").subsample(4, 4)
         # paletteBlue = PhotoImage(file="assets/Palettes/Blue.png").subsample(4, 4)
         #
@@ -536,52 +550,10 @@ class Registro(customtkinter.CTk):
         #                                            fg_color=grey, command=lambda: user.selectTexture("OP3"), width=100,
         #                                            height=100)
 #---------------------------------------------------------------------------------------------------------------------------------
-        def on_switch_palette_active(switchVar):
-            if switchVar.get() == "on":
-                switches = [self.switchVarRed, self.switchVarWhite, self.switchVarGreen, self.switchVarBlack,
-                            self.switchVarBlue]
-                for s in switches:
-                    if s != switchVar:
-                        s.set("off")
-
-        def on_switch_texture_active(switchVar):
-            if switchVar.get() == "on":
-                switches = [self.switchVarPack1, self.switchVarPack2, self.switchVarPack3]
-                for s in switches:
-                    if s != switchVar:
-                        s.set("off")
 
 
 
-        # Enlazar la función a los eventos de activación de los Switch de palettes
-        self.switchVarRed.trace("w", lambda *args: on_switch_palette_active(self.switchVarRed))
-        self.switchVarWhite.trace("w", lambda *args: on_switch_palette_active(self.switchVarWhite))
-        self.switchVarGreen.trace("w", lambda *args: on_switch_palette_active(self.switchVarGreen))
-        self.switchVarBlack.trace("w", lambda *args: on_switch_palette_active(self.switchVarBlack))
-        self.switchVarBlue.trace("w", lambda *args: on_switch_palette_active(self.switchVarBlue))
 
-        # Enlazar la función a los eventos de activación de los Switch de texture
-        self.switchVarPack1.trace("w", lambda *args: on_switch_texture_active(self.switchVarPack1))
-        self.switchVarPack2.trace("w", lambda *args: on_switch_texture_active(self.switchVarPack2))
-        self.switchVarPack3.trace("w", lambda *args: on_switch_texture_active(self.switchVarPack3))
-
-        # 3. Deshabilitar todos los Switch si el usuario no es miembro.
-        if self.switchVarMembresia == "off":
-            self.switchRed.configure(state="disabled")
-            self.switchWhite.configure(state="disabled")
-            self.switchGreen.configure(state="disabled")
-            self.switchBlack.configure(state="disabled")
-            self.switchBlue.configure(state="disabled")
-            self.switchPack1.configure(state="disabled")
-            self.switchPack2.configure(state="disabled")
-            self.switchPack3.configure(state="disabled")
-
-    def update_submit_button_state(self):
-        if self.switchVarMembresia.get() == "off":
-            self.card_submit_button.configure(state="disabled")
-        else:
-            self.card_submit_button.configure(state="normal")
-        self.toggle_tabs_access()
 
     #---------------------------------------------------------------------------------------------------------------------------------
         # # Coloca los botones en la ventana
@@ -619,22 +591,13 @@ class Registro(customtkinter.CTk):
             for widget in self.tabview.tab(dic.Members[dic.language]).winfo_children():
                 if widget != self.switchMembresia:
                     widget.configure(state="disabled")
-            for widget in self.tabview.tab(dic.Palettes[dic.language]).winfo_children():
-                widget.configure(state="disabled")
-            for widget in self.tabview.tab(dic.Texture[dic.language]).winfo_children():
-                widget.configure(state="disabled")
         else:
             # Activa todos los widgets en las pestañas
             for widget in self.tabview.tab(dic.Members[dic.language]).winfo_children():
                 widget.configure(state="normal")
-            for widget in self.tabview.tab(dic.Palettes[dic.language]).winfo_children():
-                widget.configure(state="normal")
-            for widget in self.tabview.tab(dic.Texture[dic.language]).winfo_children():
-                widget.configure(state="normal")
     def disable_widgets_except_switch(self, tab_name, switch_variable):
         # Obtiene la lista de widgets en la pestaña especificada
         tab_widgets = self.tabview.tab(tab_name).winfo_children()
-
         # Desactiva todos los widgets excepto el switch
         for widget in tab_widgets:
             if widget != switch_variable:
@@ -656,6 +619,22 @@ class Registro(customtkinter.CTk):
         else:
             self.calendario.place(relx=0.8, rely=0.7, anchor=customtkinter.CENTER)
             self.edad_button.place(relx=0.5, rely=0.6, anchor=customtkinter.CENTER)
+
+
+    def confirm_Songs(self):
+        Songs = [self.cancion1.get(),self.cancion2.get(),self.cancion3.get()]
+
+
+        for song in Songs:
+            if song == "":
+                tkinter.messagebox.showerror("Error", "Falta alguna canción")
+                return 0
+            elif not spot.SearchSong(song):
+                tkinter.messagebox.showerror("Error", "Alguna canción no existe")
+                return 0
+        tkinter.messagebox.showinfo("Info", "Canciones confirmadas")
+        #self.confirmSongs.configure(state="disabled")
+        return 1
 
     def UserSpotSelect(self):
         User = self.userSpot.get()
@@ -768,10 +747,7 @@ class Registro(customtkinter.CTk):
             self.registrar_usuario()
             self.temp_verification_code = None
             self.destroy()
-            self.
-
-
-
+            
         else:
             # El código es incorrecto, muestra un mensaje de error
             tkinter.messagebox.showerror("Error", "Código de verificación incorrecto.")
@@ -815,12 +791,14 @@ class Registro(customtkinter.CTk):
         expiration = self.card_expiry_entry.get()
         cvc = self.card_cvc_entry.get()
         paleta = self.get_active_palettes()
-        textura = self.get_active_textures()
+        textura = self.get_active_texture()
         # cancion = self.cancion1.get()
         usuario_img = self.entry_Username.get()
         imagen_ruta = 'ProfilePics/' + usuario_img + ".jpg"  # Ruta de la imagen guardada
 
         edad = self.age  # Accede a la edad desde la variable de instancia
+
+
 
         if edad < 13:
             tkinter.messagebox.showerror("Error", "El usuario debe tener al menos 13 años para registrarse.")
@@ -837,13 +815,14 @@ class Registro(customtkinter.CTk):
             # Llama a la función para insertar los datos en la base de datos
             try:
                 DataBase.insert_user(usuario, contra, nombre, apellido, correo, edad, imagen_ruta, "Yes",
-                                     spotify_user1, song1, song2, song3, card, expiration, cvc)
-                print(DataBase.insert_user(usuario, contra, nombre, apellido, correo, edad, imagen_ruta, "Yes",
-                                     spotify_user1, song1, song2, song3, card, expiration, cvc))
+                                     spotify_user1, song1, song2, song3, card, expiration, cvc,textura,paleta)
+                #print(DataBase.insert_user(usuario, contra, nombre, apellido, correo, edad, imagen_ruta, "Yes",
+                        #spotify_user1, song1, song2, song3, card, expiration, cvc))
 
-                DataBase.insert_personalization_option(usuario, paleta, textura)
-                print(DataBase.insert_personalization_option(usuario, paleta, textura))
+                #DataBase.insert_personalization_option(usuario, paleta, textura)
+               # print(DataBase.insert_personalization_option(usuario, paleta, textura))
                 tkinter.messagebox.showinfo(title="Registro", message="El usuario GOLD se ha registrado exitosamente.")
+                self.open_main_menu()
 
             # Nota: No mostramos el mensaje de éxito aquí.
             except Exception as e:
@@ -852,11 +831,12 @@ class Registro(customtkinter.CTk):
         if self.switchVarMembresia.get() == "off":
             try:
                 DataBase.insert_user(usuario, contra, nombre, apellido, correo, edad, imagen_ruta, "No" ,
-                                     spotify_user1, song1, song2, song3, None, None, None)
+                                     spotify_user1, song1, song2, song3, None, None, None, textura, paleta)
 
                 print( DataBase.insert_user(usuario, contra, nombre, apellido, correo, edad, imagen_ruta, "No" ,
-                                     spotify_user1, song1, song2, song3, None, None, None))
+                                     spotify_user1, song1, song2, song3, None, None, None, textura, paleta))
                 tkinter.messagebox.showinfo(title="Registro", message="El usuario BASE se ha registrado exitosamente.")
+                self.open_main_menu()
 
                 # Nota: No mostramos el mensaje de éxito aquí.
             except Exception as e:
@@ -876,43 +856,61 @@ class Registro(customtkinter.CTk):
         print("retornamos true")
         return True  # Retornamos True para indicar que el registro fue exitoso
 
+
+
+
+
+    def palette_switch_changed(self, switch_name):
+        # Un diccionario de los switches de paleta y su estado ('on' o 'off')
+        palette_switches = {
+            'switchVarRed': self.switchVarRed,
+            'switchVarWhite': self.switchVarWhite,
+            'switchVarGreen': self.switchVarGreen,
+            'switchVarBlack': self.switchVarBlack,
+            'switchVarBlue': self.switchVarBlue
+        }
+
+        # Si el switch activado está 'on', pon los demás 'off'
+        if palette_switches[switch_name].get() == "on":
+            for sw_name, sw_var in palette_switches.items():
+                if sw_name != switch_name:
+                    sw_var.set("off")
+
+    def switch_texture(self, active_switch):
+        # Lista de todos los switch variables para texturas
+        all_switches = ['switchVarPack1', 'switchVarPack2', 'switchVarPack3']
+        # Desactiva todos los switches excepto el activo
+        for switch in all_switches:
+            if switch != active_switch:
+                getattr(self, switch).set("off")
+
     def get_active_palettes(self):
-        active_palettes = []
+        # Un diccionario que mapea los nombres de las variables de interruptor a sus colores correspondientes
+        palette_switches = {
+            "switchVarRed": "Red",
+            "switchVarWhite": "White",
+            "switchVarGreen": "Green",
+            "switchVarBlack": "Black",
+            "switchVarBlue": "Blue"
+        }
 
-        # Verifica el estado de cada switch de paleta y agrega la paleta activa a la lista
-        if self.switchVarRed.get() == "on":
-            active_palettes.append("Red")
+        # Retorna el nombre de la paleta activa, o None si ninguna está activa
+        for switch, color in palette_switches.items():
+            if getattr(self, switch).get() == "on":
+                return color
+        return None
 
-        if self.switchVarWhite.get() == "on":
-            active_palettes.append("White")
-
-        if self.switchVarGreen.get() == "on":
-            active_palettes.append("Green")
-
-        if self.switchVarBlack.get() == "on":
-            active_palettes.append("Black")
-
-        if self.switchVarBlue.get() == "on":
-            active_palettes.append("Blue")
-
-        return active_palettes
-
-    def get_active_textures(self):
-        active_textures = []
-
-        # Verifica el estado de cada switch de textura y agrega la textura activa a la lista
+    def get_active_texture(self):
+        # Verifica el estado de cada switch de textura y devuelve la textura activa
         if self.switchVarPack1.get() == "on":
-            active_textures.append("Textura 1")
+            return "Textura 1"
+        elif self.switchVarPack2.get() == "on":
+            return "Textura 2"
+        elif self.switchVarPack3.get() == "on":
+            return "Textura 3"
+        # Retorna None o una cadena vacía si no se selecciona ninguna textura
+        return None
 
-        if self.switchVarPack2.get() == "on":
-            active_textures.append("Textura 2")
-
-        if self.switchVarPack3.get() == "on":
-            active_textures.append("Textura 3")
-
-        # Agrega más texturas según sea necesario
-
-        return active_textures
     def on_register_button_click(self):
 
         error_occurred = False
@@ -958,6 +956,8 @@ class Registro(customtkinter.CTk):
             tkinter.messagebox.showerror("Error", "Este nombre de usuario ya está registrado.")
             return
 
+
+
         contrasena = self.entry_Contra.get()
         if not self.validar_contrasena(contrasena):
             tkinter.messagebox.showerror("Error",
@@ -983,6 +983,7 @@ class Registro(customtkinter.CTk):
                 DataBase.update_membership_status(self.entry_Username.get(), "Yes")
                 DataBase.insert_membership_details(self.entry_Username.get(), self.card_number_var.get(),
                                                    self.card_expiry_entry.get(), self.card_cvc_entry.get())
+                #DataBase.update_songs(self.cancion1.get(), self.cancion2.get(), self.cancion3.get()) # Actualiza las canciones
 
             # Intenta enviar el correo electrónico
             DataBase.send_confirmation_email(self.entry_Correo.get(), self.temp_verification_code)
@@ -996,6 +997,8 @@ class Registro(customtkinter.CTk):
             # Si no ocurrió ningún error, realiza la verificación
         if not error_occurred:
             self.solicitar_verificacion()
+            #self.iniciar()
+
 
     def solicitar_verificacion(self):
         # Aquí puedes abrir una nueva ventana o usar la actual para solicitar el código al usuario.
@@ -1072,6 +1075,10 @@ class Registro(customtkinter.CTk):
             self.selected_photo_path = archivo
             # Cargar la imagen
             imagen = Image.open(archivo)
+            if self.entry_Username.get() == "":
+                tkinter.messagebox.showerror("Error", "Falta el nombre de usuario para guardar la imagen")
+                return
+            Image.open(archivo).save("ProfilePics/" + self.entry_Username.get() + ".jpg")
             imagen = imagen.resize((100, 100), Image.ANTIALIAS)
             circular = self.make_circle_image(imagen)
             Imagentk = ImageTk.PhotoImage(circular)
@@ -1135,6 +1142,13 @@ class Registro(customtkinter.CTk):
 
     # def change_appearance_mode_event(self, new_appearance_mode: str):
     #     customtkinter.set_appearance_mode(new_appearance_mode)
+    def open_main_menu(self):
+        # Close the registration window
+        self.destroy()  # or self.withdraw(), depending on how you've implemented the registration window
+
+        # Open the main menu
+        menu = logGUI.menu.Menu_principal()
+        menu.mainloop()
 
     def displayPhoto(self,usuario_img):
         img = usuario_img + ".jpg"
