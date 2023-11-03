@@ -12,7 +12,6 @@ warnings.simplefilter(action='ignore', category=UserWarning)
 from logGUI.login import Login
 import tkinter.messagebox
 import database.DataBaseLocal as DataBase
-import game.juegoinit as juegoinit
 import database.users as users
 import re
 # customtkinter.set_appearance_mode("System")  # Modes: "System" (standard), "Dark", "Light"
