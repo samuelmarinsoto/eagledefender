@@ -279,4 +279,7 @@ def iniciar():
 
 iniciar()
 # TODO:
-# animaciones, musica, datos de usuario, regeneracion con algoritmo de cocinero, rotacion de bloques
+# sprint 2:
+# animaciones, musica, datos de usuario (seleccion de sprites), rotacion de bloques
+# sprint 3:
+# regeneracion con algoritmo de cocinero
