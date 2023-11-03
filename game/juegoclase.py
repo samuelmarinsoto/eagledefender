@@ -1,6 +1,6 @@
 import pygame
 import time
-from game.jugadorclase import Jugador
+from jugadorclase import Jugador
 
 class Juego:
     def __init__(self):
@@ -157,7 +157,7 @@ class Juego:
 
     def fin(self, puntos1, puntos2):
 
-        fuente = pygame.font.Font(None, 144)
+        fuente = pygame.font.Font(None, 72)
         
         texto1 = f"Jugador 1: {puntos1}"
         texto2 = f"Jugador 2: {puntos2}"
@@ -175,8 +175,8 @@ class Juego:
             texto2_dim = fuente.size(texto2)
             texto2_color = (255,0,0)
         else:
-            texto1 = "EMPATE!!!" + texto1 
-            texto2 = "EMPATE!!!" + texto2
+            texto1 = "EMPATE!!! " + texto1 
+            texto2 = "EMPATE!!! " + texto2
             texto1_dim = fuente.size(texto1)
             texto2_dim = fuente.size(texto2)
             texto1_color = (0,0,255)

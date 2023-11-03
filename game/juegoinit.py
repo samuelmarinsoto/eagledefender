@@ -1,4 +1,4 @@
-from game.juegoclase import Juego
+from juegoclase import Juego
 
 def iniciar():
     jugador1_puntos = 0
@@ -9,7 +9,8 @@ def iniciar():
     print(jugador1_puntos)
     print(jugador2_puntos)
     print("partida 1 iniciando")
-    
+
+    # juego.fin(jugador1_puntos, jugador2_puntos)
     # match 1
     juego.partida(1)
     
@@ -74,3 +75,5 @@ def iniciar():
         print("fin, al fin")
 
         juego.fin(jugador1_puntos, jugador2_puntos)
+
+# iniciar()
