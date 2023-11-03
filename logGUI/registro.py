@@ -884,23 +884,32 @@ class Registro(customtkinter.CTk):
                 if sw_name != switch_name:
                     sw_var.set("off")
 
-
-
     def get_active_textures(self):
+        texture_options = {
+            'switchVarPack1': "Textura 1",
+            'switchVarPack2': "Textura 2",
+            'switchVarPack3': "Textura 3",
+        }
+        for switch_var_name, texture_name in texture_options.items():
+            if getattr(self, switch_var_name).get() == "on":
+                return texture_name
 
+        return None  # O alguna textura predeterminada si ninguna está activa
 
-        # Verifica el estado de cada switch de textura y agrega la textura activa a la lista
-        if self.switchVarPack1.get() == "on":
-            self.active_textures = "Textura 1"
+    def texture_switch_changed(self, switch_name):
+        # Un diccionario de los switches de textura y su estado ('on' o 'off')
+        texture_switches = {
+            'switchVarPack1': self.switchVarPack1,
+            'switchVarPack2': self.switchVarPack2,
+            'switchVarPack3': self.switchVarPack3
+            # Añadir más si hay más switches de textura
+        }
 
-        if self.switchVarPack2.get() == "on":
-            self.active_textures = "Textura 2"
-
-        if self.switchVarPack3.get() == "on":
-            self.active_textures = "Textura 3"
-        # Agrega más texturas según sea necesario
-        return  self.active_textures
-
+        # Si el switch activado está 'on', pon los demás 'off'
+        if texture_switches[switch_name].get() == "on":
+            for sw_name, sw_var in texture_switches.items():
+                if sw_name != switch_name:
+                    sw_var.set("off")
     def on_register_button_click(self):
 
         error_occurred = False
