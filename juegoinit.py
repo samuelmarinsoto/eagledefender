@@ -1,4 +1,4 @@
-from juegoclase.py import Juego
+from juegoclase import Juego
 
 def iniciar():
     jugador1_puntos = 0
