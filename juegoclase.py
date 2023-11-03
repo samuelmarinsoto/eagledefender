@@ -13,7 +13,7 @@ class Juego:
         
         self.clock = pygame.time.Clock()
 
-        self.cron = 10000 # 10 segundos, por ahora
+        self.cron = 30000 # 30 segundos, por ahora
 
         # van a ser objetos usuario con info del usuario
         self.A = 0
@@ -53,7 +53,9 @@ class Juego:
         atacante = Jugador(1, self.pantalla)
         defensor = Jugador(0, self.pantalla)
 
+        fuente = pygame.font.Font(None, 36)
         ultimo_tiempo = time.time()
+
         while self.cron > 0:
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
@@ -66,6 +68,11 @@ class Juego:
             # el fondo siempre se pone primero,
             # sino no se ve nada
             self.pantalla.blit(self.fondo, (0,0))
+
+            cron_texto = f"Tiempo restante: {self.cron//1000}"
+            cron_texto_dim = fuente.size(cron_texto)
+            cron_sup = fuente.render(cron_texto, True, (0, 0, 0))
+            self.pantalla.blit(cron_sup, ((self.pantalla.get_width()//2)-(cron_texto_dim[0]//2), 0))
 
             defensor.moverse(dt)
             nueva_pared = defensor.disparar()
@@ -83,9 +90,8 @@ class Juego:
             # si se acaba el tiempo, cambiar de fase
             self.cron -= dt*1000
 
-        self.cron = 10000
+        self.cron = 30000
 
-        ultimo_tiempo = time.time()
         while self.cron > 0:
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
@@ -95,6 +101,11 @@ class Juego:
             ultimo_tiempo = time.time()
 
             self.pantalla.blit(self.fondo, (0,0))
+            
+            cron_texto = f"Tiempo restante: {self.cron//1000}"
+            cron_texto_dim = fuente.size(cron_texto)
+            cron_sup = fuente.render(cron_texto, True, (0, 0, 0))
+            self.pantalla.blit(cron_sup, ((self.pantalla.get_width()//2)-(cron_texto_dim[0]//2), 0))
 
             self.moverbalas(dt)
             self.colision()
@@ -126,3 +137,5 @@ class Juego:
 juego = Juego()
 while True:
     juego.partida()
+# TODO:
+# animaciones, cronometro, musica, puntajes, datos de usuario
