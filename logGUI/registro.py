@@ -1,6 +1,6 @@
 import spotipy
 import spotipy.util as util
-import src.database.datauser as user
+import database.datauser as user
 from PIL import Image, ImageTk
 import  logGUI.menu as menu
 
@@ -58,17 +58,17 @@ import customtkinter
 import tkinter.filedialog as filedialog
 from tkinter import PhotoImage
 from PIL import Image, ImageTk
-import src.auxiliar.language_dictionary as dic
+import auxiliar.language_dictionary as dic
 import os
 import cv2
 from matplotlib import pyplot
 from mtcnn.mtcnn import MTCNN
 import numpy as np
-import src.logGUI.menu as menu
+import logGUI.menu as menu
 from tkcalendar import Calendar
 from datetime import date
-import src.auxiliar.spot as spot
-import src.database.DataBaseLocal as DataBase
+import auxiliar.spot as spot
+import database.DataBaseLocal as DataBase
 import re
 from PIL import Image, ImageDraw
 Userspotify = spot.userSpot
@@ -80,7 +80,10 @@ Userspotify = spot.userSpot
 
 
 class Registro(customtkinter.CTk):
+    
     def __init__(self):
+        self.active_palettes = "White"
+        self.active_textures = "Textura 1"  
         green = "#E49393"
         green_light = "Green"
         pink = "PINK"
@@ -112,9 +115,9 @@ class Registro(customtkinter.CTk):
         self.tabview.add(dic.Data[dic.language])
         self.tabview.add(dic.Game[dic.language])
         self.tabview.add(dic.Music[dic.language])
-        self.tabview.add(dic.Members[dic.language])
         self.tabview.add(dic.Palettes[dic.language])
         self.tabview.add(dic.Texture[dic.language])
+        self.tabview.add(dic.Members[dic.language])
         self.tabview.tab(dic.Data[dic.language]).grid_columnconfigure(0, weight=1)  # configure grid of individual tabs
         self.tabview.tab(dic.Game[dic.language]).grid_columnconfigure(0, weight=1)
         self.tabview.tab(dic.Data[dic.language]).configure(bg_color="transparent", fg_color="transparent")
@@ -295,6 +298,10 @@ class Registro(customtkinter.CTk):
 
         self.cancion3 = customtkinter.CTkEntry(self.tabview.tab(dic.Music[dic.language]), placeholder_text="Song 3")
         self.cancion3.place(relx=0.5, rely=0.41, anchor=customtkinter.CENTER)
+
+
+        self.confirmSongs = customtkinter.CTkButton(self.tabview.tab(dic.Music[dic.language]),text="Confirm Songs", fg_color=green_light, hover_color=green,command=self.confirm_Songs)
+        self.confirmSongs.place(relx=0.5, rely=0.58, anchor=customtkinter.CENTER)
 
         # ---------------------------------------------------------------------------------------------
         self.register_button_data = customtkinter.CTkButton(self.tabview.tab(dic.Data[dic.language]),
@@ -657,6 +664,22 @@ class Registro(customtkinter.CTk):
             self.calendario.place(relx=0.8, rely=0.7, anchor=customtkinter.CENTER)
             self.edad_button.place(relx=0.5, rely=0.6, anchor=customtkinter.CENTER)
 
+
+    def confirm_Songs(self):
+        Songs = [self.cancion1.get(),self.cancion2.get(),self.cancion3.get()]
+
+        
+        for song in Songs:
+            if song == "":
+                tkinter.messagebox.showerror("Error", "Falta alguna canción")
+                return 0
+            elif not spot.SearchSong(song):
+                tkinter.messagebox.showerror("Error", "Alguna canción no existe")
+                return 0
+        tkinter.messagebox.showinfo("Info", "Canciones confirmadas")
+        #self.confirmSongs.configure(state="disabled")
+        return 1
+
     def UserSpotSelect(self):
         User = self.userSpot.get()
         spot.userSpot = User
@@ -822,6 +845,8 @@ class Registro(customtkinter.CTk):
 
         edad = self.age  # Accede a la edad desde la variable de instancia
 
+    
+
         if edad < 13:
             tkinter.messagebox.showerror("Error", "El usuario debe tener al menos 13 años para registrarse.")
             return
@@ -837,12 +862,12 @@ class Registro(customtkinter.CTk):
             # Llama a la función para insertar los datos en la base de datos
             try:
                 DataBase.insert_user(usuario, contra, nombre, apellido, correo, edad, imagen_ruta, "Yes",
-                                     spotify_user1, song1, song2, song3, card, expiration, cvc)
-                print(DataBase.insert_user(usuario, contra, nombre, apellido, correo, edad, imagen_ruta, "Yes",
-                                     spotify_user1, song1, song2, song3, card, expiration, cvc))
+                                     spotify_user1, song1, song2, song3, card, expiration, cvc,textura,paleta)
+                #print(DataBase.insert_user(usuario, contra, nombre, apellido, correo, edad, imagen_ruta, "Yes",
+                        #spotify_user1, song1, song2, song3, card, expiration, cvc))
 
-                DataBase.insert_personalization_option(usuario, paleta, textura)
-                print(DataBase.insert_personalization_option(usuario, paleta, textura))
+                #DataBase.insert_personalization_option(usuario, paleta, textura)
+               # print(DataBase.insert_personalization_option(usuario, paleta, textura))
                 tkinter.messagebox.showinfo(title="Registro", message="El usuario GOLD se ha registrado exitosamente.")
 
             # Nota: No mostramos el mensaje de éxito aquí.
@@ -875,44 +900,45 @@ class Registro(customtkinter.CTk):
         #     return False  # Retornamos False para indicar que el registro no fue exitoso
         print("retornamos true")
         return True  # Retornamos True para indicar que el registro fue exitoso
+    
+    
 
     def get_active_palettes(self):
-        active_palettes = []
+    
 
         # Verifica el estado de cada switch de paleta y agrega la paleta activa a la lista
         if self.switchVarRed.get() == "on":
-            active_palettes.append("Red")
+            self.active_palettes = "Red"
 
         if self.switchVarWhite.get() == "on":
-            active_palettes.append("White")
+            self.active_palettes = "White"
 
         if self.switchVarGreen.get() == "on":
-            active_palettes.append("Green")
+            self.active_palettes = "Green"
 
         if self.switchVarBlack.get() == "on":
-            active_palettes.append("Black")
+            self.active_palettes = "Black"
 
         if self.switchVarBlue.get() == "on":
-            active_palettes.append("Blue")
+            self.active_palettes = "Blue"
 
-        return active_palettes
+        return self.active_palettes
 
     def get_active_textures(self):
-        active_textures = []
+        
 
         # Verifica el estado de cada switch de textura y agrega la textura activa a la lista
         if self.switchVarPack1.get() == "on":
-            active_textures.append("Textura 1")
+            self.active_textures = "Textura 1"
 
         if self.switchVarPack2.get() == "on":
-            active_textures.append("Textura 2")
+            self.active_textures = "Textura 2"
 
         if self.switchVarPack3.get() == "on":
-            active_textures.append("Textura 3")
-
+            self.active_textures = "Textura 3"
         # Agrega más texturas según sea necesario
-
-        return active_textures
+        return  self.active_textures
+    
     def on_register_button_click(self):
 
         error_occurred = False
@@ -957,6 +983,8 @@ class Registro(customtkinter.CTk):
         if DataBase.is_username_registered(username):
             tkinter.messagebox.showerror("Error", "Este nombre de usuario ya está registrado.")
             return
+        
+
 
         contrasena = self.entry_Contra.get()
         if not self.validar_contrasena(contrasena):
@@ -983,6 +1011,7 @@ class Registro(customtkinter.CTk):
                 DataBase.update_membership_status(self.entry_Username.get(), "Yes")
                 DataBase.insert_membership_details(self.entry_Username.get(), self.card_number_var.get(),
                                                    self.card_expiry_entry.get(), self.card_cvc_entry.get())
+                #DataBase.update_songs(self.cancion1.get(), self.cancion2.get(), self.cancion3.get()) # Actualiza las canciones
 
             # Intenta enviar el correo electrónico
             DataBase.send_confirmation_email(self.entry_Correo.get(), self.temp_verification_code)
@@ -996,6 +1025,8 @@ class Registro(customtkinter.CTk):
             # Si no ocurrió ningún error, realiza la verificación
         if not error_occurred:
             self.solicitar_verificacion()
+            #self.iniciar()
+
 
     def solicitar_verificacion(self):
         # Aquí puedes abrir una nueva ventana o usar la actual para solicitar el código al usuario.
@@ -1135,6 +1166,9 @@ class Registro(customtkinter.CTk):
 
     # def change_appearance_mode_event(self, new_appearance_mode: str):
     #     customtkinter.set_appearance_mode(new_appearance_mode)
+    def goMenu(self):
+        self.destroy    
+        menu.Menu_principal.mainloop()
 
     def displayPhoto(self,usuario_img):
         img = usuario_img + ".jpg"

@@ -12,7 +12,7 @@ import tkinter.messagebox
 import database.DataBaseLocal as DataBase
 import game.juego as juego
 import game.juegoAI as juegoAI
-
+import database.users as users
 # customtkinter.set_appearance_mode("System")  # Modes: "System" (standard), "Dark", "Light"
 # customtkinter.set_default_color_theme("green")  # Themes: "blue" (standard), "green", "dark-blue"
 
@@ -68,7 +68,7 @@ class Menu_principal(customtkinter.CTk):
         self.title("CustomTkinter complex_example.py")
         self.geometry(ScreenRes)
         self.current_screen = None
-        self.imagen = Image.open("logo agle_sinfondo.png")
+        self.imagen = Image.open("assets/Windows aux/logo agle_sinfondo.png")
 
         self.foto_logo_image = ImageTk.PhotoImage(self.imagen)
         self.foto_logo = CTkLabel(self, image=self.foto_logo_image, text=None,
@@ -81,7 +81,7 @@ class Menu_principal(customtkinter.CTk):
         # imagen = Image.open("assets/flags/Avatar-Profile.png")
         # imagen.thumbnail((100, 100))
         # self.imagen_thumbnail_tk = ImageTk.PhotoImage(imagen)
-
+        """"
         imagen_es = Image.open("assets/flags/Flag_of_Es.png")
         imagen_es_resized = imagen_es.resize(
             (int(23 / 100 * imagen_es.width), int(28 / 100 * imagen_es.height)), Image.ANTIALIAS)
@@ -97,7 +97,7 @@ class Menu_principal(customtkinter.CTk):
         imagen_fr = Image.open("assets/flags/Flag_of_Fr.png")
         imagen_fr_resized = imagen_fr.resize(
             (int(100 / 100 * imagen_fr.width), int(100/ 100 * imagen_fr.height)), Image.ANTIALIAS)
-        Fr_btn_image = CTkImage(imagen_fr_resized)
+        Fr_btn_image = CTkImage(imagen_fr_resized)"""
 
         self.languageSelector = customtkinter.CTkComboBox(self, values=["English", "Español", "Français"])
         self.languageSelector.place(relx=0.02,rely=0.05)
@@ -193,13 +193,13 @@ class Menu_principal(customtkinter.CTk):
         self.PlayWindow.logo_label = customtkinter.CTkLabel( self.PlayWindow, text=dic.SelectModegame[dic.language],font=customtkinter.CTkFont(size=20, weight="bold"))
         self.PlayWindow.logo_label.place(relx=0.5, rely=0.2, anchor=customtkinter.CENTER)
 
-        self.PlayWindow.Oneplayer = customtkinter.CTkButton( self.PlayWindow, text=dic.OnePlayer[dic.language],image=phOne,fg_color=green_light,hover_color=green,command=juegoAI.iniciar)
+        self.PlayWindow.Oneplayer = customtkinter.CTkButton( self.PlayWindow, text=dic.OnePlayer[dic.language],image=phOne,fg_color=green_light,hover_color=green,command=self.ejecutar_Game_OnePlayer)
         self.PlayWindow.Oneplayer.place(relx=0.25, rely=0.5, anchor=customtkinter.CENTER)
         
-        self.PlayWindow.Twoplayer = customtkinter.CTkButton( self.PlayWindow, text=dic.MultiplayerLocal[dic.language],image=phTwo,fg_color=green_light,hover_color=green,command=juego.iniciar)
+        self.PlayWindow.Twoplayer = customtkinter.CTkButton( self.PlayWindow, text=dic.MultiplayerLocal[dic.language],image=phTwo,fg_color=green_light,hover_color=green,command=self.ejecutar_Game_Multiplayer)
         self.PlayWindow.Twoplayer.place(relx=0.75, rely=0.5, anchor=customtkinter.CENTER)
 
-
+        
 
 
     def ejecutar_login(self):
@@ -240,6 +240,27 @@ class Menu_principal(customtkinter.CTk):
 
         if DataBase.validate_user(username, password):
             # Si el inicio de sesión es exitoso
+            Song1 = DataBase.get_user_by_username(username)[9]
+            Song2 = DataBase.get_user_by_username(username)[10]
+            Song3 = DataBase.get_user_by_username(username)[11]
+            Texture = DataBase.get_user_by_username(username)[15]
+            Palette = DataBase.get_user_by_username(username)[16]
+            if not users.player1.verify_log(users.player1.texture, users.player1.palette_color):
+                users.player1.update_song1(Song1)
+                users.player1.update_song2(Song2)
+                users.player1.update_song3(Song3)
+                users.player1.update_texture(Texture)
+                users.player1.update_palette_color(Palette)
+                print("Doit")
+            else:
+                users.player2.update_song1(Song1)
+                users.player2.update_song2(Song2)
+                users.player2.update_song3(Song3)
+                users.player2.update_texture(Texture)
+                users.player2.update_palette_color(Palette)
+                users.player2.display_customization()
+                print("Doit2")
+                
             self.PlayWindow.deiconify()
             self.LoginWindow.withdraw()
         else:
@@ -321,9 +342,24 @@ class Menu_principal(customtkinter.CTk):
 
 
     def ejecutar_Game_Multiplayer(self):
-        juego.iniciar()
+
+
+        if users.player1.verify_log(users.player1.texture, users.player1.palette_color) and users.player2.verify_log(users.player2.texture, users.player2.palette_color):
+            juego.iniciar()
+        else:
+            tkinter.messagebox.showerror("Error", "No hay suficientes jugadores logeados")
+            self.PlayWindow.withdraw()
+            self.LoginWindow.deiconify()
+        
         
     def ejecutar_Game_OnePlayer(self):
+
+
+        if users.player1.verify_log(users.player1.texture, users.player1.palette_color):
+            juegoAI.iniciar()
+        else:
+            self.PlayWindow.withdraw()
+            self.LoginWindow.deiconify()
         """
         Example
         if Logged1(Player):

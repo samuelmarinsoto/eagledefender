@@ -17,6 +17,12 @@ from database.DataBaseLocal import is_username_registered
 
 
 class Login(customtkinter.CTk):
+    """
+
+    LA INTERFAZ DE LOGIN ESTA EN MENU.PY 
+    ACA SOLO EXISTE EL LOGIN FACIAL
+
+
     def __init__(self):
         green = "#245953"
         green_light = "#408E91"
@@ -77,6 +83,7 @@ class Login(customtkinter.CTk):
     def ejecutar_Ventana(self):
         self.destroy()
         nuevo.mainloop()
+    """
     def verificacion_login(self):
         global pantalla
         log_usuario = self.entry_Username.get()

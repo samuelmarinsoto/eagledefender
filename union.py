@@ -1,7 +1,3 @@
-import time
-import tkinter
-import tkinter.messagebox
-
 import customtkinter
 
 from logGUI.menu import Menu_principal

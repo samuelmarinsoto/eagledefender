@@ -1,9 +1,6 @@
 import spotipy
 import spotipy.util as util
 import database.datauser as user
-from PIL import Image, ImageTk
-import  logGUI.menu as menu
-
 
 SPOTIPY_CLIENT_ID = '5b219ea7c93c475db3fa7acd846af046'
 SPOTIPY_CLIENT_SECRET = '372adbb3af4d4a03a935d894cd5f2af5'
@@ -49,7 +46,6 @@ def UserSpotSelect(UserSpot):
 	print(userSpot)
 
 
-import calendar
 import tkinter
 import tkinter.messagebox
 from tkinter import simpledialog
@@ -57,9 +53,8 @@ from tkinter import simpledialog
 import customtkinter
 import tkinter.filedialog as filedialog
 from tkinter import PhotoImage
-from PIL import Image, ImageTk
+from PIL import ImageTk
 import auxiliar.language_dictionary as dic
-import os
 import cv2
 from matplotlib import pyplot
 from mtcnn.mtcnn import MTCNN
@@ -111,8 +106,8 @@ class Registro(customtkinter.CTk):
         self.tabview.place(relx=0.5, rely=0.5, anchor=customtkinter.CENTER)
         self.tabview.add(dic.Data[dic.language])
         self.tabview.add(dic.Game[dic.language])
-        self.tabview.add(dic.Members[dic.language])
         self.tabview.add(dic.Music[dic.language])
+        self.tabview.add(dic.Members[dic.language])
         self.tabview.add(dic.Palettes[dic.language])
         self.tabview.add(dic.Texture[dic.language])
         self.tabview.tab(dic.Data[dic.language]).grid_columnconfigure(0, weight=1)  # configure grid of individual tabs
@@ -295,10 +290,6 @@ class Registro(customtkinter.CTk):
 
         self.cancion3 = customtkinter.CTkEntry(self.tabview.tab(dic.Music[dic.language]), placeholder_text="Song 3")
         self.cancion3.place(relx=0.5, rely=0.41, anchor=customtkinter.CENTER)
-
-
-        self.confirmSongs = customtkinter.CTkButton(self.tabview.tab(dic.Music[dic.language]),text="Confirm Songs", fg_color=green_light, hover_color=green,command=self.confirm_Songs)
-        self.confirmSongs.place(relx=0.5, rely=0.58, anchor=customtkinter.CENTER)
 
         # ---------------------------------------------------------------------------------------------
         self.register_button_data = customtkinter.CTkButton(self.tabview.tab(dic.Data[dic.language]),
@@ -661,22 +652,6 @@ class Registro(customtkinter.CTk):
             self.calendario.place(relx=0.8, rely=0.7, anchor=customtkinter.CENTER)
             self.edad_button.place(relx=0.5, rely=0.6, anchor=customtkinter.CENTER)
 
-
-    def confirm_Songs(self):
-        Songs = [self.cancion1.get(),self.cancion2.get(),self.cancion3.get()]
-
-        
-        for song in Songs:
-            if song == "":
-                tkinter.messagebox.showerror("Error", "Falta alguna canción")
-                return 0
-            elif not spot.SearchSong(song):
-                tkinter.messagebox.showerror("Error", "Alguna canción no existe")
-                return 0
-        tkinter.messagebox.showinfo("Info", "Canciones confirmadas")
-        #self.confirmSongs.configure(state="disabled")
-        return 1
-
     def UserSpotSelect(self):
         User = self.userSpot.get()
         spot.userSpot = User
@@ -842,8 +817,6 @@ class Registro(customtkinter.CTk):
 
         edad = self.age  # Accede a la edad desde la variable de instancia
 
-    
-
         if edad < 13:
             tkinter.messagebox.showerror("Error", "El usuario debe tener al menos 13 años para registrarse.")
             return
@@ -979,8 +952,6 @@ class Registro(customtkinter.CTk):
         if DataBase.is_username_registered(username):
             tkinter.messagebox.showerror("Error", "Este nombre de usuario ya está registrado.")
             return
-        
-
 
         contrasena = self.entry_Contra.get()
         if not self.validar_contrasena(contrasena):
@@ -1007,7 +978,6 @@ class Registro(customtkinter.CTk):
                 DataBase.update_membership_status(self.entry_Username.get(), "Yes")
                 DataBase.insert_membership_details(self.entry_Username.get(), self.card_number_var.get(),
                                                    self.card_expiry_entry.get(), self.card_cvc_entry.get())
-                #DataBase.update_songs(self.cancion1.get(), self.cancion2.get(), self.cancion3.get()) # Actualiza las canciones
 
             # Intenta enviar el correo electrónico
             DataBase.send_confirmation_email(self.entry_Correo.get(), self.temp_verification_code)
@@ -1021,8 +991,6 @@ class Registro(customtkinter.CTk):
             # Si no ocurrió ningún error, realiza la verificación
         if not error_occurred:
             self.solicitar_verificacion()
-            self.iniciar()
-
 
     def solicitar_verificacion(self):
         # Aquí puedes abrir una nueva ventana o usar la actual para solicitar el código al usuario.
@@ -1162,9 +1130,6 @@ class Registro(customtkinter.CTk):
 
     # def change_appearance_mode_event(self, new_appearance_mode: str):
     #     customtkinter.set_appearance_mode(new_appearance_mode)
-    def goMenu(self):
-        self.destroy    
-        menu.Menu_principal.mainloop()
 
     def displayPhoto(self,usuario_img):
         img = usuario_img + ".jpg"

@@ -24,7 +24,7 @@ from googleapiclient.discovery import build
 from google.auth.transport.requests import Request
 import tkinter.messagebox
 import sqlite3
-import database.VerificationCode as VerificationCode
+#import database.VerificationCode as VerificationCode
 # Configuración inicial para la API de Gmail
 SCOPES = ['https://www.googleapis.com/auth/gmail.send']
 CLIENT_SECRET_FILE = 'credentials.json'
@@ -114,20 +114,16 @@ def create_tables():
                 Song3 TEXT,
                 NúmeroDeTarjeta TEXT,
                 FechaDeVencimiento DATE,
-                CVC INTEGER
+                CVC INTEGER,
+                Texturas TEXT,
+                Paletas TEXT
             )
         """)
 
         # Tabla de Personalizaciones
-        cursor.execute("""
-            CREATE TABLE IF NOT EXISTS Personalizaciones (
-                ID INTEGER PRIMARY KEY AUTOINCREMENT,
-                UserID INTEGER,
-                PaletaDeColores TEXT,
-                Textura TEXT,
-                FOREIGN KEY (UserID) REFERENCES Users(UserID)
-            )
-        """)
+
+
+
 
 
         conn.commit()
@@ -169,7 +165,7 @@ def verify_password(password, hashed_from_db):
 	return bcrypt.checkpw(password.encode('utf-8'), hashed_from_db)
 
 
-def insert_user(username, password, first_name, last_name, email, age, photo,membresia, spotify_user, song1, song2, song3, card_number, expiry_date, cvc):
+def insert_user(username, password, first_name, last_name, email, age, photo,membresia, spotify_user, song1, song2, song3, card_number, expiry_date, cvc,texturas, paletas):
     """
     Inserts a new user into the database with the provided information.
 
@@ -190,10 +186,10 @@ def insert_user(username, password, first_name, last_name, email, age, photo,mem
         conn = connect()
         cursor = conn.cursor()
         cursor.execute("""
-            INSERT INTO Users (Username, Password, FirstName, LastName, Email, Age, Photo, Membresía, SpotifyUser, Song1, Song2, Song3, NúmeroDeTarjeta, FechaDeVencimiento, CVC)
-            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+            INSERT INTO Users (Username, Password, FirstName, LastName, Email, Age, Photo, Membresía, SpotifyUser, Song1, Song2, Song3, NúmeroDeTarjeta, FechaDeVencimiento, CVC, Texturas, Paletas)
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
         """, (username, hashed_pass, first_name, last_name, email, age, photo, membresia, spotify_user, song1, song2, song3,
-              card_number, expiry_date, cvc))
+              card_number, expiry_date, cvc,texturas, paletas))
         conn.commit()
         return True
     except sqlite3.IntegrityError:
@@ -204,20 +200,22 @@ def insert_user(username, password, first_name, last_name, email, age, photo,mem
         cursor.close()
         conn.close()
     return False
-def insert_personalization_option(user_id, paleta_de_colores, textura):
+
+#insert_user("admin","Cucaracha123&","admin","admin","jifsentreprise@gmail.com",18,"","No","ANGELOCEL","Yes","Toto","One","123145123","14/24","213","Textura 1","Red")
+def insert_personalization_option(username, paleta_de_colores, textura):
     try:
         # Conectarse a la base de datos (reemplaza 'nombre_de_tu_base_de_datos.db' con el nombre real)
-        conn = sqlite3.connect('nombre_de_tu_base_de_datos.db')
+        conn = sqlite3.connect('EagleDefender.db')
         cursor = conn.cursor()
 
         # Insertar la nueva opción de personalización en la tabla Personalizaciones
-        cursor.execute("INSERT INTO Personalizaciones (UserID, PaletaDeColores, Textura) VALUES (?, ?, ?)",
-                       (user_id, paleta_de_colores, textura))
+        cursor.execute("INSERT INTO Personalizaciones (Username, PaletaDeColores, Textura) VALUES (?, ?, ?)",
+                       (username, paleta_de_colores, textura))
 
         # Confirmar la transacción
         conn.commit()
 
-        # Cerrar la conexión
+        # Cerrar la conexiónS   
         conn.close()
 
     except sqlite3.Error as e:
@@ -294,7 +292,7 @@ def get_user_by_username(username):
         conn = connect()
         cursor = conn.cursor()
         cursor.execute(
-            'SELECT UserID, Username, Password, FirstName, LastName, Email, Age, Photo, SpotifyUser, Song1, Song2, Song3, NúmeroDeTarjeta, FechaDeVencimiento, CVC FROM '
+            'SELECT UserID, Username, Password, FirstName, LastName, Email, Age, Photo, SpotifyUser, Song1, Song2, Song3, NúmeroDeTarjeta, FechaDeVencimiento, CVC, Texturas,Paletas FROM '
             'Users WHERE Username = ?', (username,))
         usuario = cursor.fetchone()
         return usuario
@@ -366,12 +364,14 @@ def get_user(email):
         cursor = conn.cursor()
         cursor.execute(
             'SELECT UserID, Username, Password, FirstName, LastName, Email, Age, Photo, SpotifyUser, Song1, Song2, Song3, NúmeroDeTarjeta, FechaDeVencimiento, CVC FROM '
-            'Users WHERE Email = ?', (email,))
+            'Users WHERE Email = ?' , (email,))
         usuario = cursor.fetchone()
         return usuario
     except Exception as e:
         print(f"Ocurrió un error al obtener el usuario: {e}")
         return None
+
+
 
 
 def is_email_registered(email):
@@ -406,7 +406,7 @@ def generate_and_save_code(email):
 		conn = connect()
 		cursor = conn.cursor()
 		cursor.execute("UPDATE Users SET Code = ?, DateCode = ? WHERE Email = ?",
-		               (codigo_confirmacion, datetime.now(), correo))
+		               (codigo_confirmacion, datetime.now(), email))
 		conn.commit()
 		return codigo_confirmacion
 	except Exception as e:
