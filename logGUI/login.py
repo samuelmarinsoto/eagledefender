@@ -4,7 +4,7 @@ import customtkinter
 
 import database.DataBaseLocal as DataBase
 from logGUI.registro import Registro
-import auxiliar.language_dictionary as dic
+import Auxiliar.language_dictionary as dic
 import logGUI.menu as menu
 # customtkinter.set_appearance_mode("System")  # Modes: "System" (standard), "Dark", "Light"
 # customtkinter.set_default_color_theme("green")  # Themes: "blue" (standard), "green", "dark-blue"
