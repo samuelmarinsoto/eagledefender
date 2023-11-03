@@ -150,15 +150,8 @@ def hash_password(password):
 
 
 def verify_password(password, hashed_from_db):
-	"""Verifies if a password matches its encrypted version.
-
-	Args:
-		password (str): The plain-text password entered by the user.
-		hashed_from_db (bytes): The hashed password retrieved from the database.
-
-	Returns:
-		bool: True if the passwords match, False otherwise.
-	"""
+	"""The email or username is already registered.
+"""
 	if not hashed_from_db:
 		print("No hash found for this user.")
 		return False

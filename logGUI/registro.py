@@ -71,7 +71,7 @@ import database.DataBaseLocal as DataBase
 import re
 from PIL import Image, ImageDraw
 Userspotify = spot.userSpot
-
+import logGUI.menu
 
 # customtkinter.set_appearance_mode("System")  # Modes: "System" (standard), "Dark", "Light"
 # customtkinter.set_default_color_theme("green")  # Themes: "blue" (standard), "green", "dark-blue"
@@ -532,6 +532,10 @@ class Registro(customtkinter.CTk):
                                                           fg_color=green_light, hover_color=green,
                                                           command=self.on_register_button_click)
         self.card_submit_button.place(relx=0.5, rely=0.7, anchor=customtkinter.CENTER)
+        self.switchVarPack1.trace('w', lambda *args: self.switch_texture('switchVarPack1'))
+        self.switchVarPack2.trace('w', lambda *args: self.switch_texture('switchVarPack2'))
+        self.switchVarPack3.trace('w', lambda *args: self.switch_texture('switchVarPack3'))
+
         # paletteBlack = PhotoImage(file="assets/Palettes/Black.png").subsample(4, 4)
         # paletteBlue = PhotoImage(file="assets/Palettes/Blue.png").subsample(4, 4)
         #
@@ -790,7 +794,7 @@ class Registro(customtkinter.CTk):
         expiration = self.card_expiry_entry.get()
         cvc = self.card_cvc_entry.get()
         paleta = self.get_active_palettes()
-        textura = self.get_active_textures()
+        textura = self.get_active_texture()
         # cancion = self.cancion1.get()
         usuario_img = self.entry_Username.get()
         imagen_ruta = 'ProfilePics/' + usuario_img + ".jpg"  # Ruta de la imagen guardada
@@ -821,6 +825,7 @@ class Registro(customtkinter.CTk):
                 #DataBase.insert_personalization_option(usuario, paleta, textura)
                # print(DataBase.insert_personalization_option(usuario, paleta, textura))
                 tkinter.messagebox.showinfo(title="Registro", message="El usuario GOLD se ha registrado exitosamente.")
+                self.open_main_menu()
 
             # Nota: No mostramos el mensaje de éxito aquí.
             except Exception as e:
@@ -829,11 +834,12 @@ class Registro(customtkinter.CTk):
         if self.switchVarMembresia.get() == "off":
             try:
                 DataBase.insert_user(usuario, contra, nombre, apellido, correo, edad, imagen_ruta, "No" ,
-                                     spotify_user1, song1, song2, song3, None, None, None)
+                                     spotify_user1, song1, song2, song3, None, None, None, textura, paleta)
 
                 print( DataBase.insert_user(usuario, contra, nombre, apellido, correo, edad, imagen_ruta, "No" ,
-                                     spotify_user1, song1, song2, song3, None, None, None))
+                                     spotify_user1, song1, song2, song3, None, None, None, textura, paleta))
                 tkinter.messagebox.showinfo(title="Registro", message="El usuario BASE se ha registrado exitosamente.")
+                self.open_main_menu()
 
                 # Nota: No mostramos el mensaje de éxito aquí.
             except Exception as e:
@@ -855,18 +861,7 @@ class Registro(customtkinter.CTk):
 
 
 
-    def get_active_palettes(self):
-        # Un diccionario que mapea los nombres de las variables de interruptor a sus colores correspondientes
-        palette_switches = {
-            "switchVarRed": "Red",
-            "switchVarWhite": "White",
-            "switchVarGreen": "Green",
-            "switchVarBlack": "Black",
-            "switchVarBlue": "Blue"
-        }
 
-        # Utilizar la comprensión de listas para obtener todas las paletas activas
-        return [color for switch, color in palette_switches.items() if getattr(self, switch).get() == "on"]
 
     def palette_switch_changed(self, switch_name):
         # Un diccionario de los switches de paleta y su estado ('on' o 'off')
@@ -884,32 +879,41 @@ class Registro(customtkinter.CTk):
                 if sw_name != switch_name:
                     sw_var.set("off")
 
-    def get_active_textures(self):
-        texture_options = {
-            'switchVarPack1': "Textura 1",
-            'switchVarPack2': "Textura 2",
-            'switchVarPack3': "Textura 3",
-        }
-        for switch_var_name, texture_name in texture_options.items():
-            if getattr(self, switch_var_name).get() == "on":
-                return texture_name
+    def switch_texture(self, active_switch):
+        # Lista de todos los switch variables para texturas
+        all_switches = ['switchVarPack1', 'switchVarPack2', 'switchVarPack3']
+        # Desactiva todos los switches excepto el activo
+        for switch in all_switches:
+            if switch != active_switch:
+                getattr(self, switch).set("off")
 
-        return None  # O alguna textura predeterminada si ninguna está activa
-
-    def texture_switch_changed(self, switch_name):
-        # Un diccionario de los switches de textura y su estado ('on' o 'off')
-        texture_switches = {
-            'switchVarPack1': self.switchVarPack1,
-            'switchVarPack2': self.switchVarPack2,
-            'switchVarPack3': self.switchVarPack3
-            # Añadir más si hay más switches de textura
+    def get_active_palettes(self):
+        # Un diccionario que mapea los nombres de las variables de interruptor a sus colores correspondientes
+        palette_switches = {
+            "switchVarRed": "Red",
+            "switchVarWhite": "White",
+            "switchVarGreen": "Green",
+            "switchVarBlack": "Black",
+            "switchVarBlue": "Blue"
         }
 
-        # Si el switch activado está 'on', pon los demás 'off'
-        if texture_switches[switch_name].get() == "on":
-            for sw_name, sw_var in texture_switches.items():
-                if sw_name != switch_name:
-                    sw_var.set("off")
+        # Retorna el nombre de la paleta activa, o None si ninguna está activa
+        for switch, color in palette_switches.items():
+            if getattr(self, switch).get() == "on":
+                return color
+        return None
+
+    def get_active_texture(self):
+        # Verifica el estado de cada switch de textura y devuelve la textura activa
+        if self.switchVarPack1.get() == "on":
+            return "Textura 1"
+        elif self.switchVarPack2.get() == "on":
+            return "Textura 2"
+        elif self.switchVarPack3.get() == "on":
+            return "Textura 3"
+        # Retorna None o una cadena vacía si no se selecciona ninguna textura
+        return None
+
     def on_register_button_click(self):
 
         error_occurred = False
@@ -1141,9 +1145,13 @@ class Registro(customtkinter.CTk):
 
     # def change_appearance_mode_event(self, new_appearance_mode: str):
     #     customtkinter.set_appearance_mode(new_appearance_mode)
-    def goMenu(self):
-        self.destroy
-        menu.Menu_principal.mainloop()
+    def open_main_menu(self):
+        # Close the registration window
+        self.destroy()  # or self.withdraw(), depending on how you've implemented the registration window
+
+        # Open the main menu
+        menu = logGUI.menu.Menu_principal()
+        menu.mainloop()
 
     def displayPhoto(self,usuario_img):
         img = usuario_img + ".jpg"
