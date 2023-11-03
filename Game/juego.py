@@ -1,8 +1,8 @@
 import time
 import pygame
 import math
-import auxiliar.spot as spot
-from game.Game_over import GameWindow
+import Auxiliar.spot as spot
+from Game.Game_over import GameWindow
 
 def iniciar():
     pygame.init()

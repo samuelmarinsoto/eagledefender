@@ -54,7 +54,7 @@ import customtkinter
 import tkinter.filedialog as filedialog
 from tkinter import PhotoImage
 from PIL import ImageTk
-import auxiliar.language_dictionary as dic
+import Auxiliar.language_dictionary as dic
 import cv2
 from matplotlib import pyplot
 from mtcnn.mtcnn import MTCNN
@@ -62,7 +62,7 @@ import numpy as np
 import logGUI.menu as menu
 from tkcalendar import Calendar
 from datetime import date
-import auxiliar.spot as spot
+import Auxiliar.spot as spot
 import database.DataBaseLocal as DataBase
 import re
 from PIL import Image, ImageDraw

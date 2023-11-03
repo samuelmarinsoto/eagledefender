@@ -1,5 +1,5 @@
 import pygame
-from game.jugadorclase import Jugador
+from Game.jugadorclase import Jugador
 
 class Juego:
     def __init__(self):

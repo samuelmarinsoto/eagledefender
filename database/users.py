@@ -2,13 +2,23 @@
 
 
 class CustomizationData:
-    def __init__(self, song1, song2, song3, palette_color, texture):
+    def __init__(self,Username,pathimage,membership, song1, song2, song3, palette_color, texture):
+        self.Username = Username
+        self.pathimage = pathimage
+        self.membership = membership
         self.song1 = song1
         self.song2 = song2
         self.song3 = song3
         self.palette_color = palette_color
         self.texture = texture
 
+    def update_Username(self, Username):
+        self.Username = Username
+    def update_pathimage(self, new_pathimage):
+        self.pathimage = new_pathimage
+
+    def update_membership(self, new_membership):
+        self.membership = new_membership
     def update_song1(self, new_song1):
         self.song1 = new_song1
 
@@ -46,5 +56,5 @@ class CustomizationData:
 #player_customization.update_palette_color("Red")
 #player_customization.display_customization()
 
-player1 = CustomizationData("Scatman", "Gasolina Daddy Yankee", "Ace spades", "DefaultPalette", "DefaultTexture")
-player2 = CustomizationData("Stayin' alive", "Danza kuduro", "Blitzkrieg Pop", "DefaultPalette", "DefaultTexture")
+player1 = CustomizationData("","","NO","Scatman", "Gasolina Daddy Yankee", "Ace spades", "DefaultPalette", "DefaultTexture")
+player2 = CustomizationData("","","NO","Stayin' alive", "Danza kuduro", "Blitzkrieg Pop", "DefaultPalette", "DefaultTexture")

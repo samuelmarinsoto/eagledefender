@@ -1,5 +1,7 @@
 import customtkinter
-from PIL import Image, ImageTk
+from PIL import Image, ImageTk, ImageDraw
+import tkinter.filedialog as filedialog
+from tkinter import PhotoImage
 import Auxiliar.language_dictionary as dic
 import logGUI.registro as registro
 from customtkinter import CTkImage, CTkLabel
@@ -13,6 +15,7 @@ import database.DataBaseLocal as DataBase
 import Game.juego as juego
 import Game.juegoAI as juegoAI
 import database.users as users
+import re
 # customtkinter.set_appearance_mode("System")  # Modes: "System" (standard), "Dark", "Light"
 # customtkinter.set_default_color_theme("green")  # Themes: "blue" (standard), "green", "dark-blue"
 
@@ -49,7 +52,7 @@ class Menu_principal(customtkinter.CTk):
         grey = "#000000"
         super().__init__()
 
-        ScreenRes = f"{900}x{500}"
+        ScreenRes = f"{1024}x{720}"
         # Here create the other windows
 
         self.LoginWindow = customtkinter.CTkToplevel(self)
@@ -181,12 +184,12 @@ class Menu_principal(customtkinter.CTk):
 
 
         imagenOne = Image.open("assets/Windows aux/OnePlayer.png")
-        imagenOne_resized = imagenOne.resize((250,250), Image.ANTIALIAS)
+        imagenOne_resized = imagenOne.resize((220,220), Image.ANTIALIAS)
         phOne = ImageTk.PhotoImage(imagenOne_resized)
 
 
         imagenTwo = Image.open("assets/Windows aux/TwoPlayer.png")
-        imagenTwo_resized =  imagenTwo.resize((250,250), Image.ANTIALIAS)
+        imagenTwo_resized =  imagenTwo.resize((220,220), Image.ANTIALIAS)
         phTwo = ImageTk.PhotoImage(imagenTwo_resized)
 
 
@@ -199,7 +202,16 @@ class Menu_principal(customtkinter.CTk):
         self.PlayWindow.Twoplayer = customtkinter.CTkButton( self.PlayWindow, text=dic.MultiplayerLocal[dic.language],image=phTwo,fg_color=green_light,hover_color=green,command=self.ejecutar_Game_Multiplayer)
         self.PlayWindow.Twoplayer.place(relx=0.75, rely=0.5, anchor=customtkinter.CENTER)
 
-        
+        self.selected_photo_path = "assets/flags/Avatar-Profile.png"
+        default_image = Image.open(self.selected_photo_path)
+        default_image = default_image.resize((100, 100), Image.ANTIALIAS)
+        default_imageop = ImageTk.PhotoImage(default_image)
+
+        self.PlayWindow.Player1Pic = customtkinter.CTkLabel(self.PlayWindow, image=default_imageop, corner_radius=60, text="")
+        self.PlayWindow.Player1Pic.place(relx=0.1, rely=0.2, anchor=customtkinter.CENTER)
+
+        self.PlayWindow.Player2Pic = customtkinter.CTkLabel(self.PlayWindow, image=default_imageop, corner_radius=60,text="")
+        self.PlayWindow.Player2Pic.place(relx=0.9, rely=0.2, anchor=customtkinter.CENTER)
 
 
     def ejecutar_login(self):
@@ -240,19 +252,30 @@ class Menu_principal(customtkinter.CTk):
 
         if DataBase.validate_user(username, password):
             # Si el inicio de sesión es exitoso
+            USERname = DataBase.get_user_by_username(username)[2]
+            Pic = DataBase.get_user_by_username(username)[7]
+            Merbership = DataBase.get_user_by_username(username)[8]
             Song1 = DataBase.get_user_by_username(username)[9]
             Song2 = DataBase.get_user_by_username(username)[10]
             Song3 = DataBase.get_user_by_username(username)[11]
             Texture = DataBase.get_user_by_username(username)[15]
             Palette = DataBase.get_user_by_username(username)[16]
             if not users.player1.verify_log(users.player1.texture, users.player1.palette_color):
+                self.abrir_archivo(1,Pic)
+                users.player1.update_Username(USERname)
+                users.player1.update_pathimage(Pic)
+                users.player1.update_membership(Merbership)
                 users.player1.update_song1(Song1)
                 users.player1.update_song2(Song2)
                 users.player1.update_song3(Song3)
                 users.player1.update_texture(Texture)
                 users.player1.update_palette_color(Palette)
-                print("Doit")
-            else:
+                print("Doit",Pic)
+            elif not users.player1.Username == USERname:
+                self.abrir_archivo(2,Pic)
+                users.player2.update_Username(USERname)
+                users.player2.update_pathimage(Pic)
+                users.player2.update_membership(Merbership)
                 users.player2.update_song1(Song1)
                 users.player2.update_song2(Song2)
                 users.player2.update_song3(Song3)
@@ -260,6 +283,9 @@ class Menu_principal(customtkinter.CTk):
                 users.player2.update_palette_color(Palette)
                 users.player2.display_customization()
                 print("Doit2")
+            else:
+                tkinter.messagebox.showerror("Error", "No se puede logear con el mismo usuario")
+                return 0
                 
             self.PlayWindow.deiconify()
             self.LoginWindow.withdraw()
@@ -372,3 +398,43 @@ class Menu_principal(customtkinter.CTk):
        """
 
 
+    def abrir_archivo(self,player,archivo):
+        #archivo = filedialog.askopenfilename(filetypes=[(dic.Photo[dic.language], "*.png *.jpg *.jpeg *.gif *.bmp")])
+        if archivo:
+            #self.selected_photo_path = archivo
+                # Cargar la imagen
+            imagen = Image.open(archivo)
+            imagen = imagen.resize((100, 100), Image.ANTIALIAS)
+            circular = self.make_circle_image(imagen)
+            Imagentk = ImageTk.PhotoImage(circular)
+
+        if player == 1:
+            self.PlayWindow.Player1Pic.configure(image=Imagentk)
+            self.PlayWindow.Player1Pic.image = Imagentk
+
+        elif player == 2:
+            self.PlayWindow.Player2Pic.configure(image=Imagentk)
+            self.PlayWindow.Player2Pic.image = Imagentk
+        else:
+            tkinter.messagebox.showerror("Error", "No se actualizo la imagen de perfil")
+            return 0
+
+    @staticmethod
+    def make_circle_image(img):
+        """
+            Convert an image into a circular image.
+        """
+
+        img = img.convert("RGBA")
+
+
+        mask = Image.new("L", img.size, 0)
+
+
+        draw = ImageDraw.Draw(mask)
+        width, height = img.size
+        draw.ellipse((0, 0, width, height), fill=255)
+
+
+        circular_img = Image.composite(img, Image.new("RGBA", img.size, (255, 255, 255, 0)), mask)
+        return circular_img

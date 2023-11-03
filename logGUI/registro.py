@@ -220,7 +220,7 @@ class Registro(customtkinter.CTk):
         # self.facial_label.place(relx=0.55, rely=0.23, anchor=customtkinter.CENTER)
         self.selected_photo_path = "assets/flags/Avatar-Profile.png"
         self.selected_picpassword = ""
-        #default_image_path = "assets/flags/Avatar-Profile.png"
+
         default_image = Image.open(self.selected_photo_path)
         default_image = default_image.resize((100, 100), Image.ANTIALIAS)
         default_imageop = ImageTk.PhotoImage(default_image)
@@ -1042,6 +1042,10 @@ class Registro(customtkinter.CTk):
             self.selected_photo_path = archivo
             # Cargar la imagen
             imagen = Image.open(archivo)
+            if self.entry_Username.get() == "":
+                tkinter.messagebox.showerror("Error", "Falta el nombre de usuario para guardar la imagen")
+                return
+            Image.open(archivo).save("ProfilePics/" + self.entry_Username.get() + ".jpg")
             imagen = imagen.resize((100, 100), Image.ANTIALIAS)
             circular = self.make_circle_image(imagen)
             Imagentk = ImageTk.PhotoImage(circular)
