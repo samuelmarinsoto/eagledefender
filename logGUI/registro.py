@@ -465,7 +465,12 @@ class Registro(customtkinter.CTk):
                                                           fg_color=green_light, hover_color=green,
                                                           command=self.on_register_button_click)
         self.card_submit_button.place(relx=0.5, rely=0.55, anchor=customtkinter.CENTER)
-
+        # Y luego asigna este método a los switches en su método de inicialización o en el lugar donde se crean
+        self.switchVarRed.trace('w', lambda *args: self.palette_switch_changed('switchVarRed'))
+        self.switchVarWhite.trace('w', lambda *args: self.palette_switch_changed('switchVarWhite'))
+        self.switchVarGreen.trace('w', lambda *args: self.palette_switch_changed('switchVarGreen'))
+        self.switchVarBlack.trace('w', lambda *args: self.palette_switch_changed('switchVarBlack'))
+        self.switchVarBlue.trace('w', lambda *args: self.palette_switch_changed('switchVarBlue'))
         # --------------------------------------------------------------------------------------------------------------------------------
         # --------------------------------------------------------------------------------------------------------------------------------
         self.logo_label = customtkinter.CTkLabel(self.tabview.tab(dic.Texture[dic.language]),
@@ -862,6 +867,24 @@ class Registro(customtkinter.CTk):
 
         # Utilizar la comprensión de listas para obtener todas las paletas activas
         return [color for switch, color in palette_switches.items() if getattr(self, switch).get() == "on"]
+
+    def palette_switch_changed(self, switch_name):
+        # Un diccionario de los switches de paleta y su estado ('on' o 'off')
+        palette_switches = {
+            'switchVarRed': self.switchVarRed,
+            'switchVarWhite': self.switchVarWhite,
+            'switchVarGreen': self.switchVarGreen,
+            'switchVarBlack': self.switchVarBlack,
+            'switchVarBlue': self.switchVarBlue
+        }
+
+        # Si el switch activado está 'on', pon los demás 'off'
+        if palette_switches[switch_name].get() == "on":
+            for sw_name, sw_var in palette_switches.items():
+                if sw_name != switch_name:
+                    sw_var.set("off")
+
+
 
     def get_active_textures(self):
 
