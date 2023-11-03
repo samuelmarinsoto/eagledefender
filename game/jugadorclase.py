@@ -9,7 +9,7 @@ class Jugador:
         # le damos a la clase acceso a la pantalla de juego
         self.pantalla = pantalla
 
-        self.angulo = 0
+        self.angulo = 180
         self.fecha_ultima_bala = time.time()*1000
         
         self.balasA = 10
@@ -26,7 +26,8 @@ class Jugador:
             self.posx = (self.pantalla.get_width() * (3/4))
             self.posy = self.pantalla.get_height() // 2
 
-            img = pygame.image.load("goblinSpriteWalk/tile000.png").convert_alpha()
+            img = pygame.image.load("goblinSpriteWalk/tile100.png").convert_alpha()
+            img = pygame.transform.flip(img, True, False)
             self.sup = pygame.transform.scale(img, (self.pantalla.get_height() // 20 * 3, self.pantalla.get_height() // 20 * 3))
 
             # atacante solo puede estar en lado derecho
