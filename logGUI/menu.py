@@ -13,6 +13,7 @@ from logGUI.login import Login
 import tkinter.messagebox
 import database.DataBaseLocal as DataBase
 import database.users as users
+import game.juegoinit as juegoinit
 import re
 # customtkinter.set_appearance_mode("System")  # Modes: "System" (standard), "Dark", "Light"
 # customtkinter.set_default_color_theme("green")  # Themes: "blue" (standard), "green", "dark-blue"
@@ -369,7 +370,7 @@ class Menu_principal(customtkinter.CTk):
 
 
         if users.player1.verify_log(users.player1.texture, users.player1.palette_color) and users.player2.verify_log(users.player2.texture, users.player2.palette_color):
-            juego.iniciar()
+            juegoinit.iniciar()
         else:
             tkinter.messagebox.showerror("Error", "No hay suficientes jugadores logeados")
             self.PlayWindow.withdraw()
