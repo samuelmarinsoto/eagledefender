@@ -1,7 +1,7 @@
 import time
 import math
 import pygame
-from disparoclase import Bala
+from game.disparoclase import Bala
 
 class Jugador:
     def __init__(self, rol, partida, pantalla):
