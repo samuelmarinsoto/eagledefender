@@ -202,6 +202,6 @@ class Juego:
 
 # TODO:
 # sprint 2:
-# animaciones, musica, datos de usuario (seleccion de sprites), rotacion de bloques
+# animaciones, musica, datos de usuario (seleccion de sprites), rotacion de bloques, boton de pausa
 # sprint 3:
-# regeneracion con algoritmo de cocinero
+# regeneracion con algoritmo de cocinero, salon de la fama

@@ -142,24 +142,24 @@ class Jugador:
             if tecla[self.disparoA] and self.balasA > 0:
                 self.balasA -= 1
                 self.fecha_ultima_bala = time.time()*1000
-                bala = Bala(self.rol, 'A', self.pantalla, self.posx, self.posy, self.angulo)
+                bala = Bala(self.rol, 'A', self.pantalla, self.posx + self.sup.get_width()//2, self.posy + self.sup.get_height()//2, self.angulo)
                 return bala
                 
             elif tecla[self.disparoB] and self.balasB > 0:
                 self.balasB -= 1
                 self.fecha_ultima_bala = time.time()*1000
-                bala = Bala(self.rol, 'B', self.pantalla, self.posx, self.posy, self.angulo)
+                bala = Bala(self.rol, 'B', self.pantalla, self.posx + self.sup.get_width()//2, self.posy + self.sup.get_height()//2, self.angulo)
                 return bala
                 
             elif tecla[self.disparoC] and self.balasC > 0:
                 self.balasC -= 1
                 self.fecha_ultima_bala = time.time()*1000
-                bala = Bala(self.rol, 'C', self.pantalla, self.posx, self.posy, self.angulo)
+                bala = Bala(self.rol, 'C', self.pantalla, self.posx + self.sup.get_width()//2, self.posy + self.sup.get_height()//2, self.angulo)
                 return bala
                 
             elif tecla[self.disparoX] and self.balasX > 0:
                 self.balasX -= 1
                 self.fecha_ultima_bala = time.time()*1000
                 if self.rol == 0:
-                    bala = Bala(self.rol, 'X', self.pantalla, self.posx, self.posy, self.angulo)
+                    bala = Bala(self.rol, 'X', self.pantalla, self.posx + self.sup.get_width()//2, self.posy + self.sup.get_height()//2, self.angulo)
                     return bala
