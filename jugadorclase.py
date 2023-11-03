@@ -3,7 +3,7 @@ import pygame
 from disparoclase import Bala
 
 class Jugador:
-    def __init__(self, rol, pantalla):
+    def __init__(self, rol, partida, pantalla):
     
         # le damos a la clase acceso a la pantalla de juego
         self.pantalla = pantalla
@@ -34,18 +34,33 @@ class Jugador:
             self.limiteymin = 0
             self.limiteymax = self.pantalla.get_height()
 
-            # atacante se mueve con las flechas
-            self.arriba = pygame.K_i
-            self.izquierda = pygame.K_j
-            self.abajo = pygame.K_k
-            self.derecha = pygame.K_l
+            if partida%2:
+                # atacante se mueve con las flechas
+                self.arriba = pygame.K_i
+                self.izquierda = pygame.K_j
+                self.abajo = pygame.K_k
+                self.derecha = pygame.K_l
 
-            # dispara con 7890
-            self.disparoA = pygame.K_8 # agua
-            self.disparoB = pygame.K_9 # fuego
-            self.disparoC = pygame.K_0 # bomba
-            self.disparoX = pygame.K_7 # no hace nada por ahora
-            self.rotacion = pygame.K_o # rotacion
+                # dispara con 7890
+                self.disparoA = pygame.K_8 # agua
+                self.disparoB = pygame.K_9 # fuego
+                self.disparoC = pygame.K_0 # bomba
+                self.disparoX = pygame.K_7 # nada
+                self.rotacion = pygame.K_o # rotacion
+
+            else:
+                # atacante se mueve con WASD
+                self.arriba = pygame.K_w
+                self.izquierda = pygame.K_a
+                self.abajo = pygame.K_s
+                self.derecha = pygame.K_d
+
+                # dispara con 1234
+                self.disparoA = pygame.K_1 # agua
+                self.disparoB = pygame.K_2 # fuego
+                self.disparoC = pygame.K_3 # bomba
+                self.disparoX = pygame.K_4 # nada
+                self.rotacion = pygame.K_q # rotacion
             
         else:
             # aparece en medio del lado izquierdo
@@ -60,19 +75,34 @@ class Jugador:
             self.limitexmax = self.pantalla.get_width()//2
             self.limiteymin = 0
             self.limiteymax = self.pantalla.get_height()
-            
-            # defensor se mueve con WASD
-            self.arriba = pygame.K_w
-            self.izquierda = pygame.K_a
-            self.abajo = pygame.K_s
-            self.derecha = pygame.K_d
 
-            # pone bloques con 1234
-            self.disparoA = pygame.K_1 # madera
-            self.disparoB = pygame.K_2 # acero
-            self.disparoC = pygame.K_3 # concreto
-            self.disparoX = pygame.K_4 # aguila
-            self.rotacion = pygame.K_q # rotacion
+            if partida%2:
+                # defensor se mueve con WASD
+                self.arriba = pygame.K_w
+                self.izquierda = pygame.K_a
+                self.abajo = pygame.K_s
+                self.derecha = pygame.K_d
+
+                # pone bloques con 1234
+                self.disparoA = pygame.K_1 # madera
+                self.disparoB = pygame.K_2 # acero
+                self.disparoC = pygame.K_3 # concreto
+                self.disparoX = pygame.K_4 # aguila
+                self.rotacion = pygame.K_q # rotacion
+
+            else:
+                # defensor se mueve con las flechas
+                self.arriba = pygame.K_i
+                self.izquierda = pygame.K_j
+                self.abajo = pygame.K_k
+                self.derecha = pygame.K_l
+
+                # pone bloques con 7890
+                self.disparoA = pygame.K_8 # madera
+                self.disparoB = pygame.K_9 # acero
+                self.disparoC = pygame.K_0 # concreto
+                self.disparoX = pygame.K_7 # aguila
+                self.rotacion = pygame.K_o # rotacion
     
     def moverse(self, dt):
         tecla = pygame.key.get_pressed()
