@@ -24,8 +24,12 @@ class Juego:
 
     def colision(self):
         for barrera in self.barreras.copy():
+            barrera_rect = barrera.sup.get_rect(topleft=(barrera.posx, barrera.posy))
+            
             for bala in self.balas.copy():
-                if barrera.sup.get_rect().colliderect(bala.sup.get_rect()):
+                bala_rect = bala.sup.get_rect(topleft=(bala.posx, bala.posy))
+                
+                if barrera_rect.colliderect(bala_rect):
                     barrera.vida -= bala.vida
                     bala.sonido.play()
                     self.balas.remove(bala)
@@ -68,12 +72,11 @@ class Juego:
             
             if nueva_pared:
                 self.barreras.append(nueva_pared)
-
+                
             self.blittodo()
             self.pantalla.blit(defensor.sup, (defensor.posx, defensor.posy))
             self.pantalla.blit(atacante.sup, (atacante.posx, atacante.posy))
 
-            print(self.clock.get_fps())
             self.clock.tick()
             pygame.display.update()
 
