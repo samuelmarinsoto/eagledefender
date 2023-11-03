@@ -63,7 +63,7 @@ class Juego:
         atacante = Jugador(1, partida, self.pantalla)
         defensor = Jugador(0, partida, self.pantalla)
 
-        self.cron = 30000
+        self.cron = 10000
         
         self.puntos_atacante = 0
         self.puntos_defensa = 0
@@ -144,6 +144,7 @@ class Juego:
             self.blittodo()
             self.pantalla.blit(defensor.sup, (defensor.posx, defensor.posy))
             self.pantalla.blit(atacante.sup, (atacante.posx, atacante.posy))
+            atacante.dibujar_mira()
 
             self.clock.tick()
             pygame.display.update()

@@ -76,4 +76,4 @@ def iniciar():
 
         juego.fin(jugador1_puntos, jugador2_puntos)
 
-# iniciar()
+iniciar()

@@ -1,4 +1,5 @@
 import time
+import math
 import pygame
 from disparoclase import Bala
 
@@ -36,17 +37,18 @@ class Jugador:
 
             if partida%2:
                 # atacante se mueve con las flechas
-                self.arriba = pygame.K_i
-                self.izquierda = pygame.K_j
-                self.abajo = pygame.K_k
-                self.derecha = pygame.K_l
+                self.arriba = pygame.K_UP
+                self.izquierda = pygame.K_LEFT
+                self.abajo = pygame.K_DOWN
+                self.derecha = pygame.K_RIGHT
 
                 # dispara con 7890
                 self.disparoA = pygame.K_8 # agua
                 self.disparoB = pygame.K_9 # fuego
                 self.disparoC = pygame.K_0 # bomba
                 self.disparoX = pygame.K_7 # nada
-                self.rotacion = pygame.K_o # rotacion
+                self.rothorario = pygame.K_o # rotacion
+                self.rotahorario = pygame.K_u # rotacion
 
             else:
                 # atacante se mueve con WASD
@@ -60,7 +62,8 @@ class Jugador:
                 self.disparoB = pygame.K_2 # fuego
                 self.disparoC = pygame.K_3 # bomba
                 self.disparoX = pygame.K_4 # nada
-                self.rotacion = pygame.K_q # rotacion
+                self.rothorario = pygame.K_e # horario
+                self.rotahorario = pygame.K_q # antihorario
             
         else:
             # aparece en medio del lado izquierdo
@@ -88,22 +91,33 @@ class Jugador:
                 self.disparoB = pygame.K_2 # acero
                 self.disparoC = pygame.K_3 # concreto
                 self.disparoX = pygame.K_4 # aguila
-                self.rotacion = pygame.K_q # rotacion
+                self.rothorario = pygame.K_e # horario
+                self.rotahorario = pygame.K_q # antihorario
 
             else:
                 # defensor se mueve con las flechas
-                self.arriba = pygame.K_i
-                self.izquierda = pygame.K_j
-                self.abajo = pygame.K_k
-                self.derecha = pygame.K_l
+                self.arriba = pygame.K_UP
+                self.izquierda = pygame.K_LEFT
+                self.abajo = pygame.K_DOWN
+                self.derecha = pygame.K_RIGHT
 
                 # pone bloques con 7890
                 self.disparoA = pygame.K_8 # madera
                 self.disparoB = pygame.K_9 # acero
                 self.disparoC = pygame.K_0 # concreto
                 self.disparoX = pygame.K_7 # aguila
-                self.rotacion = pygame.K_o # rotacion
-    
+                self.rothorario = pygame.K_o # rotacion
+                self.rotahorario = pygame.K_u # rotacion
+
+    # solo usar con atacante
+    def dibujar_mira(self):
+        # Calculate the line's end position based on the cube's position
+        mirax = self.posx + self.sup.get_width() // 2 + self.pantalla.get_height()//15 * math.cos(math.radians(self.angulo))
+        miray = self.posy + self.sup.get_height() // 2 + self.pantalla.get_height()//15 * math.sin(math.radians(self.angulo))
+        
+        # dibuja una linea cafe
+        pygame.draw.line(self.pantalla, (139, 69, 19), (self.posx + self.sup.get_width() // 2, self.posy + self.sup.get_height() // 2), (mirax, miray), self.pantalla.get_height()//100)
+        
     def moverse(self, dt):
         tecla = pygame.key.get_pressed()
 
@@ -115,8 +129,10 @@ class Jugador:
             self.posx -= 300*dt
         if tecla[self.derecha] and self.limitexmax > self.posx + self.sup.get_width():
             self.posx += 300*dt
-        if tecla[self.rotacion]:
-            self.angulo += 5
+        if tecla[self.rothorario]:
+            self.angulo += 1
+        if tecla[self.rotahorario]:
+            self.angulo -= 1
         
     def disparar(self):
         tecla = pygame.key.get_pressed()
