@@ -1,6 +1,6 @@
-import pygame
 import time
-from game.jugadorclase import Jugador
+import pygame
+from jugadorclase import Jugador
 
 class Juego:
     def __init__(self):
@@ -8,7 +8,7 @@ class Juego:
         self.pantalla = pygame.display.set_mode((pygame.display.Info().current_w // 1.5, pygame.display.Info().current_h // 1.5))
         pygame.display.set_caption('Eagle Defender')
 
-        img = pygame.image.load("Scenary/Arena Tileset Template Verde.png").convert()
+        img = pygame.image.load("../Scenary/Arena Tileset Template Verde.png").convert()
         self.fondo = pygame.transform.scale(img, (self.pantalla.get_width(), self.pantalla.get_height()))
         
         self.clock = pygame.time.Clock()
@@ -95,7 +95,7 @@ class Juego:
 
             defensor.moverse(dt)
             nueva_pared = defensor.disparar()
-            
+
             if nueva_pared:
                 self.barreras.append(nueva_pared)
                 
@@ -138,6 +138,7 @@ class Juego:
             atacante.moverse(dt)
             # atacante.regenerar() # regenerar balas con algoritmo de cocinero
             nueva_bala = atacante.disparar()
+            atacante.cambiar_sup()
             if nueva_bala:
                 self.balas.append(nueva_bala)
 
@@ -201,7 +202,13 @@ class Juego:
             pygame.display.update()
 
 # TODO:
+# ASAP:
+# o cambiar todos los archivos al la carpeta principal, o crear un .py que 
+# defina las direcciones de los archivos de los assets y usar las variables nadamas
+# igualmente para el codigo
+#
 # sprint 2:
-# animaciones, musica, datos de usuario (seleccion de sprites), rotacion de bloques, boton de pausa
+# musica, datos de usuario (seleccion de sprites), rotacion de bloques, boton de pausa
+#
 # sprint 3:
 # regeneracion con algoritmo de cocinero, salon de la fama
