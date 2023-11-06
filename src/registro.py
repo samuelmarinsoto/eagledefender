@@ -1,8 +1,8 @@
 import spotipy
 import spotipy.util as util
-import database.datauser as user
+import datauser as user
 from PIL import Image, ImageTk
-import  logGUI.menu as menu
+import menu
 
 
 SPOTIPY_CLIENT_ID = '5b219ea7c93c475db3fa7acd846af046'
@@ -66,15 +66,15 @@ from mtcnn.mtcnn import MTCNN
 import numpy as np
 from tkcalendar import Calendar
 from datetime import date
-import Auxiliar.spot as spot
-import database.DataBaseLocal as DataBase
+import spot
+import DataBaseLocal as DataBase
 import re
 from PIL import Image, ImageDraw
-Userspotify = spot.userSpot
-import logGUI.menu
+import menu
 
 # customtkinter.set_appearance_mode("System")  # Modes: "System" (standard), "Dark", "Light"
 # customtkinter.set_default_color_theme("green")  # Themes: "blue" (standard), "green", "dark-blue"
+Userspotify = spot.userSpot
 
 
 

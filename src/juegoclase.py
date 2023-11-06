@@ -1,6 +1,7 @@
 import time
 import pygame
 from jugadorclase import Jugador
+import spot
 
 class Juego:
     def __init__(self):
@@ -8,7 +9,7 @@ class Juego:
         self.pantalla = pygame.display.set_mode((pygame.display.Info().current_w // 1.5, pygame.display.Info().current_h // 1.5))
         pygame.display.set_caption('Eagle Defender')
 
-        img = pygame.image.load("../Scenary/Arena Tileset Template Verde.png").convert()
+        img = pygame.image.load("../assets/Scenary/Arena Tileset Template Verde.png").convert()
         self.fondo = pygame.transform.scale(img, (self.pantalla.get_width(), self.pantalla.get_height()))
         
         self.clock = pygame.time.Clock()

@@ -30,7 +30,7 @@ class Jugador:
             csprite_archivos = [0, 1, 2, 3, 4, 5]
             
             for i in csprite_archivos:
-                img = pygame.image.load("../goblinSpriteWalk/tile00" + str(i) + ".png")
+                img = pygame.image.load("../assets/goblinSpriteWalk/tile00" + str(i) + ".png")
                 img_surf = img.convert_alpha()
                 img_flip = pygame.transform.flip(img_surf, True, False)
                 imgx = imgy = self.pantalla.get_height() // 20 * 3
@@ -41,14 +41,14 @@ class Jugador:
             dsprite_archivos = [4, 5, 6, 7, 8, 9]
             
             for i in dsprite_archivos:
-                img = pygame.image.load("../goblinSpriteShoot/tile06" + str(i) + ".png")
+                img = pygame.image.load("../assets/goblinSpriteShoot/tile06" + str(i) + ".png")
                 img_surf = img.convert_alpha()
                 img_flip = pygame.transform.flip(img_surf, True, False)
                 imgx = imgy = self.pantalla.get_height() // 20 * 3
                 img_scale = pygame.transform.scale(img_flip, (imgx, imgy))
                 self.dsprite.append(img_scale)
 
-            estatico = pygame.image.load("../goblinSpriteWalk/tile100.png").convert_alpha()
+            estatico = pygame.image.load("../assets/goblinSpriteWalk/tile100.png").convert_alpha()
             estatico = pygame.transform.flip(estatico, True, False)
             imgx = imgy = self.pantalla.get_height() // 20 * 3
             self.estatico = pygame.transform.scale(estatico, (imgx, imgy))

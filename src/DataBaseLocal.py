@@ -84,7 +84,7 @@ def connect():
         sqlite3.Connection: Connection object to the database, or None if an error occurred.
     """
     try:
-        conn = sqlite3.connect('EagleDefender.db')  # Create or connect to a SQLite database
+        conn = sqlite3.connect('../EagleDefender.db')  # Create or connect to a SQLite database
         return conn
     except Exception as e:
         print(f"An error occurred connecting to the database: {e}")
