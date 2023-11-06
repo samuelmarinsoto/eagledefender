@@ -287,16 +287,12 @@ class Juego:
             pygame.display.update()
 
 # TODO:
-# ASAP:
-# o cambiar todos los archivos al la carpeta principal, o crear un .py que 
-# defina las direcciones de los archivos de los assets y usar las variables nadamas
-# igualmente para el codigo
 #
 # prueba de usabilidad:
 # musica, boton de pausa, transicion entre cambio de rol
 #
 # sprint 2:
-# datos de usuario (seleccion de sprites), rotacion de bloques
+# seleccion de sprites, rotacion de bloques
 #
 # sprint 3:
 # regeneracion con algoritmo de cocinero, salon de la fama
