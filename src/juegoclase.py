@@ -292,7 +292,7 @@ class Juego:
 # musica, boton de pausa, transicion entre cambio de rol
 #
 # sprint 2:
-# seleccion de sprites, rotacion de bloques
+# seleccion de sprites, rotacion de bloques, animaciones de colision
 #
 # sprint 3:
 # regeneracion con algoritmo de cocinero, salon de la fama
