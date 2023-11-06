@@ -70,7 +70,7 @@ class Menu_principal(customtkinter.CTk):
         self.title("CustomTkinter complex_example.py")
         self.geometry(ScreenRes)
         self.current_screen = None
-        self.imagen = Image.open("assets/Windows aux/logo agle_sinfondo.png")
+        self.imagen = Image.open("../assets/Windows aux/logo agle_sinfondo.png")
 
         self.foto_logo_image = ImageTk.PhotoImage(self.imagen)
         self.foto_logo = CTkLabel(self, image=self.foto_logo_image, text=None,
@@ -84,7 +84,7 @@ class Menu_principal(customtkinter.CTk):
         # imagen.thumbnail((100, 100))
         # self.imagen_thumbnail_tk = ImageTk.PhotoImage(imagen)
         """"
-        imagen_es = Image.open("assets/flags/Flag_of_Es.png")
+        imagen_es = Image.open("../assets/flags/Flag_of_Es.png")
         imagen_es_resized = imagen_es.resize(
             (int(23 / 100 * imagen_es.width), int(28 / 100 * imagen_es.height)), Image.ANTIALIAS)
         Es_btn_image = CTkImage(imagen_es_resized)
@@ -182,13 +182,13 @@ class Menu_principal(customtkinter.CTk):
         self.PlayWindow.back.place(relx=0.001, rely=0.001, anchor=customtkinter.NW)
 
 
-        imagenOne = Image.open("assets/Windows aux/OnePlayer.png")
-        imagenOne_resized = imagenOne.resize((220,220), Image.ANTIALIAS)
+        imagenOne = Image.open("../assets/Windows aux/OnePlayer.png")
+        imagenOne_resized = imagenOne.resize((220,220), Image.LANCZOS)
         phOne = ImageTk.PhotoImage(imagenOne_resized)
 
 
-        imagenTwo = Image.open("assets/Windows aux/TwoPlayer.png")
-        imagenTwo_resized =  imagenTwo.resize((220,220), Image.ANTIALIAS)
+        imagenTwo = Image.open("../assets/Windows aux/TwoPlayer.png")
+        imagenTwo_resized =  imagenTwo.resize((220,220), Image.LANCZOS)
         phTwo = ImageTk.PhotoImage(imagenTwo_resized)
 
 
@@ -201,9 +201,9 @@ class Menu_principal(customtkinter.CTk):
         self.PlayWindow.Twoplayer = customtkinter.CTkButton( self.PlayWindow, text=dic.MultiplayerLocal[dic.language],image=phTwo,fg_color=green_light,hover_color=green,command=self.ejecutar_Game_Multiplayer)
         self.PlayWindow.Twoplayer.place(relx=0.75, rely=0.5, anchor=customtkinter.CENTER)
 
-        self.selected_photo_path = "assets/flags/Avatar-Profile.png"
+        self.selected_photo_path = "../assets/flags/Avatar-Profile.png"
         default_image = Image.open(self.selected_photo_path)
-        default_image = default_image.resize((100, 100), Image.ANTIALIAS)
+        default_image = default_image.resize((100, 100), Image.LANCZOS)
         default_imageop = ImageTk.PhotoImage(default_image)
 
         self.PlayWindow.Player1Pic = customtkinter.CTkLabel(self.PlayWindow, image=default_imageop, corner_radius=60, text="")
@@ -403,7 +403,7 @@ class Menu_principal(customtkinter.CTk):
             #self.selected_photo_path = archivo
                 # Cargar la imagen
             imagen = Image.open(archivo)
-            imagen = imagen.resize((100, 100), Image.ANTIALIAS)
+            imagen = imagen.resize((100, 100), Image.LANCZOS)
             circular = self.make_circle_image(imagen)
             Imagentk = ImageTk.PhotoImage(circular)
 

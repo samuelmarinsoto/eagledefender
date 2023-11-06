@@ -99,10 +99,10 @@ class Registro(customtkinter.CTk):
         # self.attributes("-fullscreen", True)
         self.title(dic.Registration[dic.language])
         self.geometry(f"{1024}x{1024}")
-        self.selected_photo_path = "assets/flags/Avatar-Profile.png"
+        self.selected_photo_path = "../assets/flags/Avatar-Profile.png"
         self.background_label = customtkinter.CTkLabel(self, width=1024, height=1024, text=None, bg_color="WHITE")
         # Establecer la imagen de fondo al CTkLabel
-        self.background_image = ImageTk.PhotoImage(Image.open("assets/BackGround/pattern.png"))
+        self.background_image = ImageTk.PhotoImage(Image.open("../assets/BackGround/pattern.png"))
         self.background_label.configure(image=self.background_image)
         self.background_label.image = self.background_image  # mantener una referencia a la imagen
         self.background_label.place(relx=0.5, rely=0.5, anchor=customtkinter.CENTER)
@@ -218,11 +218,11 @@ class Registro(customtkinter.CTk):
         #     fg_color="transparent"  # Texto transparente
         # )
         # self.facial_label.place(relx=0.55, rely=0.23, anchor=customtkinter.CENTER)
-        self.selected_photo_path = "assets/flags/Avatar-Profile.png"
+        self.selected_photo_path = "../assets/flags/Avatar-Profile.png"
         self.selected_picpassword = ""
 
         default_image = Image.open(self.selected_photo_path)
-        default_image = default_image.resize((100, 100), Image.ANTIALIAS)
+        default_image = default_image.resize((100, 100), Image.LANCZOS)
         default_imageop = ImageTk.PhotoImage(default_image)
 
 
@@ -249,7 +249,7 @@ class Registro(customtkinter.CTk):
         self.subir_Foto.place(relx=0.43, rely=0.65, anchor=customtkinter.CENTER)
 
         # Botón de cámara
-        self.camera_icon = ImageTk.PhotoImage(file="camera_icon.png")  # Cargar el ícono
+        self.camera_icon = ImageTk.PhotoImage(file="../assets/camera_icon.png")  # Cargar el ícono
         self.camera_button = customtkinter.CTkButton(
             self.tabview.tab(dic.Game[dic.language]),
             image=self.camera_icon,
@@ -397,11 +397,11 @@ class Registro(customtkinter.CTk):
                                                  text="Selección paleta de colores",
                                                  font=customtkinter.CTkFont(size=20, weight="bold"))
         self.logo_label.place(relx=0.5, rely=0.1, anchor=customtkinter.CENTER)
-        paletteRed = PhotoImage(file="assets/Palettes/Red.png").subsample(5,5)
-        paletteWhite = PhotoImage(file="assets/Palettes/White.png").subsample(5, 5)
-        paletteGreen = PhotoImage(file="assets/Palettes/Green.png").subsample(5, 5)
-        paletteBlack = PhotoImage(file="assets/Palettes/Black.png").subsample(5, 5)
-        paletteBlue = PhotoImage(file="assets/Palettes/Blue.png").subsample(5, 5)
+        paletteRed = PhotoImage(file="../assets/Palettes/Red.png").subsample(5,5)
+        paletteWhite = PhotoImage(file="../assets/Palettes/White.png").subsample(5, 5)
+        paletteGreen = PhotoImage(file="../assets/Palettes/Green.png").subsample(5, 5)
+        paletteBlack = PhotoImage(file="../assets/Palettes/Black.png").subsample(5, 5)
+        paletteBlue = PhotoImage(file="../assets/Palettes/Blue.png").subsample(5, 5)
 
         self.buttonRed = customtkinter.CTkButton(self.tabview.tab(dic.Palettes[dic.language]), text="",
                                                  image=paletteRed, fg_color="#2B2B2B",
@@ -477,17 +477,17 @@ class Registro(customtkinter.CTk):
                                                  text="Selección textura",
                                                  font=customtkinter.CTkFont(size=20, weight="bold"))
         self.logo_label.place(relx=0.5, rely=0.1, anchor=customtkinter.CENTER)
-        block1Metal= PhotoImage(file="assets/Blocks/bloquemetal.png").subsample(7, 7)
-        block1Wood = PhotoImage(file="assets/Blocks/bloquemadera.png").subsample(6, 6)
-        block1Cement = PhotoImage(file="assets/Blocks/bloqueconcreto.png").subsample(6, 6)
+        block1Metal= PhotoImage(file="../assets/Blocks/bloquemetal.png").subsample(7, 7)
+        block1Wood = PhotoImage(file="../assets/Blocks/bloquemadera.png").subsample(6, 6)
+        block1Cement = PhotoImage(file="../assets/Blocks/bloqueconcreto.png").subsample(6, 6)
 
-        block2Metal = PhotoImage(file="assets/Blocks/Block2Metal.png").subsample(3, 3)
-        block2Wood = PhotoImage(file="assets/Blocks/Block2Wood.png").subsample(3, 3)
-        block2Cement = PhotoImage(file="assets/Blocks/Block2Cement.png").subsample(3, 3)
+        block2Metal = PhotoImage(file="../assets/Blocks/Block2Metal.png").subsample(3, 3)
+        block2Wood = PhotoImage(file="../assets/Blocks/Block2Wood.png").subsample(3, 3)
+        block2Cement = PhotoImage(file="../assets/Blocks/Block2Cement.png").subsample(3, 3)
 
-        block3Metal = PhotoImage(file="assets/Blocks/Block3Metal.png").subsample(1, 1)
-        block3Wood = PhotoImage(file="assets/Blocks/Block3Wood.png").subsample(1, 1)
-        block3Cement = PhotoImage(file="assets/Blocks/Block3Cement.png").subsample(1, 1)
+        block3Metal = PhotoImage(file="../assets/Blocks/Block3Metal.png").subsample(1, 1)
+        block3Wood = PhotoImage(file="../assets/Blocks/Block3Wood.png").subsample(1, 1)
+        block3Cement = PhotoImage(file="../assets/Blocks/Block3Cement.png").subsample(1, 1)
 
         self.BlockMetal1 = customtkinter.CTkLabel(self.tabview.tab(dic.Texture[dic.language]),image=block1Metal,text="")
         self.BlockWood1 = customtkinter.CTkLabel(self.tabview.tab(dic.Texture[dic.language]), image=block1Wood, text="")
@@ -569,17 +569,17 @@ class Registro(customtkinter.CTk):
         card_number = self.card_number_var.get()
 
         if card_number.startswith("4"):
-            original_image = Image.open("assets/cards/visa.png")
+            original_image = Image.open("../assets/cards/visa.png")
         elif card_number.startswith("5"):
-            original_image = Image.open("assets/cards/mastercard.png")
+            original_image = Image.open("../assets/cards/mastercard.png")
         elif card_number.startswith("34") or card_number.startswith("37"):
-            original_image = Image.open("assets/cards/amex.png")
+            original_image = Image.open("../assets/cards/amex.png")
         else:
             self.card_icon_label.configure(image=None)  # quitar imagen si el número no coincide
             return
 
         # Cambia el tamaño de la imagen
-        resized_image = original_image.resize((50, 50), Image.ANTIALIAS)
+        resized_image = original_image.resize((50, 50), Image.LANCZOS)
         card_image = ImageTk.PhotoImage(resized_image)
 
         self.card_icon_label.configure(image=card_image)
@@ -794,7 +794,7 @@ class Registro(customtkinter.CTk):
         textura = self.get_active_texture()
         # cancion = self.cancion1.get()
         usuario_img = self.entry_Username.get()
-        imagen_ruta = 'ProfilePics/' + usuario_img + ".jpg"  # Ruta de la imagen guardada
+        imagen_ruta = '../ProfilePics/' + usuario_img + ".jpg"  # Ruta de la imagen guardada
 
         edad = self.age  # Accede a la edad desde la variable de instancia
 
@@ -920,13 +920,13 @@ class Registro(customtkinter.CTk):
             missing_info = ', '.join([f"{field} ({tab})" for field, tab in zip(missing_fields, missing_tabs)])
             tkinter.messagebox.showerror("Error", f"Faltan los siguientes campos: {missing_info}")
             return
-        if self.selected_photo_path is None or self.selected_photo_path == "assets/flags/Avatar-Profile.png":
+        if self.selected_photo_path is None or self.selected_photo_path == "../assets/flags/Avatar-Profile.png":
             respuesta = tkinter.messagebox.askyesno("Confirmación",
                                                     "¿Seguro que no quieres tener una foto personalizada?")
             if respuesta == "no":
                 return
             else:
-                self.selected_photo_path = "assets/flags/Avatar-Profile.png"
+                self.selected_photo_path = "../assets/flags/Avatar-Profile.png"
         # Convertir el nombre de usuario a minúsculas para la verificación
         ## Comprobar si el switch de membresía está activo
         if self.switchVarMembresia.get() == "on":
@@ -1078,8 +1078,8 @@ class Registro(customtkinter.CTk):
             if self.entry_Username.get() == "":
                 tkinter.messagebox.showerror("Error", "Falta el nombre de usuario para guardar la imagen")
                 return
-            Image.open(archivo).save("ProfilePics/" + self.entry_Username.get() + ".jpg")
-            imagen = imagen.resize((100, 100), Image.ANTIALIAS)
+            Image.open(archivo).save("../ProfilePics/" + self.entry_Username.get() + ".jpg")
+            imagen = imagen.resize((100, 100), Image.LANCZOS)
             circular = self.make_circle_image(imagen)
             Imagentk = ImageTk.PhotoImage(circular)
             self.avatar_label.configure(image=Imagentk)
@@ -1147,14 +1147,14 @@ class Registro(customtkinter.CTk):
         self.destroy()  # or self.withdraw(), depending on how you've implemented the registration window
 
         # Open the main menu
-        menu = logGUI.menu.Menu_principal()
-        menu.mainloop()
+        # menu = menu.Menu_principal()
+        menu.Menu_principal().mainloop()
 
     def displayPhoto(self,usuario_img):
         img = usuario_img + ".jpg"
         imgpng = "ProfilePics/" + usuario_img + ".png"
         imagen = Image.open(imgpng)
-        imagen = imagen.resize((100, 100), Image.ANTIALIAS)
+        imagen = imagen.resize((100, 100), Image.LANCZOS)
         circular = self.make_circle_image(imagen)
         Imagentk = ImageTk.PhotoImage(circular)
         self.avatar_label.configure(image=Imagentk)

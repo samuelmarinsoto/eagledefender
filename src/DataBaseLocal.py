@@ -27,8 +27,8 @@ import sqlite3
 #import database.VerificationCode as VerificationCode
 # Configuración inicial para la API de Gmail
 SCOPES = ['https://www.googleapis.com/auth/gmail.send']
-CLIENT_SECRET_FILE = 'credentials.json'
-CREDENTIALS_FILE = 'token.json'
+CLIENT_SECRET_FILE = '../credentials.json'
+CREDENTIALS_FILE = '../token.json'
 
 
 def get_credentials():
@@ -198,7 +198,7 @@ def insert_user(username, password, first_name, last_name, email, age, photo,mem
 def insert_personalization_option(username, paleta_de_colores, textura):
     try:
         # Conectarse a la base de datos (reemplaza 'nombre_de_tu_base_de_datos.db' con el nombre real)
-        conn = sqlite3.connect('EagleDefender.db')
+        conn = sqlite3.connect('../EagleDefender.db')
         cursor = conn.cursor()
 
         # Insertar la nueva opción de personalización en la tabla Personalizaciones
