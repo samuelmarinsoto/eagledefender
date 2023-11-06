@@ -58,7 +58,7 @@ import customtkinter
 import tkinter.filedialog as filedialog
 from tkinter import PhotoImage
 from PIL import Image, ImageTk
-import Auxiliar.language_dictionary as dic
+import language_dictionary as dic
 import os
 import cv2
 from matplotlib import pyplot

@@ -1,6 +1,6 @@
 import customtkinter
 
-from logGUI.menu import Menu_principal
+from menu import Menu_principal
 customtkinter.set_appearance_mode("dark")  # Forzar el modo oscuro
 
 
