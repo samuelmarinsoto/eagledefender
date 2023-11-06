@@ -1,6 +1,6 @@
 from juegoclase import Juego
 
-def iniciar():
+def iniciar(jugador1, jugador2):
     jugador1_puntos = 0
     jugador2_puntos = 0
     
@@ -76,4 +76,6 @@ def iniciar():
 
         juego.fin(jugador1_puntos, jugador2_puntos)
 
-# iniciar()
+# import users
+#
+# iniciar(users.player1, users.player2)
