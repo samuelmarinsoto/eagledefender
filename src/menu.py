@@ -370,7 +370,7 @@ class Menu_principal(customtkinter.CTk):
 
 
         if users.player1.verify_log(users.player1.texture, users.player1.palette_color) and users.player2.verify_log(users.player2.texture, users.player2.palette_color):
-            juegoinit.iniciar()
+            juegoinit.iniciar(users.player1, users.player2)
         else:
             tkinter.messagebox.showerror("Error", "No hay suficientes jugadores logeados")
             self.PlayWindow.withdraw()
