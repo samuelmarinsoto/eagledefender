@@ -4,7 +4,7 @@ from jugadorclase import Jugador
 import spot
 
 class Juego:
-    def __init__(self):
+    def __init__(self, j1, j2):
         pygame.init()
         self.pantalla = pygame.display.set_mode((pygame.display.Info().current_w // 1.5, pygame.display.Info().current_h // 1.5))
         pygame.display.set_caption('Eagle Defender')
@@ -17,8 +17,8 @@ class Juego:
         self.cron = 30000 # 30 segundos, por ahora
 
         # van a ser objetos usuario con info del usuario
-        self.A = 0
-        self.B = 0
+        self.j1 = j1
+        self.j2 = j2
 
         self.puntos_atacante = 0
         self.puntos_defensa = 0
@@ -26,6 +26,14 @@ class Juego:
 
         self.balas = []
         self.barreras = []
+        
+    # calcula tamano de puente en base a procentaje
+    # de pantalla que ocupa
+    def tamano_fuente(self, porcentaje):
+        w = self.pantalla.get_width()
+        h = self.pantalla.get_height()
+        min_dim = min(w, h)
+        return int(min_dim * porcentaje / 100)
 
     def colision(self):
         for barrera in self.barreras.copy():
@@ -63,8 +71,6 @@ class Juego:
     def partida(self, partida):
         atacante = Jugador(1, partida, self.pantalla)
         defensor = Jugador(0, partida, self.pantalla)
-
-        self.cron = 10000
         
         self.puntos_atacante = 0
         self.puntos_defensa = 0
@@ -72,8 +78,53 @@ class Juego:
 
         self.balas = []
         self.barreras = []
+        
+        tamanocron = self.tamano_fuente(10) # 1/25 de la pantalla
+        fcron = pygame.font.Font(None, tamanocron)
 
-        fuente = pygame.font.Font(None, 36)
+        tamanonom = self.tamano_fuente(5)
+        fnom = pygame.font.Font(None, tamanonom)
+
+        imgescala = self.pantalla.get_height()//5
+
+        if partida%2:
+            nombreD = self.j1.Username
+            jachaD = pygame.image.load(self.j1.pathimage).convert_alpha()
+            jachaD = pygame.transform.scale(jachaD, (imgescala, imgescala))
+            jachaDC = pygame.Surface((imgescala, imgescala), pygame.SRCALPHA)
+
+            pygame.draw.circle(jachaDC, (255, 255, 255), (imgescala//2, imgescala//2), imgescala//2)
+            jachaD.set_colorkey((0, 0, 0))  # Make black pixels transparent
+            jachaDC.blit(jachaD, (0, 0), special_flags=pygame.BLEND_RGBA_MIN)
+
+            nombreA = self.j2.Username
+            jachaA = pygame.image.load(self.j2.pathimage).convert_alpha()
+            jachaA = pygame.transform.scale(jachaA, (imgescala, imgescala))
+            jachaAC = pygame.Surface((imgescala, imgescala), pygame.SRCALPHA)
+
+            pygame.draw.circle(jachaAC, (255, 255, 255), (imgescala//2, imgescala//2), imgescala//2)
+            jachaA.set_colorkey((0, 0, 0))  # Make black pixels transparent
+            jachaAC.blit(jachaA, (0, 0), special_flags=pygame.BLEND_RGBA_MIN)
+            
+        else:
+            nombreD = self.j2.Username
+            jachaD = pygame.image.load(self.j2.pathimage).convert_alpha()
+            jachaD = pygame.transform.scale(jachaD, (imgescala, imgescala))
+            jachaDC = pygame.Surface((imgescala, imgescala), pygame.SRCALPHA)
+
+            pygame.draw.circle(jachaDC, (255, 255, 255), (imgescala//2, imgescala//2), imgescala//2)
+            jachaD.set_colorkey((0, 0, 0))  # Make black pixels transparent
+            jachaDC.blit(jachaD, (0, 0), special_flags=pygame.BLEND_RGBA_MIN)
+
+            nombreA = self.j1.Username
+            jachaA = pygame.image.load(self.j1.pathimage).convert_alpha()
+            jachaA = pygame.transform.scale(jachaA, (imgescala, imgescala))
+            jachaAC = pygame.Surface((imgescala, imgescala), pygame.SRCALPHA)
+
+            pygame.draw.circle(jachaAC, (255, 255, 255), (imgescala//2, imgescala//2), imgescala//2)
+            jachaA.set_colorkey((0, 0, 0))  # Make black pixels transparent
+            jachaAC.blit(jachaA, (0, 0), special_flags=pygame.BLEND_RGBA_MIN)
+            
         ultimo_tiempo = time.time()
 
         while self.cron > 0:
@@ -90,9 +141,25 @@ class Juego:
             self.pantalla.blit(self.fondo, (0,0))
 
             cron_texto = f"Tiempo para defensa: {self.cron//1000}"
-            cron_texto_dim = fuente.size(cron_texto)
-            cron_sup = fuente.render(cron_texto, True, (0, 0, 0))
+            cron_texto_dim = fcron.size(cron_texto)
+            cron_sup = fcron.render(cron_texto, True, (0, 0, 0))
             self.pantalla.blit(cron_sup, ((self.pantalla.get_width()//2)-(cron_texto_dim[0]//2), 0))
+
+            self.pantalla.blit(jachaDC, (self.pantalla.get_width()//45,0))
+            centraditoAC = self.pantalla.get_width()-imgescala-self.pantalla.get_width()//45
+            self.pantalla.blit(jachaAC, (centraditoAC, 0))
+
+            altura_nombres = self.pantalla.get_height()//4
+            centradito_nombres = self.pantalla.get_width()//55
+            atacante_centradito = self.pantalla.get_width() - centradito_nombres
+
+            nomDdim = fnom.size(nombreD)
+            nomDsup = fnom.render(nombreD, True, (0, 0, 0))
+            self.pantalla.blit(nomDsup, (centradito_nombres, altura_nombres))
+
+            nomAdim = fnom.size(nombreA)
+            nomAsup = fnom.render(nombreA, True, (0, 0, 0))
+            self.pantalla.blit(nomAsup, (atacante_centradito-nomAdim[0], altura_nombres))
 
             defensor.moverse(dt)
             nueva_pared = defensor.disparar()
@@ -123,9 +190,25 @@ class Juego:
             self.pantalla.blit(self.fondo, (0,0))
             
             cron_texto = f"Tiempo para ataque: {self.cron//1000}"
-            cron_texto_dim = fuente.size(cron_texto)
-            cron_sup = fuente.render(cron_texto, True, (0, 0, 0))
+            cron_texto_dim = fcron.size(cron_texto)
+            cron_sup = fcron.render(cron_texto, True, (0, 0, 0))
             self.pantalla.blit(cron_sup, ((self.pantalla.get_width()//2)-(cron_texto_dim[0]//2), 0))
+
+            self.pantalla.blit(jachaDC, (self.pantalla.get_width()//45,0))
+            centraditoAC = self.pantalla.get_width()-imgescala-self.pantalla.get_width()//45
+            self.pantalla.blit(jachaAC, (centraditoAC, 0))
+
+            altura_nombres = self.pantalla.get_height()//4
+            centradito_nombres = self.pantalla.get_width()//55
+            atacante_centradito = self.pantalla.get_width() - centradito_nombres
+
+            nomDdim = fnom.size(nombreD)
+            nomDsup = fnom.render(nombreD, True, (0, 0, 0))
+            self.pantalla.blit(nomDsup, (centradito_nombres, altura_nombres))
+
+            nomAdim = fnom.size(nombreA)
+            nomAsup = fnom.render(nombreA, True, (0, 0, 0))
+            self.pantalla.blit(nomAsup, (atacante_centradito-nomAdim[0], altura_nombres))
 
             self.moverbalas(dt)
             self.colision()
@@ -160,10 +243,11 @@ class Juego:
 
     def fin(self, puntos1, puntos2):
 
-        fuente = pygame.font.Font(None, 72)
+        tamano = self.tamano_fuente(12)
+        fuente = pygame.font.Font(None, tamano)
         
-        texto1 = f"Jugador 1: {puntos1}"
-        texto2 = f"Jugador 2: {puntos2}"
+        texto1 = f"{self.j1.Username}: {puntos1}"
+        texto2 = f"{self.j2.Username}: {puntos2}"
         texto1_dim = fuente.size(texto1)
         texto2_dim = fuente.size(texto2)
         texto1_color = (0,0,0)

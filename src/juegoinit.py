@@ -4,7 +4,7 @@ def iniciar(jugador1, jugador2):
     jugador1_puntos = 0
     jugador2_puntos = 0
     
-    juego = Juego()
+    juego = Juego(jugador1, jugador2)
 
     print(jugador1_puntos)
     print(jugador2_puntos)
@@ -76,6 +76,5 @@ def iniciar(jugador1, jugador2):
 
         juego.fin(jugador1_puntos, jugador2_puntos)
 
-# import users
-#
-# iniciar(users.player1, users.player2)
+import users
+iniciar(users.player1, users.player2)

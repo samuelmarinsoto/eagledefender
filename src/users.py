@@ -56,5 +56,5 @@ class CustomizationData:
 #player_customization.update_palette_color("Red")
 #player_customization.display_customization()
 
-player1 = CustomizationData("josegamer123","../ProfilePics/testjuego1.png","NO","Scatman", "Gasolina Daddy Yankee", "Ace spades", "DefaultPalette", "DefaultTexture")
+player1 = CustomizationData("josegamer123","../ProfilePics/testjuego1.jpeg","NO","Scatman", "Gasolina Daddy Yankee", "Ace spades", "DefaultPalette", "DefaultTexture")
 player2 = CustomizationData("angeloMetal64","../ProfilePics/testjuego2.png","NO","Stayin' alive", "Danza kuduro", "Blitzkrieg Pop", "DefaultPalette", "DefaultTexture")
