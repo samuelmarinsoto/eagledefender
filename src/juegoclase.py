@@ -106,7 +106,24 @@ class Juego:
 
         self.pantalla.blit(sup, (w, h))
         pygame.display.update()
+        
+    def transicion(self, partida):
+        tamano = self.tamano_fuente(12)
+        fuente = pygame.font.Font(None, tamano)
 
+        if partida > 1:
+            dim = fuente.size("Cambio de rol!!!")
+            sup = fuente.render("Cambio de rol!!!", True, (0,0,0))
+            
+            w = self.pantalla.get_width()//2 - dim[0]//2
+            h = self.pantalla.get_height()//2 - dim[1]//2
+
+            ut = time.time()
+            
+            while time.time() - ut < 3:
+                self.pantalla.blit(sup, (w, h))
+                pygame.display.update()
+            
     def pausarmusica(self):
         if self.pausa:
             spot.PauseMusic()
@@ -173,6 +190,8 @@ class Juego:
             jachaAC.blit(jachaA, (0, 0), special_flags=pygame.BLEND_RGBA_MIN)
 
         self.cancionycron(self.cancion_def)
+
+        self.transicion(partida)
         
         ultimo_tiempo = time.time()
 
@@ -366,7 +385,7 @@ class Juego:
 # TODO:
 #
 # prueba de usabilidad:
-# boton de pausa, transicion entre cambio de rol
+# transicion entre cambio de rol
 #
 # sprint 2:
 # seleccion de sprites, rotacion de bloques, animaciones de colision
