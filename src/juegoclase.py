@@ -384,9 +384,6 @@ class Juego:
 
 # TODO:
 #
-# prueba de usabilidad:
-# transicion entre cambio de rol
-#
 # sprint 2:
 # seleccion de sprites, rotacion de bloques, animaciones de colision
 #
