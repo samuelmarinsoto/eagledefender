@@ -50,10 +50,9 @@ def UserSpotSelect(UserSpot):
 def PauseMusic():
     sp.pause_playback()
 
-
-
-
-
+def unPauseMusic():
+    sp.start_playback()
+    
 def GetSongDuration(Duration):
     
     duration_ms = Duration

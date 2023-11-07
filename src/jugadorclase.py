@@ -17,7 +17,6 @@ class Jugador:
         self.balasC = 10
         self.balasX = 1
 
-        self.pausa = pygame.K_y # tecla de pausa, se comparte entre los dos jugadores
         # rol es 0 o 1,
         # 0 == defensor, 1 == atacante
         self.rol = rol
@@ -184,10 +183,6 @@ class Jugador:
         
         # dibuja una linea cafe
         pygame.draw.line(self.pantalla, (139, 69, 19), (self.posx + self.sup.get_width() // 2, self.posy + self.sup.get_height() // 2), (mirax, miray), self.pantalla.get_height()//100)
-
-    def check_pausa(self):
-        tecla = pygame.key.get_pressed()
-        return tecla[self.pausa]
         
     def check_termturno(self):
         tecla = pygame.key.get_pressed()

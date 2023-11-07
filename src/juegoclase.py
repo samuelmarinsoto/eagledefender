@@ -15,6 +15,7 @@ class Juego:
         self.clock = pygame.time.Clock()
 
         self.cron = 30000 # 30 segundos, por ahora
+        self.pausa = False # estado de pausa. tecla "y" es pausa para ambos jugadores
 
         # van a ser objetos usuario con info del usuario
         self.j1 = j1
@@ -94,6 +95,23 @@ class Juego:
             self.pantalla.blit(bala.sup, (bala.posx, bala.posy))
         for barrera in self.barreras:
             self.pantalla.blit(barrera.sup, (barrera.posx, barrera.posy))
+
+    def blitpausa(self):
+        tamano = self.tamano_fuente(12)
+        fuente = pygame.font.Font(None, tamano)
+        dim = fuente.size("Pausado")
+        sup = fuente.render("Pausado", True, (0,0,0))
+        w = self.pantalla.get_width()//2 - dim[0]//2
+        h = self.pantalla.get_height()//2 - dim[1]//2
+
+        self.pantalla.blit(sup, (w, h))
+        pygame.display.update()
+
+    def pausarmusica(self):
+        if self.pausa:
+            spot.PauseMusic()
+        else:
+            spot.unPauseMusic()
         
     def partida(self, partida):
         atacante = Jugador(1, partida, self.pantalla)
@@ -163,7 +181,17 @@ class Juego:
                 if event.type == pygame.QUIT:
                     spot.PauseMusic()
                     pygame.quit()
-                    
+
+                if event.type == pygame.KEYDOWN:
+                    if event.key == pygame.K_y:
+                        self.pausa = not self.pausa  # Toggle the paused state
+                        self.pausarmusica()
+                        self.blitpausa()
+
+            if self.pausa:
+                ultimo_tiempo = time.time()
+                continue
+                
             # https://www.youtube.com/watch?v=OmkAUzvwsDk
             dt = time.time() - ultimo_tiempo
             ultimo_tiempo = time.time()
@@ -219,6 +247,16 @@ class Juego:
                 if event.type == pygame.QUIT:
                     spot.PauseMusic()
                     pygame.quit()
+
+                if event.type == pygame.KEYDOWN:
+                    if event.key == pygame.K_y:
+                        self.pausa = not self.pausa  # Toggle the paused state
+                        self.pausarmusica()
+                        self.blitpausa()
+
+            if self.pausa:
+                ultimo_tiempo = time.time()
+                continue       
 
             dt = time.time() - ultimo_tiempo
             ultimo_tiempo = time.time()
