@@ -176,48 +176,28 @@ class Registro(customtkinter.CTk):
                                                  font=customtkinter.CTkFont(size=20, weight="bold"))
         self.logo_label.place(relx=0.5, rely=0.1, anchor=customtkinter.CENTER)
 
-        # self.username = customtkinter.CTkLabel(self.tabview.tab(dic.Game[dic.language]),
-        #                                        text=dic.Username[dic.language], anchor="w")
-        # self.username.place(relx=0.5, rely=0.32, anchor=customtkinter.CENTER)
+
         self.entry_Username = customtkinter.CTkEntry(self.tabview.tab(dic.Game[dic.language]), placeholder_text=dic.Username[dic.language])
         self.entry_Username.place(relx=0.5, rely=0.2, anchor=customtkinter.CENTER)
-        # self.contra = customtkinter.CTkLabel(self.tabview.tab(dic.Game[dic.language]), text=dic.Password[dic.language],
-        #                                      anchor="w")
-        # self.contra.place(relx=0.5, rely=0.42, anchor=customtkinter.CENTER)
+
 
         self.entry_Contra = customtkinter.CTkEntry(self.tabview.tab(dic.Game[dic.language]), show="◊", placeholder_text=dic.Password[dic.language])
         self.entry_Contra.place(relx=0.5, rely=0.27, anchor=customtkinter.CENTER)
-        # self.contra_check = customtkinter.CTkLabel(self.tabview.tab(dic.Game[dic.language]),
-        #                                            text="Verificar " + dic.Password[dic.language], anchor="w")
-        # self.contra_check.place(relx=0.5, rely=0.52, anchor=customtkinter.CENTER)
+
 
         self.entry_Contra_check = customtkinter.CTkEntry(self.tabview.tab(dic.Game[dic.language]), show="◊", placeholder_text=dic.VerifyPassword[dic.language])
         self.entry_Contra_check.place(relx=0.5, rely=0.34, anchor=customtkinter.CENTER)
 
-        # self.foto = customtkinter.CTkFrame(self.tabview.tab("Juego"), fg_color=grey, corner_radius=100, height=80,width=80)
-        # self.foto.place(relx=0.5, rely=0.7, anchor=customtkinter.CENTER)
+        # Crear un botón con forma de ojo para alternar la visibilidad de la contraseña
+        self.toggle_btn = customtkinter.CTkButton(self.tabview.tab(dic.Game[dic.language]),
+                                                  text="Mostrar",
+                                                  command=self.toggle_password_visibility, width=10)
+        self.toggle_btn.place(relx=0.72, rely=0.27, anchor=customtkinter.CENTER)
+        self.toggle_btn2= customtkinter.CTkButton(self.tabview.tab(dic.Game[dic.language]),
+                                                  text="Mostrar",
+                                                  command=self.toggle_password_visibility2, width=10)
+        self.toggle_btn2.place(relx=0.72, rely=0.34, anchor=customtkinter.CENTER)
 
-
-        #
-        # # Foto label
-        # self.foto_label = customtkinter.CTkLabel(
-        #     self.tabview.tab(dic.Game[dic.language]),
-        #     corner_radius=60,
-        #     text=dic.Photo[dic.language],
-        #     bg_color="transparent",  # Fondo transparente
-        #     fg_color="transparent"  # Texto transparente
-        # )
-        # self.foto_label.place(relx=0.45, rely=0.23, anchor=customtkinter.CENTER)
-        #
-        # # Facial label
-        # self.facial_label = customtkinter.CTkLabel(
-        #     self.tabview.tab(dic.Game[dic.language]),
-        #     corner_radius=60,
-        #     text=dic.Facial[dic.language],
-        #     bg_color="transparent",  # Fondo transparente
-        #     fg_color="transparent"  # Texto transparente
-        # )
-        # self.facial_label.place(relx=0.55, rely=0.23, anchor=customtkinter.CENTER)
         self.selected_photo_path = "../assets/flags/Avatar-Profile.png"
         self.selected_picpassword = ""
 
@@ -340,19 +320,24 @@ class Registro(customtkinter.CTk):
                                                        text="Información de Tarjeta",
                                                        font=customtkinter.CTkFont(size=16, weight="bold"))
         self.card_title_label.place(relx=0.5, rely=0.1, anchor=customtkinter.CENTER)
+        self.card_number_label = customtkinter.CTkLabel(self.tabview.tab(dic.Members[dic.language]),text="Número de Tarjeta")
+        self.card_number_label.place(relx=0.5, rely=0.2, anchor=customtkinter.CENTER)
         # Agregar un CTkLabel para mostrar el icono de la tarjeta
         self.card_icon_label = customtkinter.CTkLabel(self.tabview.tab(dic.Members[dic.language]), text="", width=50,
                                                       height=50)
-        self.card_icon_label.place(relx=0.3, rely=0.2, anchor=customtkinter.CENTER)
+        self.card_icon_label.place(relx=0.3, rely=0.25, anchor=customtkinter.CENTER)
 
         # Modifica el método de creación de la entrada de número de tarjeta para agregar un trace
-        self.card_number_var = tkinter.StringVar()
+        self.card_number_var = tkinter.StringVar(value='')  # Explicitly set to empty string.
         self.card_number_var.trace("w", self.update_card_icon)
 
-
-        self.card_number_entry = customtkinter.CTkEntry(self.tabview.tab(dic.Members[dic.language]),
-                                                        placeholder_text="Número de Tarjeta")
+        self.card_number_entry = customtkinter.CTkEntry(
+            self.tabview.tab(dic.Members[dic.language]),
+            placeholder_text="Número de Tarjeta",
+            textvariable=self.card_number_var  # This line is essential
+        )
         self.card_number_entry.place(relx=0.5, rely=0.25, anchor=customtkinter.CENTER)
+
 
         self.switchVarMembresia = customtkinter.StringVar(value="on")
         print(self.switchVarMembresia.get())
@@ -362,7 +347,7 @@ class Registro(customtkinter.CTk):
             fg_color="Red", button_color="#AFAFAF", button_hover_color="WHite",
             progress_color="Green")
 
-        self.switchMembresia.place(relx=0.555, rely=0.18, anchor=customtkinter.CENTER)
+        self.switchMembresia.place(relx=0.555, rely=0.16, anchor=customtkinter.CENTER)
 
 
         self.card_expiry_entry = customtkinter.CTkEntry(self.tabview.tab(dic.Members[dic.language]),
@@ -561,13 +546,23 @@ class Registro(customtkinter.CTk):
         # self.buttonWhite.place(relx=0.5, rely=0.25)
         # self.buttonGreen.place(relx=0.5, rely=0.40)
 
-    # self.buttonBlack.place(relx=0.5, rely=0.55)
-    # self.buttonBlue.place(relx=0.5, rely=0.70)
+    def toggle_password_visibility(self):
+        if self.entry_Contra.cget("show") == "◊":
+            self.entry_Contra.configure(show="")  # Cambiado de config a configure aquí
+            self.toggle_btn.configure(text="Ocultar")  # Cambiado de config a configure aquí
+        else:
+            self.entry_Contra.configure(show="◊")  # Cambiado de config a configure aquí
+            self.toggle_btn.configure(text="Mostrar")  # Cambiado de config a configure aquí
 
-
+    def toggle_password_visibility2(self):
+        if self.entry_Contra_check.cget("show") == "◊":
+            self.entry_Contra_check.configure(show="")  # Cambiado de config a configure aquí
+            self.toggle_btn2.configure(text="Ocultar")  # Cambiado de config a configure aquí
+        else:
+            self.entry_Contra_check.configure(show="◊")  # Cambiado de config a configure aquí
+            self.toggle_btn2.configure(text="Mostrar")  # Cambiado de config a configure aquí
     def update_card_icon(self, *args):
         card_number = self.card_number_var.get()
-
         if card_number.startswith("4"):
             original_image = Image.open("../assets/cards/visa.png")
         elif card_number.startswith("5"):

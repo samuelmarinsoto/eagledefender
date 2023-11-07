@@ -157,22 +157,6 @@ class Menu_principal(customtkinter.CTk):
 
         """_________________________________________________________________________________________________________________"""
 
-        self.MembersWindow.logo_label = customtkinter.CTkLabel( self.MembersWindow, text="Seleccion de membresia",
-                                                 font=customtkinter.CTkFont(size=20, weight="bold"))
-        self.MembersWindow.logo_label.place(relx=0.5, rely=0.2, anchor=customtkinter.CENTER)
-
-        self.MembersWindow.sidebar_button_3 = customtkinter.CTkButton( self.MembersWindow, text="Miembro Gold", fg_color=green_light,
-                                                        hover_color=green,
-                                                        command=self.ejecutar_pago)
-        self.MembersWindow.sidebar_button_3.place(relx=0.5, rely=0.5, anchor=customtkinter.CENTER)
-
-        self.MembersWindow.sidebar_button_3 = customtkinter.CTkButton( self.MembersWindow, text="Miembro Invitado", fg_color=green_light,
-                                                        hover_color=green, command=self.RegisterUser)
-        self.MembersWindow.sidebar_button_3.place(relx=0.5, rely=0.6, anchor=customtkinter.CENTER)
-
-        self.MembersWindow.sidebar_button_3 = customtkinter.CTkButton( self.MembersWindow, text="←", fg_color=green_light,
-                                                        hover_color=green, command=self.back_menu, width=30, height=30)
-        self.MembersWindow.sidebar_button_3.place(relx=0.001, rely=0.001, anchor=customtkinter.NW)
 
         """______________________________________________________________________________________________________________________"""
 
