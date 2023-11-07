@@ -14,6 +14,8 @@ import tkinter.messagebox
 import DataBaseLocal as DataBase
 import users as users
 import juegoinit
+import juegoAI
+import HallFame
 import re
 # customtkinter.set_appearance_mode("System")  # Modes: "System" (standard), "Dark", "Light"
 # customtkinter.set_default_color_theme("green")  # Themes: "blue" (standard), "green", "dark-blue"
@@ -63,6 +65,12 @@ class Menu_principal(customtkinter.CTk):
         self.PlayWindow = customtkinter.CTkToplevel(self)
         self.PlayWindow.withdraw()
         self.PlayWindow.geometry(ScreenRes)
+        self.HallOfFame = customtkinter.CTkToplevel(self)
+        self.HallOfFame.withdraw()
+        self.HallOfFame.geometry(ScreenRes)
+
+
+
         """__________________________________________________________________________________________________________"""
         # configure window
 
@@ -195,6 +203,17 @@ class Menu_principal(customtkinter.CTk):
 
         self.PlayWindow.Player2Pic = customtkinter.CTkLabel(self.PlayWindow, image=default_imageop, corner_radius=60,text="")
         self.PlayWindow.Player2Pic.place(relx=0.9, rely=0.2, anchor=customtkinter.CENTER)
+        self.BtnFame = customtkinter.CTkButton(self.PlayWindow, text="hall of fame",
+                                                  fg_color=green_light, hover_color=green, command=self.HallOfFame_select)
+        self.BtnFame.place(relx=0.1, rely=0.95, anchor=customtkinter.CENTER)
+        #-------------------------------------------------------------------------------------------------------------
+        HallFame.Score1.update_hallfame()
+        self.HallOfFame.back = customtkinter.CTkButton(self.HallOfFame, text="←", fg_color=green_light,
+                                                       hover_color=green,
+                                                       command=self.ejecutar_play, width=30, height=30)
+        self.HallOfFame.back.place(relx=0.001, rely=0.001, anchor=customtkinter.NW)
+
+
 
 
     def ejecutar_login(self):
@@ -316,6 +335,13 @@ class Menu_principal(customtkinter.CTk):
         self.withdraw()
         self.LoginWindow.withdraw()
         self.MembersWindow.deiconify()
+    def HallOfFame_select(self):
+        self.withdraw()
+        self.PlayWindow.withdraw()
+        self.LoginWindow.withdraw()
+        self.HallOfFame.deiconify()
+
+
 
     def RegisterUser(self):
         self.destroy()
@@ -344,6 +370,8 @@ class Menu_principal(customtkinter.CTk):
     def ejecutar_play(self):
         #if Logged1(Player):
         self.withdraw()
+        self.LoginWindow.withdraw()
+        self.HallOfFame.withdraw()
         self.PlayWindow.deiconify()
         #else:
             #self.PlayWindow.withdraw()

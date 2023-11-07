@@ -966,6 +966,7 @@ class Registro(customtkinter.CTk):
                 respuesta = tkinter.messagebox.askyesno("Confirmación", "¿Seguro que no quieres ser miembro?")
                 if respuesta:
                     # Guarda en la base de datos que el usuario decidió no ser miembro
+                    Image.open(self.selected_photo_path).save("../ProfilePics/" + self.entry_Username.get() + ".jpg")
                     DataBase.insert_membership_status(self.entry_Username.get(), False)
                     DataBase.update_membership_status(self.entry_Username.get(), "No")
                 else:
@@ -973,6 +974,7 @@ class Registro(customtkinter.CTk):
                     self.select_tab(dic.Members[dic.language])
                     error_occurred = True  # Marca que ocurrió un error
             else:
+                Image.open(self.selected_photo_path).save("../ProfilePics/" + self.entry_Username.get() + ".jpg")
                 # Guarda en la base de datos que el usuario decidió ser miembro y los detalles correspondientes
                 DataBase.insert_membership_status(self.entry_Username.get(), True)
                 DataBase.update_membership_status(self.entry_Username.get(), "Yes")
@@ -1073,7 +1075,7 @@ class Registro(customtkinter.CTk):
             if self.entry_Username.get() == "":
                 tkinter.messagebox.showerror("Error", "Falta el nombre de usuario para guardar la imagen")
                 return
-            Image.open(archivo).save("../ProfilePics/" + self.entry_Username.get() + ".jpg")
+            #Image.open(archivo).save("ProfilePics/" + self.entry_Username.get() + ".jpg")
             imagen = imagen.resize((100, 100), Image.LANCZOS)
             circular = self.make_circle_image(imagen)
             Imagentk = ImageTk.PhotoImage(circular)
