@@ -43,4 +43,4 @@ Score3 = Puntaje("","", 0)
 Score4 = Puntaje("","", 0)
 Score5 = Puntaje("","", 0)
 Score6 = Puntaje("","", 0)
-
+Score1.update_hallfame()

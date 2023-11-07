@@ -131,6 +131,14 @@ class Registro(customtkinter.CTk):
                                                  font=customtkinter.CTkFont(size=20, weight="bold"))
         self.logo_label.place(relx=0.5, rely=0.1, anchor=customtkinter.CENTER)
 
+        self.back = customtkinter.CTkButton(self, text="←", fg_color=green_light,
+                                                       hover_color=green,
+                                                       command=self.back, width=30, height=30)
+        self.back.place(relx=0.001, rely=0.001, anchor=customtkinter.NW)
+
+
+
+
         # self.nombre = customtkinter.CTkLabel(self.tabview.tab(dic.Data[dic.language]), text=dic.Name[dic.language],
         #                                      anchor="w")
         # self.nombre.place(relx=0.5, rely=0.2, anchor=customtkinter.CENTER)
@@ -546,6 +554,11 @@ class Registro(customtkinter.CTk):
         # self.buttonWhite.place(relx=0.5, rely=0.25)
         # self.buttonGreen.place(relx=0.5, rely=0.40)
 
+
+    def back(self):
+        self.destroy()
+        menu.Menu_principal().mainloop()
+
     def toggle_password_visibility(self):
         if self.entry_Contra.cget("show") == "◊":
             self.entry_Contra.configure(show="")  # Cambiado de config a configure aquí
@@ -789,7 +802,7 @@ class Registro(customtkinter.CTk):
         textura = self.get_active_texture()
         # cancion = self.cancion1.get()
         usuario_img = self.entry_Username.get()
-        imagen_ruta = '../ProfilePics/' + usuario_img + ".jpg"  # Ruta de la imagen guardada
+        imagen_ruta = '../ProfilePics/' + usuario_img + ".png"  # Ruta de la imagen guardada
 
         edad = self.age  # Accede a la edad desde la variable de instancia
 
@@ -966,7 +979,8 @@ class Registro(customtkinter.CTk):
                 respuesta = tkinter.messagebox.askyesno("Confirmación", "¿Seguro que no quieres ser miembro?")
                 if respuesta:
                     # Guarda en la base de datos que el usuario decidió no ser miembro
-                    Image.open(self.selected_photo_path).save("../ProfilePics/" + self.entry_Username.get() + ".jpg")
+
+                    Image.open(self.selected_photo_path).save("../ProfilePics/" + self.entry_Username.get()+".png")
                     DataBase.insert_membership_status(self.entry_Username.get(), False)
                     DataBase.update_membership_status(self.entry_Username.get(), "No")
                 else:
@@ -974,7 +988,7 @@ class Registro(customtkinter.CTk):
                     self.select_tab(dic.Members[dic.language])
                     error_occurred = True  # Marca que ocurrió un error
             else:
-                Image.open(self.selected_photo_path).save("../ProfilePics/" + self.entry_Username.get() + ".jpg")
+                Image.open(self.selected_photo_path).save("../ProfilePics/" + self.entry_Username.get() + ".png")
                 # Guarda en la base de datos que el usuario decidió ser miembro y los detalles correspondientes
                 DataBase.insert_membership_status(self.entry_Username.get(), True)
                 DataBase.update_membership_status(self.entry_Username.get(), "Yes")
