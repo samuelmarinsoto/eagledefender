@@ -19,6 +19,8 @@ class Juego:
         # van a ser objetos usuario con info del usuario
         self.j1 = j1
         self.j2 = j2
+        self.cancion_def = None
+        self.cancion_atq = None
 
         self.puntos_atacante = 0
         self.puntos_defensa = 0
@@ -26,6 +28,31 @@ class Juego:
 
         self.balas = []
         self.barreras = []
+
+    def seleccion_cancion(self, partida):
+        if partida == 1:
+            self.cancion_def = self.j1.song1
+            self.cancion_atq = self.j2.song1
+        elif partida == 2:
+            self.cancion_def = self.j2.song1
+            self.cancion_atq = self.j1.song1
+        elif partida == 3:
+            self.cancion_def = self.j1.song2
+            self.cancion_atq = self.j2.song2
+        elif partida == 4:
+            self.cancion_def = self.j2.song2
+            self.cancion_atq = self.j1.song2
+        elif partida == 5:
+            self.cancion_def = self.j1.song3
+            self.cancion_atq = self.j2.song3
+        elif partida == 6:
+            self.cancion_def = self.j2.song3
+            self.cancion_atq = self.j1.song3
+
+    def cancionycron(self, cancion):
+        spot.SearchSong(cancion)
+        spot.PlaySong(spot.Song1)
+        self.cron = spot.Song1All['duration_ms']
         
     # calcula tamano de puente en base a procentaje
     # de pantalla que ocupa
@@ -71,6 +98,8 @@ class Juego:
     def partida(self, partida):
         atacante = Jugador(1, partida, self.pantalla)
         defensor = Jugador(0, partida, self.pantalla)
+
+        self.seleccion_cancion(partida)
         
         self.puntos_atacante = 0
         self.puntos_defensa = 0
@@ -124,12 +153,15 @@ class Juego:
             pygame.draw.circle(jachaAC, (255, 255, 255), (imgescala//2, imgescala//2), imgescala//2)
             jachaA.set_colorkey((0, 0, 0))  # Make black pixels transparent
             jachaAC.blit(jachaA, (0, 0), special_flags=pygame.BLEND_RGBA_MIN)
-            
+
+        self.cancionycron(self.cancion_def)
+        
         ultimo_tiempo = time.time()
 
         while self.cron > 0:
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
+                    spot.PauseMusic()
                     pygame.quit()
                     
             # https://www.youtube.com/watch?v=OmkAUzvwsDk
@@ -140,7 +172,7 @@ class Juego:
             # sino no se ve nada
             self.pantalla.blit(self.fondo, (0,0))
 
-            cron_texto = f"Tiempo para defensa: {self.cron//1000}"
+            cron_texto = f"Tiempo para defensa: {int(self.cron//1000)}"
             cron_texto_dim = fcron.size(cron_texto)
             cron_sup = fcron.render(cron_texto, True, (0, 0, 0))
             self.pantalla.blit(cron_sup, ((self.pantalla.get_width()//2)-(cron_texto_dim[0]//2), 0))
@@ -176,12 +208,16 @@ class Juego:
 
             # si se acaba el tiempo, cambiar de fase
             self.cron -= dt*1000
+
+            if defensor.check_termturno():
+                self.cron = 0
         
-        self.cron = 30000
+        self.cancionycron(self.cancion_atq)
 
         while self.cron > 0:
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
+                    spot.PauseMusic()
                     pygame.quit()
 
             dt = time.time() - ultimo_tiempo
@@ -189,7 +225,7 @@ class Juego:
 
             self.pantalla.blit(self.fondo, (0,0))
             
-            cron_texto = f"Tiempo para ataque: {self.cron//1000}"
+            cron_texto = f"Tiempo para ataque: {int(self.cron//1000)}"
             cron_texto_dim = fcron.size(cron_texto)
             cron_sup = fcron.render(cron_texto, True, (0, 0, 0))
             self.pantalla.blit(cron_sup, ((self.pantalla.get_width()//2)-(cron_texto_dim[0]//2), 0))
@@ -235,6 +271,9 @@ class Juego:
             pygame.display.update()
 
             self.cron -= dt*1000
+
+            if atacante.check_termturno():
+                self.cron = 0
 
         if self.aguila_viva:
             self.puntos_defensa = len(self.barreras)*2 + 1000
@@ -289,7 +328,7 @@ class Juego:
 # TODO:
 #
 # prueba de usabilidad:
-# musica, boton de pausa, transicion entre cambio de rol
+# boton de pausa, transicion entre cambio de rol
 #
 # sprint 2:
 # seleccion de sprites, rotacion de bloques, animaciones de colision

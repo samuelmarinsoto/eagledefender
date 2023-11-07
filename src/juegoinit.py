@@ -75,6 +75,3 @@ def iniciar(jugador1, jugador2):
         print("fin, al fin")
 
         juego.fin(jugador1_puntos, jugador2_puntos)
-
-import users
-iniciar(users.player1, users.player2)

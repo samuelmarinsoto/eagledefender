@@ -16,7 +16,8 @@ class Jugador:
         self.balasB = 10
         self.balasC = 10
         self.balasX = 1
-                
+
+        self.pausa = pygame.K_y # tecla de pausa, se comparte entre los dos jugadores
         # rol es 0 o 1,
         # 0 == defensor, 1 == atacante
         self.rol = rol
@@ -83,6 +84,7 @@ class Jugador:
                 self.disparoX = pygame.K_7 # nada
                 self.rothorario = pygame.K_o # rotacion
                 self.rotahorario = pygame.K_u # rotacion
+                self.termturno = pygame.K_m # terminar turno
 
             else:
                 # atacante se mueve con WASD
@@ -98,6 +100,7 @@ class Jugador:
                 self.disparoX = pygame.K_4 # nada
                 self.rothorario = pygame.K_e # horario
                 self.rotahorario = pygame.K_q # antihorario
+                self.termturno = pygame.K_x # terminar turno
             
         else:
             # aparece en medio del lado izquierdo
@@ -127,6 +130,7 @@ class Jugador:
                 self.disparoX = pygame.K_4 # aguila
                 self.rothorario = pygame.K_e # horario
                 self.rotahorario = pygame.K_q # antihorario
+                self.termturno = pygame.K_x # terminar turno
 
             else:
                 # defensor se mueve con las flechas
@@ -142,6 +146,7 @@ class Jugador:
                 self.disparoX = pygame.K_7 # aguila
                 self.rothorario = pygame.K_o # rotacion
                 self.rotahorario = pygame.K_u # rotacion
+                self.termturno = pygame.K_m # terminar turno
 
     # solo usar con atacante
     def cambiar_sup(self):
@@ -179,7 +184,15 @@ class Jugador:
         
         # dibuja una linea cafe
         pygame.draw.line(self.pantalla, (139, 69, 19), (self.posx + self.sup.get_width() // 2, self.posy + self.sup.get_height() // 2), (mirax, miray), self.pantalla.get_height()//100)
+
+    def check_pausa(self):
+        tecla = pygame.key.get_pressed()
+        return tecla[self.pausa]
         
+    def check_termturno(self):
+        tecla = pygame.key.get_pressed()
+        return tecla[self.termturno]
+            
     def moverse(self, dt):
         tecla = pygame.key.get_pressed()
         teclas_caminar = [self.arriba, self.abajo, self.izquierda, self.derecha]
