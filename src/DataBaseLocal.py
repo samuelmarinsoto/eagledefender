@@ -589,6 +589,38 @@ def update_puntaje(username, puntaje):
         conn.close()
     return False
 
+def get_puntaje(username):
+    """
+    Retrieves the puntaje of a user from the database.
+
+    Args:
+        username (str): The username of the user to find the puntaje for.
+
+    Returns:
+        int: The puntaje of the user or None if not found or an error occurred.
+    """
+    try:
+        conn = connect()
+        cursor = conn.cursor()
+        cursor.execute("""
+            SELECT Puntaje 
+            FROM Users 
+            WHERE Username = ?
+        """, (username,))
+        result = cursor.fetchone()
+        if result:
+            return result[0]  # Return the puntaje value
+        else:
+            return None  # Return None if no such user exists
+    except Exception as e:
+        print(f"An error occurred while retrieving puntaje: {e}")
+        return None
+    finally:
+        # Ensure the cursor and connection are closed properly
+        if cursor:
+            cursor.close()
+        if conn:
+            conn.close()
 
 def update_membership_status(username, membership_status):
 	"""
