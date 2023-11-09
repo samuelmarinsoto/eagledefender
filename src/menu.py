@@ -20,6 +20,7 @@ import tkinter.filedialog as filedialog
 import LanguageDictionary as Lg
 from tkinter import PhotoImage
 import spot
+import os
 # customtkinter.set_appearance_mode("System")  # Modes: "System" (standard), "Dark", "Light"
 # customtkinter.set_default_color_theme("green")  # Themes: "blue" (standard), "green", "dark-blue"
 
@@ -89,16 +90,16 @@ class Menu_principal(customtkinter.CTk):
         self.PersonalizeWindow2.protocol("WM_DELETE_WINDOW", self.back_menu)
         self.MusicWindow.protocol("WM_DELETE_WINDOW", self.back_menu)
         """__________________________________________________________________________________________________________"""
-        # configure window
-        self.attributes("-fullscreen",True)
-        self.LoginWindow.attributes("-fullscreen",True)
-        self.MembersWindow.attributes("-fullscreen",True)
-        self.PlayWindow.attributes("-fullscreen",True)
-        self.HallOfFame.attributes("-fullscreen",True)
-        self.RegisterWindow.attributes("-fullscreen",True)
-        self.PersonalizeWindow.attributes("-fullscreen",True)
-        self.PersonalizeWindow2.attributes("-fullscreen",True)
-        self.MusicWindow.attributes("-fullscreen",True)
+        # # configure window
+        # self.attributes("-fullscreen",True)
+        # self.LoginWindow.attributes("-fullscreen",True)
+        # self.MembersWindow.attributes("-fullscreen",True)
+        # self.PlayWindow.attributes("-fullscreen",True)
+        # self.HallOfFame.attributes("-fullscreen",True)
+        # self.RegisterWindow.attributes("-fullscreen",True)
+        # self.PersonalizeWindow.attributes("-fullscreen",True)
+        # self.PersonalizeWindow2.attributes("-fullscreen",True)
+        # self.MusicWindow.attributes("-fullscreen",True)
 
         self.title("CustomTkinter complex_example.py")
         self.geometry(ScreenRes)
@@ -195,7 +196,7 @@ class Menu_principal(customtkinter.CTk):
 
 
         imagenTwo = Image.open("../assets/Windows aux/TwoPlayer.png")
-        imagenTwo_resized =  imagenTwo.resize((220,220), Image.LANCZOS)
+        imagenTwo_resized =  imagenTwo.resize((400,400), Image.LANCZOS)
         phTwo = ImageTk.PhotoImage(imagenTwo_resized)
 
 
@@ -219,9 +220,22 @@ class Menu_principal(customtkinter.CTk):
         self.PlayWindow.Player2Pic = customtkinter.CTkLabel(self.PlayWindow, image=self.default_imageop, corner_radius=60,text="")
         self.PlayWindow.Player2Pic.place(relx=0.9, rely=0.2, anchor=customtkinter.CENTER)
         self.BtnFame = customtkinter.CTkButton(self.PlayWindow, text="hall of fame",
-                                                  fg_color=green_light, hover_color=green, command= lambda:  [self.updateAllhall() ,self.HallOfFame_select()])
+                                                  fg_color=green_light, hover_color=green, command= lambda:  [self.update_hall_of_fame(),self.update_hall_of_fame_scores() ,self.HallOfFame_select()])
         self.BtnFame.place(relx=0.1, rely=0.95, anchor=customtkinter.CENTER)
         #-------------------------------------------------------------------------------------------------------------
+        self.selected_photo_path = "../assets/flags/Avatar-Profile.png"
+        default_image2 = Image.open(self.selected_photo_path)
+        default_image2 = default_image2.resize((40, 40), Image.LANCZOS)
+        self.default_imageop3 = ImageTk.PhotoImage(default_image2)
+        self.selected_photo_path = "../assets/flags/Podium.png"
+        default_image3 = Image.open(self.selected_photo_path)
+        default_image3 = default_image3.resize((500, 500), Image.LANCZOS)
+        self.default_imageop2 = ImageTk.PhotoImage(default_image3)
+
+        self.HallOfFame.Podium = customtkinter.CTkLabel(self.HallOfFame, image=self.default_imageop2,
+                                                        corner_radius=60, text="")
+        self.HallOfFame.Podium.place(relx=0.25, rely=0.5, anchor=customtkinter.CENTER)
+
         self.HallOfFame.back = customtkinter.CTkButton(self.HallOfFame, text="←", fg_color=green_light,
                                                        hover_color=green,
                                                        command=self.ejecutar_play, width=30, height=30)
@@ -229,23 +243,256 @@ class Menu_principal(customtkinter.CTk):
 
         self.HallOfFame.logo_label = customtkinter.CTkLabel(self.HallOfFame, text="Hall of Fame", font=customtkinter.CTkFont(size=20, weight="bold"))
 
-        self.HallOfFame.Player1Pic = customtkinter.CTkLabel(self.HallOfFame, image=self.default_imageop, corner_radius=60, text="")
-        self.HallOfFame.Player1Pic.place(relx=0.5, rely=0.2, anchor=customtkinter.CENTER)
 
-        self.HallOfFame.Player2Pic = customtkinter.CTkLabel(self.HallOfFame, image=self.default_imageop, corner_radius=60, text="")
-        self.HallOfFame.Player2Pic.place(relx=0.25, rely=0.3, anchor=customtkinter.CENTER)
 
-        self.HallOfFame.Player3Pic = customtkinter.CTkLabel(self.HallOfFame, image=self.default_imageop, corner_radius=60, text="")
-        self.HallOfFame.Player3Pic.place(relx=0.75, rely=0.3, anchor=customtkinter.CENTER)
 
-        self.HallOfFame.Player1Name = customtkinter.CTkLabel(self.HallOfFame, text="Player1", font=customtkinter.CTkFont(size=20, weight="bold"))
-        self.HallOfFame.Player1Name.place(relx=0.5, rely=0.3, anchor=customtkinter.CENTER)
 
-        self.HallOfFame.Player2Name = customtkinter.CTkLabel(self.HallOfFame, text="Player2", font=customtkinter.CTkFont(size=20, weight="bold"))
-        self.HallOfFame.Player2Name.place(relx=0.25, rely=0.4, anchor=customtkinter.CENTER)
 
-        self.HallOfFame.Player3Name = customtkinter.CTkLabel(self.HallOfFame, text="Player3", font=customtkinter.CTkFont(size=20, weight="bold"))
-        self.HallOfFame.Player3Name.place(relx=0.75, rely=0.4, anchor=customtkinter.CENTER)
+
+
+        self.backgroundTop = customtkinter.CTkLabel(self.HallOfFame, text="", fg_color="#303044", width= 500, height= 600, corner_radius= 60)
+        self.backgroundTop.place(relx=0.75, rely=0.5, anchor=customtkinter.CENTER)
+
+        self.backgroundTopTile = customtkinter.CTkLabel(self.HallOfFame, text="", fg_color="#181824",bg_color="#303044" , width = 450, height= 40, corner_radius= 60)
+        self.backgroundTopTile.place(relx=0.75, rely=0.14, anchor=customtkinter.CENTER)
+
+        self.rank = customtkinter.CTkLabel(self.HallOfFame, text="Rank",  width = 55, height= 35, corner_radius= 60, font=customtkinter.CTkFont(size=16, weight="bold"), bg_color="#181824", fg_color="#303044")
+        self.rank.place(relx=0.65, rely=0.14, anchor=customtkinter.CENTER)
+
+        self.username = customtkinter.CTkLabel(self.HallOfFame, text="Username", width=55, height=35, corner_radius=60,
+                                           font=customtkinter.CTkFont(size=16, weight="bold"), bg_color="#181824",
+                                           fg_color="#303044")
+        self.username.place(relx=0.775, rely=0.14, anchor=customtkinter.CENTER)
+
+        self.score = customtkinter.CTkLabel(self.HallOfFame, text="Score", width=55, height=35, corner_radius=60,
+                                               font=customtkinter.CTkFont(size=16, weight="bold"), bg_color="#181824",
+                                               fg_color="#303044")
+        self.score.place(relx=0.9, rely=0.14, anchor=customtkinter.CENTER)
+
+        self.backgroundTop1Name= customtkinter.CTkLabel(self.HallOfFame, text="", fg_color="#181824", bg_color="#EDB93F" ,width= 110, height= 40, corner_radius= 60)
+        self.backgroundTop1Name.place(relx=0.25, rely=0.56, anchor=customtkinter.CENTER)
+
+        self.backgroundTop2Name = customtkinter.CTkLabel(self.HallOfFame, text="", fg_color="#181824",bg_color="#89A3BC" , width = 110, height= 40, corner_radius= 60)
+        self.backgroundTop2Name.place(relx=0.118, rely=0.645, anchor=customtkinter.CENTER)
+
+        self.backgroundTop3Name = customtkinter.CTkLabel(self.HallOfFame, text="", fg_color="#181824", bg_color="#A15347" ,width= 110, height= 40, corner_radius= 60)
+        self.backgroundTop3Name.place(relx=0.382, rely=0.71, anchor=customtkinter.CENTER)
+        self.top1score = customtkinter.CTkLabel(self.HallOfFame, text="", fg_color="#181824", bg_color="#EDB93F",
+                                                     width=110, height=30, corner_radius=60)
+
+        self.backgroundTop4 = customtkinter.CTkLabel(self.HallOfFame, text="", fg_color="#232334",
+                                                             bg_color="#303044", width=450, height=55, corner_radius=22)
+        self.backgroundTop4.place(relx=0.75, rely=0.25, anchor=customtkinter.CENTER)
+
+        self.backgroundTop5 = customtkinter.CTkLabel(self.HallOfFame, text="", fg_color="#232334",
+                                                                bg_color="#303044", width=450, height=55, corner_radius=22)
+        self.backgroundTop5.place(relx=0.75, rely=0.35, anchor=customtkinter.CENTER)
+
+
+
+        self.backgroundTop6 = customtkinter.CTkLabel(self.HallOfFame, text="", fg_color="#232334",
+                                                                bg_color="#303044", width=450, height=50, corner_radius=22)
+        self.backgroundTop6.place(relx=0.75, rely=0.45, anchor=customtkinter.CENTER)
+
+        self.backgroundTop7 = customtkinter.CTkLabel(self.HallOfFame, text="", fg_color="#232334",
+                                                                bg_color="#303044", width=450, height=50, corner_radius=22)
+        self.backgroundTop7.place(relx=0.75, rely=0.55, anchor=customtkinter.CENTER)
+
+        self.backgroundTop8 = customtkinter.CTkLabel(self.HallOfFame, text="", fg_color="#232334",
+                                                                bg_color="#303044", width=450, height=50, corner_radius=22)
+        self.backgroundTop8.place(relx=0.75, rely=0.65, anchor=customtkinter.CENTER)
+
+        self.backgroundTop9 = customtkinter.CTkLabel(self.HallOfFame, text="", fg_color="#232334",
+                                                                bg_color="#303044", width=450, height=50, corner_radius=22)
+        self.backgroundTop9.place(relx=0.75, rely=0.75, anchor=customtkinter.CENTER)
+
+
+        self.backgroundTop10 = customtkinter.CTkLabel(self.HallOfFame, text="", fg_color="#232334",
+                                                                bg_color="#303044", width=450, height=50, corner_radius=22)
+        self.backgroundTop10.place(relx=0.75, rely=0.85, anchor=customtkinter.CENTER)
+
+        """ranks#"""
+        self.ranktop4 = customtkinter.CTkLabel(self.HallOfFame, text="#4", width=55, height=35, corner_radius=60,
+                                               font=customtkinter.CTkFont(size=16, weight="bold"), bg_color="#232334",
+                                               fg_color="#181824")
+        self.ranktop4.place(relx=0.65, rely=0.25, anchor=customtkinter.CENTER)
+        self.ranktop5 = customtkinter.CTkLabel(self.HallOfFame, text="#5", width=55, height=35, corner_radius=60,
+                                               font=customtkinter.CTkFont(size=16, weight="bold"), bg_color="#232334",
+                                               fg_color="#181824")
+        self.ranktop5.place(relx=0.65, rely=0.35, anchor=customtkinter.CENTER)
+        self.ranktop6 = customtkinter.CTkLabel(self.HallOfFame, text="#6", width=55, height=35, corner_radius=60,
+                                               font=customtkinter.CTkFont(size=16, weight="bold"), bg_color="#232334",
+                                               fg_color="#181824")
+        self.ranktop6.place(relx=0.65, rely=0.45, anchor=customtkinter.CENTER)
+        self.ranktop7 = customtkinter.CTkLabel(self.HallOfFame, text="#7", width=55, height=35, corner_radius=60,
+                                               font=customtkinter.CTkFont(size=16, weight="bold"), bg_color="#232334",
+                                               fg_color="#181824")
+        self.ranktop7.place(relx=0.65, rely=0.55, anchor=customtkinter.CENTER)
+        self.ranktop8 = customtkinter.CTkLabel(self.HallOfFame, text="#8", width=55, height=35, corner_radius=60,
+                                               font=customtkinter.CTkFont(size=16, weight="bold"), bg_color="#232334",
+                                               fg_color="#181824")
+        self.ranktop8.place(relx=0.65, rely=0.65, anchor=customtkinter.CENTER)
+        self.ranktop9 = customtkinter.CTkLabel(self.HallOfFame, text="#9", width=55, height=35, corner_radius=60,
+                                               font=customtkinter.CTkFont(size=16, weight="bold"), bg_color="#232334",
+                                               fg_color="#181824")
+        self.ranktop9.place(relx=0.65, rely=0.75, anchor=customtkinter.CENTER)
+
+        self.ranktop10 = customtkinter.CTkLabel(self.HallOfFame, text="#10", width=55, height=35, corner_radius=60,
+                                                    font=customtkinter.CTkFont(size=16, weight="bold"), bg_color="#232334",
+                                                    fg_color="#181824")
+        self.ranktop10.place(relx=0.65, rely=0.85, anchor=customtkinter.CENTER)
+
+        """NOmbres"""
+
+
+
+        # Player 1 Name Label
+        self.HallOfFame.Player1Name = customtkinter.CTkLabel(self.HallOfFame, text="Player1", fg_color="#EDB93F",
+                                                             bg_color="#181824", corner_radius=60,text_color="BLACK",
+                                                             font=customtkinter.CTkFont(size=9, weight="bold"))
+        self.HallOfFame.Player1Name.place(relx=0.25, rely=0.56, anchor=customtkinter.CENTER)
+
+        # Player 2 Name Label
+        self.HallOfFame.Player2Name = customtkinter.CTkLabel(self.HallOfFame, text="Player2", fg_color="#89A3BC",
+                                                             bg_color="#181824", corner_radius=60,
+                                                             font=customtkinter.CTkFont(size=9, weight="bold"))
+        self.HallOfFame.Player2Name.place(relx=0.12, rely=0.645, anchor=customtkinter.CENTER)
+
+        # Player 3 Name Label
+        self.HallOfFame.Player3Name = customtkinter.CTkLabel(self.HallOfFame, text="Player3", fg_color="#A15347",
+                                                             bg_color="#181824", corner_radius=60,
+                                                             font=customtkinter.CTkFont(size=9, weight="bold"))
+        self.HallOfFame.Player3Name.place(relx=0.38, rely=0.71, anchor=customtkinter.CENTER)
+
+        self.HallOfFame.Player4Name = customtkinter.CTkLabel(self.HallOfFame, text="Player4", fg_color="#181824",
+                                                                bg_color="#232334", corner_radius=60,
+                                                                font=customtkinter.CTkFont(size=9, weight="bold"))
+        self.HallOfFame.Player4Name.place(relx=0.775, rely=0.25, anchor=customtkinter.CENTER)
+
+        self.HallOfFame.Player5Name = customtkinter.CTkLabel(self.HallOfFame, text="Player5", fg_color="#181824",
+                                                                bg_color="#232334", corner_radius=60,
+                                                                font=customtkinter.CTkFont(size=9, weight="bold"))
+        self.HallOfFame.Player5Name.place(relx=0.775, rely=0.35, anchor=customtkinter.CENTER)
+
+        self.HallOfFame.Player6Name = customtkinter.CTkLabel(self.HallOfFame, text="Player6", fg_color="#181824",
+                                                                bg_color="#232334", corner_radius=60,
+                                                                font=customtkinter.CTkFont(size=9, weight="bold"))
+        self.HallOfFame.Player6Name.place(relx=0.775, rely=0.45, anchor=customtkinter.CENTER)
+
+        self.HallOfFame.Player7Name = customtkinter.CTkLabel(self.HallOfFame, text="Player7", fg_color="#181824",
+                                                                bg_color="#232334", corner_radius=60,
+                                                                font=customtkinter.CTkFont(size=9, weight="bold"))
+        self.HallOfFame.Player7Name.place(relx=0.775, rely=0.55, anchor=customtkinter.CENTER)
+
+        self.HallOfFame.Player8Name = customtkinter.CTkLabel(self.HallOfFame, text="Player8", fg_color="#181824",
+                                                                bg_color="#232334", corner_radius=60,
+                                                                font=customtkinter.CTkFont(size=9, weight="bold"))
+        self.HallOfFame.Player8Name.place(relx=0.775, rely=0.65, anchor=customtkinter.CENTER)
+
+        self.HallOfFame.Player9Name = customtkinter.CTkLabel(self.HallOfFame, text="Player9", fg_color="#181824",
+                                                                bg_color="#232334", corner_radius=60,
+                                                                font=customtkinter.CTkFont(size=9, weight="bold"))
+        self.HallOfFame.Player9Name.place(relx=0.775, rely=0.75, anchor=customtkinter.CENTER)
+
+        self.HallOfFame.Player10Name = customtkinter.CTkLabel(self.HallOfFame, text="Player10", fg_color="#181824",
+                                                                bg_color="#232334", corner_radius=60,
+                                                                font=customtkinter.CTkFont(size=9, weight="bold"))
+        self.HallOfFame.Player10Name.place(relx=0.775, rely=0.85, anchor=customtkinter.CENTER)
+
+
+
+
+
+        """Score"""
+        self.top1score.place(relx=0.25, rely=0.615, anchor=customtkinter.CENTER)
+
+        self.top2score = customtkinter.CTkLabel(self.HallOfFame, text="Score", fg_color="#181824", bg_color="#89A3BC",
+                                                width=110, height=30, corner_radius=60)
+        self.top2score.place(relx=0.118, rely=0.7, anchor=customtkinter.CENTER)
+
+        self.top3score = customtkinter.CTkLabel(self.HallOfFame, text="", fg_color="#181824", bg_color="#A15347",
+                                                width=110, height=30, corner_radius=60)
+        self.top3score.place(relx=0.382, rely=0.765, anchor=customtkinter.CENTER)
+
+        self.top4score = customtkinter.CTkLabel(self.HallOfFame, text="", fg_color="#181824", bg_color="#232334",
+                                                width=70, height=35, corner_radius=22)
+        self.top4score.place(relx=0.9, rely=0.25, anchor=customtkinter.CENTER)
+
+        self.top5score = customtkinter.CTkLabel(self.HallOfFame, text="", fg_color="#181824", bg_color="#232334",
+                                                width=70, height=35, corner_radius=22)
+        self.top5score.place(relx=0.9, rely=0.35, anchor=customtkinter.CENTER)
+
+        self.top6score = customtkinter.CTkLabel(self.HallOfFame, text="", fg_color="#181824", bg_color="#232334",
+                                                width=70, height=35, corner_radius=22)
+        self.top6score.place(relx=0.9, rely=0.45, anchor=customtkinter.CENTER)
+
+        self.top7score = customtkinter.CTkLabel(self.HallOfFame, text="", fg_color="#181824", bg_color="#232334",
+                                                width=70, height=35, corner_radius=22)
+        self.top7score.place(relx=0.9, rely=0.55, anchor=customtkinter.CENTER)
+
+        self.top8score = customtkinter.CTkLabel(self.HallOfFame, text="", fg_color="#181824", bg_color="#232334",
+                                                width=70, height=35, corner_radius=22)
+        self.top8score.place(relx=0.9, rely=0.65, anchor=customtkinter.CENTER)
+
+        self.top9score = customtkinter.CTkLabel(self.HallOfFame, text="", fg_color="#181824", bg_color="#232334",
+                                                width=70, height=35, corner_radius=22)
+        self.top9score.place(relx=0.9, rely=0.75, anchor=customtkinter.CENTER)
+
+        self.top10score = customtkinter.CTkLabel(self.HallOfFame, text="", fg_color="#181824", bg_color="#232334",
+                                                    width=70, height=35, corner_radius=22)
+        self.top10score.place(relx=0.9, rely=0.85, anchor=customtkinter.CENTER)
+
+        """ProfilePics"""
+        self.HallOfFame.Player1Pic = customtkinter.CTkLabel(self.HallOfFame, image=self.default_imageop3,
+                                                            corner_radius=60, text="", fg_color="#EDB93F",
+                                                            bg_color="#EDB93F")
+        self.HallOfFame.Player1Pic.place(relx=0.25, rely=0.375, anchor=customtkinter.CENTER)
+
+        self.HallOfFame.Player2Pic = customtkinter.CTkLabel(self.HallOfFame, image=self.default_imageop3,
+                                                            corner_radius=100, text="", fg_color="#89A3BC",
+                                                            bg_color="#89A3BC")
+        self.HallOfFame.Player2Pic.place(relx=0.118, rely=0.46, anchor=customtkinter.CENTER)
+
+        self.HallOfFame.Player3Pic = customtkinter.CTkLabel(self.HallOfFame, image=self.default_imageop3,
+                                                            corner_radius=60, text="", fg_color="#A15347",
+                                                            bg_color="#A15347")
+        self.HallOfFame.Player3Pic.place(relx=0.383, rely=0.525, anchor=customtkinter.CENTER)
+
+        self.HallOfFame.Player4Pic = customtkinter.CTkLabel(self.HallOfFame, image=self.default_imageop3,
+                                                            corner_radius=60, text="", fg_color="#232334",
+                                                            bg_color="#232334")
+        self.HallOfFame.Player4Pic.place(relx=0.575, rely=0.25, anchor=customtkinter.CENTER)
+
+        self.HallOfFame.Player5Pic = customtkinter.CTkLabel(self.HallOfFame, image=self.default_imageop3,
+                                                            corner_radius=60, text="", fg_color="#232334",
+                                                            bg_color="#232334")
+        self.HallOfFame.Player5Pic.place(relx=0.575, rely=0.35, anchor=customtkinter.CENTER)
+
+        self.HallOfFame.Player6Pic = customtkinter.CTkLabel(self.HallOfFame, image=self.default_imageop3,
+                                                            corner_radius=60, text="", fg_color="#232334",
+                                                            bg_color="#232334")
+        self.HallOfFame.Player6Pic.place(relx=0.575, rely=0.45, anchor=customtkinter.CENTER)
+
+        self.HallOfFame.Player7Pic = customtkinter.CTkLabel(self.HallOfFame, image=self.default_imageop3,
+                                                            corner_radius=60, text="", fg_color="#232334",
+                                                            bg_color="#232334")
+        self.HallOfFame.Player7Pic.place(relx=0.575, rely=0.55, anchor=customtkinter.CENTER)
+
+        self.HallOfFame.Player8Pic = customtkinter.CTkLabel(self.HallOfFame, image=self.default_imageop3,
+                                                            corner_radius=60, text="", fg_color="#232334",
+                                                            bg_color="#232334")
+        self.HallOfFame.Player8Pic.place(relx=0.575, rely=0.65, anchor=customtkinter.CENTER)
+
+        self.HallOfFame.Player9Pic = customtkinter.CTkLabel(self.HallOfFame, image=self.default_imageop3,
+                                                            corner_radius=60, text="", fg_color="#232334",
+                                                            bg_color="#232334")
+        self.HallOfFame.Player9Pic.place(relx=0.575, rely=0.75, anchor=customtkinter.CENTER)
+
+        self.HallOfFame.Player10Pic = customtkinter.CTkLabel(self.HallOfFame, image=self.default_imageop3,
+                                                            corner_radius=60, text="", fg_color="#232334",
+                                                            bg_color="#232334")
+        self.HallOfFame.Player10Pic.place(relx=0.575, rely=0.85, anchor=customtkinter.CENTER)
+
         #-------------------------------------------------------------------------------------------------------------
 
         self.RegisterWindow.back = customtkinter.CTkButton(self.RegisterWindow,text="←", fg_color=green_light,  hover_color=green, command=self.ejecutar_login,width=30, height=30)
@@ -854,7 +1101,7 @@ class Menu_principal(customtkinter.CTk):
         self.PlayWindow.withdraw()
         self.LoginWindow.withdraw()
         self.HallOfFame.deiconify()
-
+        self.HallOfFame.resizable(False, False)
 
 
     def RegisterUser(self):
@@ -923,19 +1170,42 @@ class Menu_principal(customtkinter.CTk):
        """
 
 
-    def abrir_archivo(self,archivo):
-        #archivo = filedialog.askopenfilename(filetypes=[(dic.Photo[dic.language], "*.png *.jpg *.jpeg *.gif *.bmp")])
-        if archivo:
-            #self.selected_photo_path = archivo
-                # Cargar la imagen
-            imagen = Image.open(archivo)
-            imagen = imagen.resize((100, 100), Image.LANCZOS)
-            circular = self.make_circle_image(imagen)
-            #Imagentk = ImageTk.PhotoImage(circular)
-            return ImageTk.PhotoImage(circular)
-        else:
-            tkinter.messagebox.showerror("Error", "No se selecciono una imagen")
-            return 0
+    # def abrir_archivo(self,archivo):
+    #     #archivo = filedialog.askopenfilename(filetypes=[(dic.Photo[dic.language], "*.png *.jpg *.jpeg *.gif *.bmp")])
+    #     if archivo:
+    #         #self.selected_photo_path = archivo
+    #             # Cargar la imagen
+    #         imagen = Image.open(archivo)
+    #         imagen = imagen.resize((100, 100), Image.LANCZOS)
+    #         circular = self.make_circle_image(imagen)
+    #         #Imagentk = ImageTk.PhotoImage(circular)
+    #         return ImageTk.PhotoImage(circular)
+    #     else:
+    #         tkinter.messagebox.showerror("Error", "No se selecciono una imagen")
+    #         return 0
+
+    def abrir_archivo(self, relative_path):
+        try:
+            # Normalize the relative path and remove leading spaces if any
+            normalized_path = os.path.normpath(os.path.join(os.getcwd(), relative_path.strip()))
+
+            # Check if the file exists
+            if not os.path.exists(normalized_path):
+                tkinter.messagebox.showerror("Error", f"Archivo no encontrado: {normalized_path}")
+                return None
+
+            # Open and process the image
+            with open(normalized_path, 'rb') as img_file:
+                img = Image.open(img_file)
+                img = img.resize((40, 40), Image.LANCZOS)  # Resize as needed
+                circular = self.make_circle_image(img)
+                return ImageTk.PhotoImage(circular)
+        except FileNotFoundError:
+            tkinter.messagebox.showerror("Error", f"Archivo no encontrado: {relative_path}")
+            return None
+        except Exception as e:  # Catch other possible errors
+            tkinter.messagebox.showerror("Error", str(e))
+            return None
     def set_register_pic(self):
         archivo = filedialog.askopenfilename(filetypes=[(dic.Photo[dic.language], "*.png *.jpg *.jpeg *.gif *.bmp")])
         if archivo:
@@ -971,20 +1241,103 @@ class Menu_principal(customtkinter.CTk):
         else:
             #tkinter.messagebox.showerror("Error", "No se actualizo la imagen de perfil")
             return 0
-    def updateAllhall(self):
-        """
-        ../ProfilePics/Jaimes123.jpg
-        ../ProfilePics/cejas123.jpg
-        ../ProfilePics/fabianceci.jpg
-        :return:
-        """
-        HallFame.Score1.update_hallfame()
-        self.set_picHallfame(1, "../ProfilePics/Jaimes123.jpg")
-        self.HallOfFame.Player1Name.configure(text="Jaimes123"+" Puntos: " + "100")
-        self.set_picHallfame(2, "../ProfilePics/cejas123.jpg")
-        self.HallOfFame.Player2Name.configure(text="cejas123" + " Puntos: " + "67")
-        self.set_picHallfame(3,"../ProfilePics/minorcr.png")
-        self.HallOfFame.Player3Name.configure(text="fabianceci" + " Puntos: " + "50")
+
+
+
+    # Define a new method to fetch top three players and update the display.
+    def update_top_three_hall_of_fame(self):
+        top_three_players = DataBase.get_top_10_scores()[:3]  # Assuming this fetches the top scores and player names.
+
+        # Iterate over the top three players and update self attributes
+        for i, player_info in enumerate(top_three_players):
+            username, score, photo_path = player_info  # Assuming the order is username, score, photo path
+
+            # Fetch the image using the path and make it circular
+            player_image = self.abrir_archivo(photo_path) if photo_path else None
+
+            # Update the profile picture labels
+            if player_image and i == 0:
+                self.HallOfFame.Player1Pic.configure(image=player_image)
+                self.HallOfFame.Player1Pic.image = player_image  # Keep a reference
+                self.HallOfFame.Player1Name.configure(text=username)  # Update the username label
+                self.top1score.configure(text=str(score))  # Update the score label
+            elif player_image and i == 1:
+                self.HallOfFame.Player2Pic.configure(image=player_image)
+                self.HallOfFame.Player2Pic.image = player_image
+                self.HallOfFame.Player2Name.configure(text=username)
+                self.top2score.configure(text=str(score))
+            elif player_image and i == 2:
+                self.HallOfFame.Player3Pic.configure(image=player_image)
+                self.HallOfFame.Player3Pic.image = player_image
+                self.HallOfFame.Player3Name.configure(text=username)
+                self.top3score.configure(text=str(score))
+
+    def update_hall_of_fame(self):
+        # Fetch the top 10 players' scores from the database
+        top_ten_players = DataBase.get_top_10_scores()
+
+        # Check if the top players' data is available
+        if not top_ten_players:
+            tkinter.messagebox.showerror("Error", "No se pudo obtener los puntajes del Hall of Fame.")
+            return
+
+        # Update each player's display
+        for i, player_data in enumerate(top_ten_players):
+            username, score, photo_path = player_data
+            player_rank = i + 1  # Player rank (1 through 10)
+
+            # Construct label names based on player rank
+            name_label_name = f'Player{player_rank}Name'
+            score_label_name = f'top{player_rank}score'
+            pic_label_name = f'Player{player_rank}Pic'
+
+            # Fetch the corresponding labels
+            name_label = getattr(self.HallOfFame, name_label_name, None)
+            score_label = getattr(self.HallOfFame, score_label_name, None)
+            pic_label = getattr(self.HallOfFame, pic_label_name, None)
+
+            # Update the name and score labels if they exist
+            if name_label:
+                name_label.configure(text=username)
+            if score_label:
+                score_label.configure(text=str(score))
+
+            # Update the profile picture if the label exists
+            if pic_label and photo_path:  # Check if the profile picture path exists
+                player_image = self.abrir_archivo(photo_path)
+                if player_image:  # If an image was successfully loaded
+                    pic_label.configure(image=player_image)
+                    pic_label.image = player_image  # Keep a reference to the image
+
+    def update_hall_of_fame_scores(self):
+        # Assuming 'get_top_10_scores()' returns a list of tuples in the format (username, score, photo_blob)
+        top_ten_players_scores = DataBase.get_top_10_scores()
+        if not top_ten_players_scores:
+            tkinter.messagebox.showerror("Error", "No se pudo obtener los puntajes del Hall of Fame.")
+            return
+
+        # A dictionary to map the player rank to the corresponding label
+        score_labels = {
+            1: self.top1score,
+            2: self.top2score,
+            3: self.top3score,
+            4: self.top4score,
+            5: self.top5score,
+            6: self.top6score,
+            7: self.top7score,
+            8: self.top8score,
+            9: self.top9score,
+            10: self.top10score,
+        }
+        # Update each label with the corresponding score
+        for index, player_info in enumerate(top_ten_players_scores):
+            rank = index + 1  # Player rank (1 through 10)
+            _, score, _ = player_info  # Get the score part of the tuple
+
+            # Check if there's a label for this rank and update it
+            if rank in score_labels:
+                score_label = score_labels[rank]
+                score_label.configure(text=str(score))  # Update the label with the score
     @staticmethod
     def make_circle_image(img):
         """

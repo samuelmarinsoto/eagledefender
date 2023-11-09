@@ -106,7 +106,7 @@ def create_tables():
                 LastName TEXT,
                 Email TEXT NOT NULL UNIQUE,
                 Age INTEGER,
-                Photo BLOB,
+                Photo TEXT,
                 Membresía TEXT,
                 SpotifyUser TEXT,
                 Song1 TEXT,
@@ -177,13 +177,7 @@ def insert_user(username, password, first_name, last_name, email, age, photo,mem
 	    # Hash the password
     hashed_pass = hash_password(password)
 
-    # Open the photo file and read it as a binary stream
-    try:
-	    with open(photo_path, 'rb') as file:
-		    photo_blob = file.read()
-    except FileNotFoundError:
-	    print(f"The photo at {photo_path} does not exist.")
-	    return False
+
 
     # Connect to the database and insert the user
     try:
@@ -193,7 +187,7 @@ def insert_user(username, password, first_name, last_name, email, age, photo,mem
                 INSERT INTO Users (Username, Password, FirstName, LastName, Email, Age, Photo, Membresía, SpotifyUser, Song1, Song2, Song3, NúmeroDeTarjeta, FechaDeVencimiento, CVC, Texturas, Paletas, Puntaje)
                 VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
             """, (
-	    username, hashed_pass, first_name, last_name, email, age, photo_blob, membresia, spotify_user, song1, song2,
+	    username, hashed_pass, first_name, last_name, email, age, photo, membresia, spotify_user, song1, song2,
 	    song3, card_number, expiry_date, cvc, texturas, paletas, 0))
 	    conn.commit()
 	    return True

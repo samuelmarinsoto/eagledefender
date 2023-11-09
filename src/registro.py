@@ -806,12 +806,7 @@ class Registro(customtkinter.CTk):
 
         edad = self.age  # Accede a la edad desde la variable de instancia
 
-        try:
-            with open(imagen_ruta, 'rb') as file:
-                photo_blob = file.read()
-        except FileNotFoundError:
-            tkinter.messagebox.showerror("Error", "Archivo de imagen no encontrado.")
-            return False
+
 
         if edad < 13:
             tkinter.messagebox.showerror("Error", "El usuario debe tener al menos 13 años para registrarse.")
@@ -826,7 +821,7 @@ class Registro(customtkinter.CTk):
             return
         if self.switchVarMembresia.get() == "on":
             # Intentar insertar un usuario con membresía
-            success = DataBase.insert_user(usuario, contra, nombre, apellido, correo, edad, photo_blob, "Yes",
+            success = DataBase.insert_user(usuario, contra, nombre, apellido, correo, edad, imagen_ruta, "Yes",
                                            spotify_user1, song1, song2, song3, card, expiration, cvc, textura, paleta)
             if success:
                 tkinter.messagebox.showinfo(title="Registro", message="El usuario GOLD se ha registrado exitosamente.")
@@ -836,7 +831,7 @@ class Registro(customtkinter.CTk):
                 return False
         elif self.switchVarMembresia.get() == "off":
             # Intentar insertar un usuario sin membresía
-            success = DataBase.insert_user(usuario, contra, nombre, apellido, correo, edad, photo_blob, "No",
+            success = DataBase.insert_user(usuario, contra, nombre, apellido, correo, edad, imagen_ruta, "No",
                                            spotify_user1, song1, song2, song3, None, None, None, textura, paleta)
             if success:
                 tkinter.messagebox.showinfo(title="Registro", message="El usuario BASE se ha registrado exitosamente.")
