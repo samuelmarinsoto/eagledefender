@@ -261,6 +261,9 @@ class Juego:
         
         self.cancionycron(self.cancion_atq)
 
+        if defensor.balasX > 0:
+            self.barreras.append(defensor.forzar_aguila())
+            
         while self.cron > 0:
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:

@@ -251,3 +251,10 @@ class Jugador:
                 if self.rol == 0:
                     bala = Bala(self.rol, 'X', self.pantalla, self.posx + self.sup.get_width()//2, self.posy + self.sup.get_height()//2, self.angulo)
                     return bala
+
+    def forzar_aguila(self):
+        self.balasX -= 1
+        self.fecha_ultima_bala = time.time()
+        if self.rol == 0:
+            bala = Bala(self.rol, 'X', self.pantalla, self.pantalla.get_width()//4, self.pantalla.get_height()//2, self.angulo)
+            return bala
