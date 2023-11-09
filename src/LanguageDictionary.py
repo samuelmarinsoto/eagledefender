@@ -43,6 +43,25 @@ dic = {
     "Card Date": Translation(en="Card Date", es="Fecha de tarjeta", fr="Date de la carte"),
     "Card CVV": Translation(en="Card CVV", es="CVV de tarjeta", fr="CVV de la carte"),
     "Card Name": Translation(en="Card Name", es="Nombre de tarjeta", fr="Nom de la carte"),
+    "Instructions": Translation(en="Instructions to play", es="Instrucciones para jugar", fr="Instructions joueur"),
+    "Player 1": Translation(en="Player 1", es="Jugador 1", fr="Joueur 1"),
+    "Player 2": Translation(en="Player 2", es="Jugador 2", fr="Joueur 2"),
+    "Attack": Translation(en="Atack", es="Atacar", fr="Attaque"),
+    "Defense": Translation(en="Defense", es="Defender", fr="Défense"),
+    "Identify":Translation(en="Is identify by the led:", es="Se identifica por el led:", fr="Il est identifié par la lumière:"),
+
+
+}
+
+Ins = {
+
+    "Attack":Translation(en="B Fire \n A Water \n Y Bomb \n X Action ",es="B Fuego \n A Agua \n Y Bomba \n X Accion",fr="B Feu \n A Eau \n Y Bombe \n X Action"),
+    "Rotate":Translation(en="→ ←Aim \n > Pause",es="→ ← Apuntar \n > Pausa",fr="→ ← Tourner \n > Pause"),
+    "Joy":Translation(en="Joystick \n ↑ ↓\n ← → ",es="Analogo \n ↑ ↓\n ← → ",fr="Joystick \n ↑ ↓\n ← → "),
+
+    "Block":Translation(en="B Metal\n A Wood\n Y Concrete \n Put the eagle",es="B Metal\n A Madera\n Y Concreto \n Poner el aguila",fr="B Métal\n A Bois\n Y Béton \n Mettre l'aigle"),
+    "Rote Block":Translation(en="→ ← Rotate block \n > Pause",es="→ ← Rotar bloque \n > Pausa",fr="→ ← Tourner bloc \n > Pause "),
+    "Joy Block":Translation(en="Move block \n ↑ ↓\n ← → ",es="Mueve el blcque \n ↑ ↓\n ← → ",fr="Déplacer le bloc \n ↑ ↓\n ← → "),
 
 }
 
