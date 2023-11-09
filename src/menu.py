@@ -21,6 +21,10 @@ import LanguageDictionary as Lg
 from tkinter import PhotoImage
 import spot
 import os
+import cv2
+from matplotlib import pyplot
+from mtcnn.mtcnn import MTCNN
+import numpy as np
 # customtkinter.set_appearance_mode("System")  # Modes: "System" (standard), "Dark", "Light"
 # customtkinter.set_default_color_theme("green")  # Themes: "blue" (standard), "green", "dark-blue"
 
@@ -48,8 +52,8 @@ class Menu_principal(customtkinter.CTk):
                Returns:
                    None
                """
-        green = "#245953"
-        green_light = "#408E91"
+        green = "Green"
+        green_light = "Green"
         pink = "#E49393"
         grey = "#000000"
         super().__init__()
@@ -531,15 +535,29 @@ class Menu_principal(customtkinter.CTk):
         self.RegisterWindow.entry_Contra_check = customtkinter.CTkEntry(self.RegisterWindow, show="◊",placeholder_text=dic.VerifyPassword[dic.language])
         self.RegisterWindow.entry_Contra_check.place(relx=0.5, rely=0.55, anchor=customtkinter.CENTER)
         self.RegisterWindow.toggle_btn = customtkinter.CTkButton(self.RegisterWindow, text="⦾",fg_color=green_light, hover_color=green, command=self.toggle_password_visibility,width=30, height=30)
-        self.RegisterWindow.toggle_btn.place(relx=0.6, rely=0.5, anchor=customtkinter.CENTER)
+        self.RegisterWindow.toggle_btn.place(relx=0.4, rely=0.5, anchor=customtkinter.CENTER)
         self.RegisterWindow.toggle_btn2 = customtkinter.CTkButton(self.RegisterWindow, text="⦾",fg_color=green_light, hover_color=green, command=self.toggle_password_visibility2,width=30, height=30)
-        self.RegisterWindow.toggle_btn2.place(relx=0.6, rely=0.55, anchor=customtkinter.CENTER)
+        self.RegisterWindow.toggle_btn2.place(relx=0.4, rely=0.55, anchor=customtkinter.CENTER)
 
         self.RegisterWindow.avatar_label = customtkinter.CTkLabel(self.RegisterWindow, image=self.default_imageop,corner_radius=60, text="")
-        self.RegisterWindow.avatar_label.place(relx=0.35, rely=0.7, anchor=customtkinter.CENTER)
+        self.RegisterWindow.avatar_label.place(relx=0.5, rely=0.7, anchor=customtkinter.CENTER)
 
         self.RegisterWindow.subir_Foto = customtkinter.CTkButton(self.RegisterWindow,text="✚", hover=True,fg_color=green_light,hover_color=green,corner_radius=50,height=10,width=10,bg_color="transparent", command=self.set_register_pic)
-        self.RegisterWindow.subir_Foto.place(relx=0.35, rely=0.75, anchor=customtkinter.CENTER)
+        self.RegisterWindow.subir_Foto.place(relx=0.48, rely=0.8, anchor=customtkinter.CENTER)
+
+        self.camera_icon = ImageTk.PhotoImage(file="../assets/camera_icon.png")  # Cargar el ícono
+        self.camera_button = customtkinter.CTkButton(
+            self.RegisterWindow,
+            image=self.camera_icon,
+            corner_radius=0,
+            width=0,
+            border_width=0,
+            text="",
+            bg_color="transparent",  # Fondo transparente
+            fg_color="transparent",  # Fondo transparente
+            command=self.registro_facial
+        )
+        self.camera_button.place(relx=0.52, rely=0.8, anchor=customtkinter.CENTER)
 
         self.RegisterWindow.Continue = customtkinter.CTkButton(self.RegisterWindow, text="Continuar",fg_color=green_light, hover_color=green, command=self.ejecutar_perzonalizar)
         self.RegisterWindow.Continue.place(relx=0.5, rely=0.9, anchor=customtkinter.CENTER)
@@ -660,18 +678,18 @@ class Menu_principal(customtkinter.CTk):
 
         self.MusicWindow.Advice = customtkinter.CTkLabel(self.MusicWindow, text=Lg.dic["Music Spotify Advise"][Lg.language], font=customtkinter.CTkFont(size=10, weight="bold"))
         self.MusicWindow.Advice.place(relx=0.5, rely=0.2, anchor=customtkinter.CENTER)
-
-        self.MusicWindow.Advice2 = customtkinter.CTkLabel(self.MusicWindow, text=Lg.dic["Music Spotify Advise2"][Lg.language], font=customtkinter.CTkFont(size=10, weight="bold"))
-        self.MusicWindow.Advice2.place(relx=0.5, rely=0.3, anchor=customtkinter.CENTER)
-
-        self.MusicWindow.PayContinueWt = customtkinter.CTkButton(self.MusicWindow, text=Lg.dic["Press here"][Lg.language],fg_color=green_light, hover_color=green, command=lambda: self.continue_Pay(False))
-        self.MusicWindow.PayContinueWt.place(relx=0.5, rely=0.35, anchor=customtkinter.CENTER)
+        #
+        # self.MusicWindow.Advice2 = customtkinter.CTkLabel(self.MusicWindow, text=Lg.dic["Music Spotify Advise2"][Lg.language], font=customtkinter.CTkFont(size=10, weight="bold"))
+        # self.MusicWindow.Advice2.place(relx=0.5, rely=0.3, anchor=customtkinter.CENTER)
+        #
+        # self.MusicWindow.PayContinueWt = customtkinter.CTkButton(self.MusicWindow, text=Lg.dic["Press here"][Lg.language],fg_color=green_light, hover_color=green, command=lambda: self.continue_Pay(False))
+        # self.MusicWindow.PayContinueWt.place(relx=0.5, rely=0.35, anchor=customtkinter.CENTER)
 
         self.MusicWindow.PayContinue = customtkinter.CTkButton(self.MusicWindow, text="→",fg_color=green_light, hover_color=green, command=lambda: self.continue_Pay(True))
-        self.MusicWindow.PayContinue.place(relx=0.9, rely=0.9, anchor=customtkinter.CENTER)
+        self.MusicWindow.PayContinue.place(relx=0.9, rely=0.5, anchor=customtkinter.CENTER)
 
-        self.MusicWindow.UserSpot = customtkinter.CTkEntry(self.MusicWindow, placeholder_text=Lg.dic["Spotify User"][Lg.language])
-        self.MusicWindow.UserSpot.place(relx=0.5, rely=0.4, anchor=customtkinter.CENTER)
+        # self.MusicWindow.UserSpot = customtkinter.CTkEntry(self.MusicWindow, placeholder_text=Lg.dic["Spotify User"][Lg.language])
+        # self.MusicWindow.UserSpot.place(relx=0.5, rely=0.4, anchor=customtkinter.CENTER)
 
         self.MusicWindow.Song1 = customtkinter.CTkEntry(self.MusicWindow, placeholder_text=Lg.dic["Song"][Lg.language]+" 1")
         self.MusicWindow.Song1.place(relx=0.5, rely=0.5, anchor=customtkinter.CENTER)
@@ -704,6 +722,12 @@ class Menu_principal(customtkinter.CTk):
 
         self.MembersWindow.PayContinue = customtkinter.CTkButton(self.MembersWindow, text=Lg.dic["Pay"][Lg.language],fg_color=green_light, hover_color=green, command=self.continue_PayValidate)
         self.MembersWindow.PayContinue.place(relx=0.5, rely=0.7, anchor=customtkinter.CENTER)
+
+        self.MembersWindow.back = customtkinter.CTkButton(self.MembersWindow, text="←", fg_color=green_light, hover_color=green,command=self.ejecutar_perzonalizar2, width=30, height=30)
+        self.MembersWindow.back.place(relx=0.001, rely=0.001, anchor=customtkinter.NW)
+
+        #self.MembersWindow.skip = customtkinter.CTkButton(self.MembersWindow, text="Skip",fg_color=green_light, hover_color=green, command=self.continue_PayValidate)
+        #self.MembersWindow.skip.place(relx=0.1, rely=0.9, anchor=customtkinter.CENTER)
         #--------------------------------------------------------------------------------------------------------
 
         self.InstructionWindow.back = customtkinter.CTkButton(self.InstructionWindow, text="←", fg_color=green_light, hover_color=green,command=self.ejecutar_playWindow, width=30, height=30)
@@ -915,6 +939,7 @@ class Menu_principal(customtkinter.CTk):
 
     def ejecutar_perzonalizar2(self):
         self.MusicWindow.withdraw()
+        self.MembersWindow.withdraw()
         self.RegisterWindow.withdraw()
         self.PersonalizeWindow.withdraw()
         self.PersonalizeWindow2.deiconify()
@@ -976,7 +1001,7 @@ class Menu_principal(customtkinter.CTk):
         password_check = self.RegisterWindow.entry_Contra_check.get()
         mail = self.RegisterWindow.entry_Correo.get()
         if self.Member == False:
-            DataBase.insert_user(username, password,name, last_name,  mail, self.age, self.selected_photo_path,"No","NONE","NONE","NONE","NONE","NONE","NONE","NONE","Block1","Green")
+            DataBase.insert_user(username, password,name, last_name,  mail, self.age, self.selected_photo_path,"No","NONE","Reggaeton Champagne","Instant Crush","Instant Crush","NONE","NONE","NONE","Block1","Green")
             self.Save_imapic(username)
             self.clean_AllRegister()
             tkinter.messagebox.showinfo("Info", "Usuario registrado con éxito")
@@ -1109,6 +1134,8 @@ class Menu_principal(customtkinter.CTk):
     def ejecutar_backperzonalizar(self):
         self.PersonalizeWindow2.withdraw()
         self.PersonalizeWindow.deiconify()
+
+
     def ejecutar_perzonalizar(self):
         self.PersonalizeWindow2.withdraw()
         if self.VerifyRegister():
@@ -1486,3 +1513,40 @@ class Menu_principal(customtkinter.CTk):
         draw.ellipse((0, 0, width, height), fill=255)
         circular_img = Image.composite(img, Image.new("RGBA", img.size, (255, 255, 255, 0)), mask)
         return circular_img
+
+    def registro_facial(self):
+        global usuario_img
+        cap = cv2.VideoCapture(0)  # Elegimos la camara con la que vamos a hacer la deteccion
+        while (True):
+            ret, frame = cap.read()  # Leemos el video
+            frame = np.flip(frame, axis=1)
+            cv2.imshow(dic.FacialRegistration[dic.language], frame)  # Mostramos el video en pantalla
+            if cv2.waitKey(1) == 27:  # Cuando oprimamos "Escape" rompe el video
+                break
+        usuario_img = self.RegisterWindow.entry_Username.get()
+        cv2.imwrite("../BiometricPic/"+usuario_img + ".jpg",
+                    frame)  # Guardamos la ultima caputra del video como imagen y asignamos el nombre del usuario
+        cap.release()  # Cerramos
+        cv2.destroyAllWindows()
+
+        img = "../BiometricPic/"+self.RegisterWindow.entry_Username.get() + ".jpg"
+        pixeles = pyplot.imread(img)
+        detector = MTCNN()
+        caras = detector.detect_faces(pixeles)
+        self.reg_rostro(img, caras)
+
+    # Vamos a capturar el rostro
+
+
+    def reg_rostro(self,img, lista_resultados):
+        data = pyplot.imread(img)
+        for i in range(len(lista_resultados)):
+            x1, y1, ancho, alto = lista_resultados[i]['box']
+            x2, y2 = x1 + ancho, y1 + alto
+            pyplot.subplot(1, len(lista_resultados), i + 1)
+            pyplot.axis('off')
+            cara_reg = data[y1:y2, x1:x2]
+            cara_reg = cv2.resize(cara_reg, (150, 200),
+                                  interpolation=cv2.INTER_CUBIC)  # Guardamos la imagen con un tamaño de 150x200
+            cv2.imwrite("../BiometricPic/"+usuario_img + ".jpg", cara_reg)
+            pyplot.imshow(data[y1:y2, x1:x2])

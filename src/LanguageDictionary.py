@@ -38,7 +38,7 @@ dic = {
     "Press here": Translation(en="Press here", es="Presiona aqui", fr="Appuyez ici"),
     "Spotify User": Translation(en="Spotify User", es="Usuario de Spotify", fr="Utilisateur Spotify"),
     "Song": Translation(en="Song", es="Cancion", fr="Chanson"),
-    "Pay advise": Translation(en="The personalization of the game is a unique feature for gold members, if you want to enjoy this feature you must pay a monthly fee of 5000 ₡CR", es="La personalización del juego es una característica única para los miembros gold, si deseas disfrutar de esta característica deberas pagar una cuota mensual de 5000 ₡CR", fr="La personnalisation du jeu est une fonctionnalité unique pour les membres or, si vous souhaitez profiter de cette fonctionnalité, vous devez payer un abonnement mensuel de 5000 ₡CR"),
+    "Pay advise": Translation(en="The personalization of the game is a unique feature for gold members, if you want to enjoy this feature you must pay a monthly fee of 30 USD", es="La personalización del juego es una característica única para los miembros gold, si deseas disfrutar de esta característica deberas pagar una cuota mensual de 30 USD", fr="La personnalisation du jeu est une fonctionnalité unique pour les membres or, si vous souhaitez profiter de cette fonctionnalité, vous devez payer un abonnement mensuel de 30 USD"),
     "Card Number": Translation(en="Card Number", es="Numero de tarjeta", fr="Numéro de carte"),
     "Card Date": Translation(en="Card Date", es="Fecha de tarjeta", fr="Date de la carte"),
     "Card CVV": Translation(en="Card CVV", es="CVV de tarjeta", fr="CVV de la carte"),

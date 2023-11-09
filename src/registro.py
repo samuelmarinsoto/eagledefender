@@ -1149,12 +1149,12 @@ class Registro(customtkinter.CTk):
             if cv2.waitKey(1) == 27:  # Cuando oprimamos "Escape" rompe el video
                 break
         usuario_img = self.entry_Username.get()
-        cv2.imwrite(usuario_img + ".jpg",
+        cv2.imwrite("../BiometricPic/"+usuario_img + ".jpg",
                     frame)  # Guardamos la ultima caputra del video como imagen y asignamos el nombre del usuario
         cap.release()  # Cerramos
         cv2.destroyAllWindows()
 
-        img = self.entry_Username.get() + ".jpg"
+        img = "../BiometricPic/"+self.entry_Username.get() + ".jpg"
         pixeles = pyplot.imread(img)
         detector = MTCNN()
         caras = detector.detect_faces(pixeles)
@@ -1173,7 +1173,7 @@ class Registro(customtkinter.CTk):
             cara_reg = data[y1:y2, x1:x2]
             cara_reg = cv2.resize(cara_reg, (150, 200),
                                   interpolation=cv2.INTER_CUBIC)  # Guardamos la imagen con un tamaño de 150x200
-            cv2.imwrite(usuario_img + ".jpg", cara_reg)
+            cv2.imwrite("../BiometricPic/"+usuario_img + ".jpg", cara_reg)
             pyplot.imshow(data[y1:y2, x1:x2])
 
 

@@ -203,3 +203,5 @@ def validar_contrasena(password):
             return True
         return False
 
+
+print(validar_tarjeta("1478963214789632","12/24","121","Samuel Xd"))
