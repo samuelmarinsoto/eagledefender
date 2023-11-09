@@ -129,6 +129,43 @@ class Juego:
             spot.PauseMusic()
         else:
             spot.unPauseMusic()
+
+    def blitstock(self, atacante, defensor):
+        texto_madera = f"Madera: {defensor.balasA}"
+        texto_acero = f"Acero: {defensor.balasB}"
+        texto_concreto = f"Concreto: {defensor.balasC}"
+        texto_agua = f"Agua: {atacante.balasA}"
+        texto_fuego = f"Fuego: {atacante.balasB}"
+        texto_bomba = f"Tierra: {atacante.balasC}"
+
+        tamano_texto = self.tamano_fuente(5)
+        ftexto = pygame.font.Font(None, tamano_texto)
+
+        madera_dim = ftexto.size(texto_madera)
+        madera_sup = ftexto.render(texto_madera, True, (0, 0, 0))
+        acero_dim = ftexto.size(texto_acero)
+        acero_sup = ftexto.render(texto_acero, True, (0, 0, 0))
+        concreto_dim = ftexto.size(texto_concreto)
+        concreto_sup = ftexto.render(texto_concreto, True, (0, 0, 0))
+        
+        agua_dim = ftexto.size(texto_agua)
+        agua_sup = ftexto.render(texto_agua, True, (0, 0, 0))
+        fuego_dim = ftexto.size(texto_fuego)
+        fuego_sup = ftexto.render(texto_fuego, True, (0, 0, 0))
+        bomba_dim = ftexto.size(texto_bomba)
+        bomba_sup = ftexto.render(texto_bomba, True, (0, 0, 0))
+
+        ancho = self.pantalla.get_width()
+        altura = self.pantalla.get_height()
+   
+        self.pantalla.blit(concreto_sup, (0, altura-concreto_dim[1]))
+        self.pantalla.blit(acero_sup, (0, altura-concreto_dim[1]-acero_dim[1]))
+        self.pantalla.blit(madera_sup, (0, altura-concreto_dim[1]-acero_dim[1]-madera_dim[1]))
+        
+        self.pantalla.blit(bomba_sup, (ancho-bomba_dim[0], altura-bomba_dim[1]))
+        self.pantalla.blit(fuego_sup, (ancho-fuego_dim[0], altura-bomba_dim[1]-fuego_dim[1]))
+        self.pantalla.blit(agua_sup, (ancho-agua_dim[0], altura-concreto_dim[1]-fuego_dim[1]-agua_dim[1]))
+        
         
     def partida(self, partida):
         atacante = Jugador(1, partida, self.pantalla)
@@ -240,6 +277,8 @@ class Juego:
             nomAsup = fnom.render(nombreA, True, (0, 0, 0))
             self.pantalla.blit(nomAsup, (atacante_centradito-nomAdim[0], altura_nombres))
 
+            self.blitstock(atacante, defensor)
+
             defensor.moverse(dt)
             nueva_pared = defensor.disparar()
 
@@ -260,10 +299,17 @@ class Juego:
                 self.cron = 0
         
         self.cancionycron(self.cancion_atq)
-
+        primerdisparo = 1
+        regenstart = 0
+        
         if defensor.balasX > 0:
             self.barreras.append(defensor.forzar_aguila())
-            
+
+        atacante.cocinero(self.cancion_atq)
+        defensor.cocinero(self.cancion_def)
+        print(atacante.tiempo_regen)
+        print(defensor.tiempo_regen)
+        
         while self.cron > 0:
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
@@ -280,6 +326,15 @@ class Juego:
                 ultimo_tiempo = time.time()
                 continue       
 
+            if len(self.balas) > 0:
+                if primerdisparo:
+                    regenstart = 1
+                primerdisparo = 0
+
+            if regenstart:
+                atacante.regen()
+                defensor.regen()
+                    
             dt = time.time() - ultimo_tiempo
             ultimo_tiempo = time.time()
 
@@ -306,6 +361,8 @@ class Juego:
             nomAsup = fnom.render(nombreA, True, (0, 0, 0))
             self.pantalla.blit(nomAsup, (atacante_centradito-nomAdim[0], altura_nombres))
 
+            self.blitstock(atacante, defensor)
+
             self.moverbalas(dt)
             self.colision()
 
@@ -326,6 +383,8 @@ class Juego:
             self.pantalla.blit(defensor.sup, (defensor.posx, defensor.posy))
             self.pantalla.blit(atacante.sup, (atacante.posx, atacante.posy))
             atacante.dibujar_mira()
+
+
 
             self.clock.tick()
             pygame.display.update()
@@ -391,4 +450,5 @@ class Juego:
 # seleccion de sprites, rotacion de bloques, animaciones de colision
 #
 # sprint 3:
-# regeneracion con algoritmo de cocinero, salon de la fama
+# terminar regeneracion con algoritmo de cocinero
+# 
