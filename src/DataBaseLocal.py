@@ -106,7 +106,7 @@ def create_tables():
                 LastName TEXT,
                 Email TEXT NOT NULL UNIQUE,
                 Age INTEGER,
-                Photo TEXT,
+                Photo BLOB,
                 Membresía TEXT,
                 SpotifyUser TEXT,
                 Song1 TEXT,
@@ -171,29 +171,42 @@ def insert_user(username, password, first_name, last_name, email, age, photo,mem
     """
     username = username.lower()
     if age < 13:
-        tkinter.messagebox.showerror("Error", "The user must be at least 13 years old to register.")
-        return False
+	    tkinter.messagebox.showerror("Error", "The user must be at least 13 years old to register.")
+	    return False
 
+	    # Hash the password
     hashed_pass = hash_password(password)
 
+    # Open the photo file and read it as a binary stream
     try:
-        conn = connect()
-        cursor = conn.cursor()
-        cursor.execute("""
-            INSERT INTO Users (Username, Password, FirstName, LastName, Email, Age, Photo, Membresía, SpotifyUser, Song1, Song2, Song3, NúmeroDeTarjeta, FechaDeVencimiento, CVC, Texturas, Paletas, Puntaje)
-            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?,?)
-        """, (username, hashed_pass, first_name, last_name, email, age, photo, membresia, spotify_user, song1, song2, song3,
-              card_number, expiry_date, cvc,texturas, paletas,0))
-        conn.commit()
-        return True
-    except sqlite3.IntegrityError:
-        print("The email or username is already registered.")
+	    with open(photo_path, 'rb') as file:
+		    photo_blob = file.read()
+    except FileNotFoundError:
+	    print(f"The photo at {photo_path} does not exist.")
+	    return False
+
+    # Connect to the database and insert the user
+    try:
+	    conn = connect()
+	    cursor = conn.cursor()
+	    cursor.execute("""
+                INSERT INTO Users (Username, Password, FirstName, LastName, Email, Age, Photo, Membresía, SpotifyUser, Song1, Song2, Song3, NúmeroDeTarjeta, FechaDeVencimiento, CVC, Texturas, Paletas, Puntaje)
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+            """, (
+	    username, hashed_pass, first_name, last_name, email, age, photo_blob, membresia, spotify_user, song1, song2,
+	    song3, card_number, expiry_date, cvc, texturas, paletas, 0))
+	    conn.commit()
+	    return True
+    except sqlite3.IntegrityError as e:
+	    print(f"The email or username is already registered: {e}")
+	    return False
     except Exception as e:
-        print(f"An error occurred while inserting the user: {e}")
+	    print(f"An error occurred while inserting the user: {e}")
+	    return False
     finally:
-        cursor.close()
-        conn.close()
-    return False
+	    if conn:
+		    cursor.close()
+		    conn.close()
 
 #insert_user("admin","Cucaracha123&","admin","admin","jifsentreprise@gmail.com",18,"","No","ANGELOCEL","Yes","Toto","One","123145123","14/24","213","Textura 1","Red")
 def insert_personalization_option(username, paleta_de_colores, textura):

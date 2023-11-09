@@ -1,46 +1,48 @@
 import DataBaseLocal as DBL
 
 
-
 class Puntaje:
 
-    def __init__(self,Username,pathimage, puntaje):
-        self.Username = Username
-        self.pathimage = pathimage
-        self.puntaje = puntaje
+	def __init__(self, Username, pathimage, puntaje):
+		self.Username = Username
+		self.pathimage = pathimage
+		self.puntaje = puntaje
 
-    def update_Username(self, Username):
-        self.Username = Username
-    def update_pathimage(self, new_pathimage):
-        self.pathimage = new_pathimage
-    def update_puntaje(self, new_puntaje):
-        self.puntaje = new_puntaje
-    def update_hallfame(self):
-       Top10 = DBL.get_top_10_scores()
-       Score1.update_Username(Top10[0][0])
-       Score1.update_pathimage(Top10[0][1])
-       Score1.update_puntaje(Top10[0][2])
-       Score2.update_Username(Top10[1][0])
-       Score2.update_pathimage(Top10[1][1])
-       Score2.update_puntaje(Top10[1][2])
-       Score3.update_Username(Top10[2][0])
-       Score3.update_pathimage(Top10[2][1])
-       Score3.update_puntaje(Top10[2][2])
-       """  Score4.update_Username(Top10[3][0])
-       Score4.update_pathimage(Top10[3][1])
-       Score4.update_puntaje(Top10[3][2])
-       Score5.update_Username(Top10[4][0])
-       Score5.update_pathimage(Top10[4][1])
-       Score5.update_puntaje(Top10[4][2])
-       Score6.update_Username(Top10[5][0])
-       Score6.update_pathimage(Top10[5][1])
-       Score6.update_puntaje(Top10[5][2])"""
+	def update_Username(self, Username):
+		self.Username = Username
+
+	def update_pathimage(self, new_pathimage):
+		self.pathimage = new_pathimage
+
+	def update_puntaje(self, new_puntaje):
+		self.puntaje = new_puntaje
+
+	@staticmethod
+	def update_hallfame():
+		Top10 = DBL.get_top_10_scores()
+		# Creamos una lista de instancias de Puntaje previamente para evitar referencias antes de asignación
+		scores = [Puntaje("", "", 0) for _ in range(10)]  # Prepara 10 espacios para puntajes
+
+		# Actualiza las instancias de Puntaje con los datos obtenidos
+		for i, score_data in enumerate(Top10):  # Usar enumerate para obtener índice y valor
+			if i < len(scores):  # Asegura que no se salga del rango de la lista 'scores'
+				scores[i].update_Username(score_data[0])
+				scores[i].update_pathimage(score_data[1])
+				scores[i].update_puntaje(score_data[2])
+			else:
+				break  # Si no hay suficientes datos, rompe el ciclo
+
+		# Devuelve la lista de puntajes actualizados
+		return scores
 
 
-Score1 = Puntaje("","", 0)
-Score2 = Puntaje("","", 0)
-Score3 = Puntaje("","", 0)
-Score4 = Puntaje("","", 0)
-Score5 = Puntaje("","", 0)
-Score6 = Puntaje("","", 0)
-Score1.update_hallfame()
+# Crear una lista de puntajes vacíos para los top 10 espacios
+scores_list = [Puntaje("", "", 0) for _ in range(6)]  # Asumiendo que solo necesitamos 6 objetos Puntaje
+
+# Llama a la función para actualizar la lista de puntajes
+updated_scores = Puntaje.update_hallfame()
+
+# Asigna los puntajes actualizados a las variables si hay datos suficientes
+if updated_scores:
+	Score1, Score2, Score3, Score4, Score5, Score6 = updated_scores[
+	                                                 :6]  # Asume que siempre hay al menos 6 puntajes, ajusta según sea necesario

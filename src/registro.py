@@ -806,7 +806,12 @@ class Registro(customtkinter.CTk):
 
         edad = self.age  # Accede a la edad desde la variable de instancia
 
-
+        try:
+            with open(imagen_ruta, 'rb') as file:
+                photo_blob = file.read()
+        except FileNotFoundError:
+            tkinter.messagebox.showerror("Error", "Archivo de imagen no encontrado.")
+            return False
 
         if edad < 13:
             tkinter.messagebox.showerror("Error", "El usuario debe tener al menos 13 años para registrarse.")
@@ -820,49 +825,27 @@ class Registro(customtkinter.CTk):
             tkinter.messagebox.showerror("Error", "Este correo ya está registrado.")
             return
         if self.switchVarMembresia.get() == "on":
-            # Llama a la función para insertar los datos en la base de datos
-            try:
-                DataBase.insert_user(usuario, contra, nombre, apellido, correo, edad, imagen_ruta, "Yes",
-                                     spotify_user1, song1, song2, song3, card, expiration, cvc,textura,paleta)
-                #print(DataBase.insert_user(usuario, contra, nombre, apellido, correo, edad, imagen_ruta, "Yes",
-                        #spotify_user1, song1, song2, song3, card, expiration, cvc))
-
-                #DataBase.insert_personalization_option(usuario, paleta, textura)
-               # print(DataBase.insert_personalization_option(usuario, paleta, textura))
+            # Intentar insertar un usuario con membresía
+            success = DataBase.insert_user(usuario, contra, nombre, apellido, correo, edad, photo_blob, "Yes",
+                                           spotify_user1, song1, song2, song3, card, expiration, cvc, textura, paleta)
+            if success:
                 tkinter.messagebox.showinfo(title="Registro", message="El usuario GOLD se ha registrado exitosamente.")
                 self.open_main_menu()
-
-            # Nota: No mostramos el mensaje de éxito aquí.
-            except Exception as e:
-                print("Error", f"Ocurrió un error al registrar al usuario GOLD: {e}")
-                return False  # Retornamos False para indicar que el registro no fue exitoso
-        if self.switchVarMembresia.get() == "off":
-            try:
-                DataBase.insert_user(usuario, contra, nombre, apellido, correo, edad, imagen_ruta, "No" ,
-                                     spotify_user1, song1, song2, song3, None, None, None, textura, paleta)
-
-                print( DataBase.insert_user(usuario, contra, nombre, apellido, correo, edad, imagen_ruta, "No" ,
-                                     spotify_user1, song1, song2, song3, None, None, None, textura, paleta))
+            else:
+                print("Error al registrar al usuario GOLD.")
+                return False
+        elif self.switchVarMembresia.get() == "off":
+            # Intentar insertar un usuario sin membresía
+            success = DataBase.insert_user(usuario, contra, nombre, apellido, correo, edad, photo_blob, "No",
+                                           spotify_user1, song1, song2, song3, None, None, None, textura, paleta)
+            if success:
                 tkinter.messagebox.showinfo(title="Registro", message="El usuario BASE se ha registrado exitosamente.")
                 self.open_main_menu()
-
-                # Nota: No mostramos el mensaje de éxito aquí.
-            except Exception as e:
-                print("Error", f"Ocurrió un error al registrar al usuario BASE: {e}")
-                return False  # Retornamos False para indicar que el registro no fue exitoso
-
-        # try:
-        #
-        #     DataBase.insert_user(self.entry_Username.get(), self.entry_Contra.get(), self.entry_Nombre.get(),
-        #                          self.entry_Apellido.get(), self.entry_Correo.get(), user.age,
-        #                          self.selected_photo_path, None, self.userSpot.get(), self.cancion1.get(),
-        #                             self.cancion2.get(), self.cancion3.get(), None, None)
-        # # Nota: No mostramos el mensaje de éxito aquí.
-        # except Exception as e:
-        #     print("Error", f"1Ocurrió un error al registrar al usuario: {e}")
-        #     return False  # Retornamos False para indicar que el registro no fue exitoso
-        print("retornamos true")
-        return True  # Retornamos True para indicar que el registro fue exitoso
+            else:
+                print("Error al registrar al usuario BASE.")
+                return False
+        print("Registro completado con éxito")
+        return True
 
 
 
@@ -937,21 +920,6 @@ class Registro(customtkinter.CTk):
                 self.selected_photo_path = "../assets/flags/Avatar-Profile.png"
         # Convertir el nombre de usuario a minúsculas para la verificación
         ## Comprobar si el switch de membresía está activo
-        if self.switchVarMembresia.get() == "on":
-            # Verificar si al menos un switch en "palettes" está activo
-            palettes_switches = [self.switchVarRed, self.switchVarWhite, self.switchVarGreen,
-                                 self.switchVarBlack, self.switchVarBlue]
-            if not any([sw.get() == "on" for sw in palettes_switches]):
-                tkinter.messagebox.showerror("Error",
-                                             f"Hace falta seleccionar una paleta en {dic.Palettes[dic.language]}")
-                return
-
-            # Verificar si al menos un switch en "texture" está activo
-            texture_switches = [self.switchVarPack1, self.switchVarPack2, self.switchVarPack3]
-            if not any([sw.get() == "on" for sw in texture_switches]):
-                tkinter.messagebox.showerror("Error",
-                                             f"Hace falta seleccionar una textura en {dic.Texture[dic.language]}")
-                return
 
         username = self.entry_Username.get().lower()
 
