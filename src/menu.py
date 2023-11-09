@@ -14,6 +14,8 @@ import tkinter.messagebox
 import DataBaseLocal as DataBase
 import users as users
 import juegoinit
+import juegoAI
+import HallFame
 import re
 # customtkinter.set_appearance_mode("System")  # Modes: "System" (standard), "Dark", "Light"
 # customtkinter.set_default_color_theme("green")  # Themes: "blue" (standard), "green", "dark-blue"
@@ -63,6 +65,13 @@ class Menu_principal(customtkinter.CTk):
         self.PlayWindow = customtkinter.CTkToplevel(self)
         self.PlayWindow.withdraw()
         self.PlayWindow.geometry(ScreenRes)
+        self.HallOfFame = customtkinter.CTkToplevel(self)
+        self.HallOfFame.withdraw()
+        self.HallOfFame.geometry(ScreenRes)
+
+
+
+
         """__________________________________________________________________________________________________________"""
         # configure window
 
@@ -157,22 +166,6 @@ class Menu_principal(customtkinter.CTk):
 
         """_________________________________________________________________________________________________________________"""
 
-        self.MembersWindow.logo_label = customtkinter.CTkLabel( self.MembersWindow, text="Seleccion de membresia",
-                                                 font=customtkinter.CTkFont(size=20, weight="bold"))
-        self.MembersWindow.logo_label.place(relx=0.5, rely=0.2, anchor=customtkinter.CENTER)
-
-        self.MembersWindow.sidebar_button_3 = customtkinter.CTkButton( self.MembersWindow, text="Miembro Gold", fg_color=green_light,
-                                                        hover_color=green,
-                                                        command=self.ejecutar_pago)
-        self.MembersWindow.sidebar_button_3.place(relx=0.5, rely=0.5, anchor=customtkinter.CENTER)
-
-        self.MembersWindow.sidebar_button_3 = customtkinter.CTkButton( self.MembersWindow, text="Miembro Invitado", fg_color=green_light,
-                                                        hover_color=green, command=self.RegisterUser)
-        self.MembersWindow.sidebar_button_3.place(relx=0.5, rely=0.6, anchor=customtkinter.CENTER)
-
-        self.MembersWindow.sidebar_button_3 = customtkinter.CTkButton( self.MembersWindow, text="←", fg_color=green_light,
-                                                        hover_color=green, command=self.back_menu, width=30, height=30)
-        self.MembersWindow.sidebar_button_3.place(relx=0.001, rely=0.001, anchor=customtkinter.NW)
 
         """______________________________________________________________________________________________________________________"""
 
@@ -206,11 +199,53 @@ class Menu_principal(customtkinter.CTk):
         default_image = default_image.resize((100, 100), Image.LANCZOS)
         default_imageop = ImageTk.PhotoImage(default_image)
 
+        self.selected_photo_path2 = "../assets/flags/Podium.png"
+        default_image2 = Image.open(self.selected_photo_path2)
+        # default_image2 = default_image2.resize((100, 00), Image.LANCZOS)
+        default_imageop2 = ImageTk.PhotoImage(default_image2)
+
+
         self.PlayWindow.Player1Pic = customtkinter.CTkLabel(self.PlayWindow, image=default_imageop, corner_radius=60, text="")
         self.PlayWindow.Player1Pic.place(relx=0.1, rely=0.2, anchor=customtkinter.CENTER)
 
         self.PlayWindow.Player2Pic = customtkinter.CTkLabel(self.PlayWindow, image=default_imageop, corner_radius=60,text="")
         self.PlayWindow.Player2Pic.place(relx=0.9, rely=0.2, anchor=customtkinter.CENTER)
+        self.BtnFame = customtkinter.CTkButton(self.PlayWindow, text="hall of fame",
+                                                  fg_color=green_light, hover_color=green, command= lambda:  [self.updateAllhall() ,self.HallOfFame_select()])
+        self.BtnFame.place(relx=0.1, rely=0.95, anchor=customtkinter.CENTER)
+        #-------------------------------------------------------------------------------------------------------------
+
+        self.HallOfFame.back = customtkinter.CTkButton(self.HallOfFame, text="←", fg_color=green_light,
+                                                       hover_color=green,
+                                                       command=self.ejecutar_play, width=30, height=30)
+        self.HallOfFame.back.place(relx=0.001, rely=0.001, anchor=customtkinter.NW)
+
+        self.HallOfFame.logo_label = customtkinter.CTkLabel(self.HallOfFame, text="Hall of Fame", font=customtkinter.CTkFont(size=20, weight="bold"))
+
+        self.Podium = customtkinter.CTkLabel(self.HallOfFame, image=default_imageop2, corner_radius=60,
+                                             text="")
+        self.Podium.place(relx=0.4, rely=0.3, anchor=customtkinter.CENTER)
+
+        self.HallOfFame.Player1Pic = customtkinter.CTkLabel(self.HallOfFame, image=default_imageop, corner_radius=60, text="")
+        self.HallOfFame.Player1Pic.place(relx=0.3, rely=0.2, anchor=customtkinter.CENTER)
+
+        self.HallOfFame.Player2Pic = customtkinter.CTkLabel(self.HallOfFame, image=default_imageop, corner_radius=60, text="")
+        self.HallOfFame.Player2Pic.place(relx=0.2, rely=0.3, anchor=customtkinter.CENTER)
+
+        self.HallOfFame.Player3Pic = customtkinter.CTkLabel(self.HallOfFame, image=default_imageop, corner_radius=60, text="")
+        self.HallOfFame.Player3Pic.place(relx=0.4, rely=0.3, anchor=customtkinter.CENTER)
+
+
+        self.HallOfFame.Player1Name = customtkinter.CTkLabel(self.HallOfFame, text="Player1", font=customtkinter.CTkFont(size=20, weight="bold"))
+        self.HallOfFame.Player1Name.place(relx=0.3, rely=0.3, anchor=customtkinter.CENTER)
+
+        self.HallOfFame.Player2Name = customtkinter.CTkLabel(self.HallOfFame, text="Player2", font=customtkinter.CTkFont(size=20, weight="bold"))
+        self.HallOfFame.Player2Name.place(relx=0.2, rely=0.4, anchor=customtkinter.CENTER)
+
+        self.HallOfFame.Player3Name = customtkinter.CTkLabel(self.HallOfFame, text="Player3", font=customtkinter.CTkFont(size=20, weight="bold"))
+        self.HallOfFame.Player3Name.place(relx=0.4, rely=0.4, anchor=customtkinter.CENTER)
+
+
 
 
     def ejecutar_login(self):
@@ -260,7 +295,7 @@ class Menu_principal(customtkinter.CTk):
             Texture = DataBase.get_user_by_username(username)[15]
             Palette = DataBase.get_user_by_username(username)[16]
             if not users.player1.verify_log(users.player1.texture, users.player1.palette_color):
-                self.abrir_archivo(1,Pic)
+                self.set_picperfil(1,Pic)
                 users.player1.update_Username(USERname)
                 users.player1.update_pathimage(Pic)
                 users.player1.update_membership(Merbership)
@@ -271,7 +306,7 @@ class Menu_principal(customtkinter.CTk):
                 users.player1.update_palette_color(Palette)
                 print("Doit",Pic)
             elif not users.player1.Username == USERname:
-                self.abrir_archivo(2,Pic)
+                self.set_picperfil(2,Pic)
                 users.player2.update_Username(USERname)
                 users.player2.update_pathimage(Pic)
                 users.player2.update_membership(Merbership)
@@ -332,6 +367,13 @@ class Menu_principal(customtkinter.CTk):
         self.withdraw()
         self.LoginWindow.withdraw()
         self.MembersWindow.deiconify()
+    def HallOfFame_select(self):
+        self.withdraw()
+        self.PlayWindow.withdraw()
+        self.LoginWindow.withdraw()
+        self.HallOfFame.deiconify()
+
+
 
     def RegisterUser(self):
         self.destroy()
@@ -360,6 +402,8 @@ class Menu_principal(customtkinter.CTk):
     def ejecutar_play(self):
         #if Logged1(Player):
         self.withdraw()
+        self.LoginWindow.withdraw()
+        self.HallOfFame.withdraw()
         self.PlayWindow.deiconify()
         #else:
             #self.PlayWindow.withdraw()
@@ -397,26 +441,68 @@ class Menu_principal(customtkinter.CTk):
        """
 
 
-    def abrir_archivo(self,player,archivo):
-        #archivo = filedialog.askopenfilename(filetypes=[(dic.Photo[dic.language], "*.png *.jpg *.jpeg *.gif *.bmp")])
-        if archivo:
-            #self.selected_photo_path = archivo
-                # Cargar la imagen
-            imagen = Image.open(archivo)
-            imagen = imagen.resize((100, 100), Image.LANCZOS)
-            circular = self.make_circle_image(imagen)
-            Imagentk = ImageTk.PhotoImage(circular)
+    def abrir_archivo(self,archivo):
+        """
+                Convierte un BLOB de una imagen en un formato que Tkinter pueda usar.
 
-        if player == 1:
-            self.PlayWindow.Player1Pic.configure(image=Imagentk)
-            self.PlayWindow.Player1Pic.image = Imagentk
+                Args:
+                photo_blob: Los datos binarios de la imagen recuperados de SQLite.
 
-        elif player == 2:
-            self.PlayWindow.Player2Pic.configure(image=Imagentk)
-            self.PlayWindow.Player2Pic.image = Imagentk
+                Returns:
+                Una imagen Tkinter PhotoImage.
+                """
+        if isinstance(photo_blob, (bytes, bytearray)):  # Si photo_blob es un tipo de datos binarios
+            image_data = io.BytesIO(photo_blob)  # Convierte los datos BLOB a un stream de bytes
+            imagen = Image.open(image_data)  # Abre la imagen desde los datos de bytes
+            Imagetk = ImageTk.PhotoImage(imagen)  # Convierte la imagen PIL a PhotoImage de Tkinter
+            return Imagetk
         else:
-            tkinter.messagebox.showerror("Error", "No se actualizo la imagen de perfil")
+            tkinter.messagebox.showerror("Error", "Formato de imagen no soportado o corrupto.")
+            return None
+
+    def set_picperfil(self, player, username):
+        user_info = get_user_by_username(username)  # Function from DataBase module
+        if user_info:
+            # Extract BLOB data from user_info
+            photo_blob = user_info['Photo']  # Ensure 'Photo' is the correct key
+            self.set_picHallfame(player,
+                                 photo_blob)  # Reuse the function for hall of fame for setting profile pictures too
+        else:
+            tkinter.messagebox.showerror("Error", "No se pudo obtener la información del perfil del usuario.")
+
+    def set_picHallfame(self, player, photo_blob):
+        if photo_blob:
+            # Convert BLOB data to an ImageTk PhotoImage
+            image_stream = io.BytesIO(photo_blob)
+            image = Image.open(image_stream)
+            Imagetk = ImageTk.PhotoImage(image)
+
+            if player == 1:
+                self.HallOfFame.Player1Pic.configure(image=Imagetk)
+                self.HallOfFame.Player1Pic.image = Imagetk
+            elif player == 2:
+                self.HallOfFame.Player2Pic.configure(image=Imagetk)
+                self.HallOfFame.Player2Pic.image = Imagetk
+            elif player == 3:
+                self.HallOfFame.Player3Pic.configure(image=Imagetk)
+                self.HallOfFame.Player3Pic.image = Imagetk
+        else:
+            #tkinter.messagebox.showerror("Error", "No se actualizo la imagen de perfil")
             return 0
+
+    def updateAllhall(self):
+        top_players = DataBase.get_top_10_scores()  # Function from DataBase module
+        if top_players:
+            for index, player_info in enumerate(top_players):
+                username, score, photo_blob = player_info  # Unpack the tuple
+                # Update the Hall of Fame entries
+                self.set_picHallfame(index + 1, photo_blob)
+                # Update the player's score display code as needed
+                # For example:
+                # self.HallOfFame.Player1Name.configure(text=f"{username} Puntos: {score}")
+        else:
+            tkinter.messagebox.showerror("Error", "No se pudo obtener la información del Hall of Fame.")
+
 
     @staticmethod
     def make_circle_image(img):
