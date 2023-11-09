@@ -2,6 +2,9 @@ import random
 from tkinter import PhotoImage
 import re
 import datetime as date
+from datetime import datetime
+
+import DataBaseLocal as DBL
 """
 
 In this .py the user information will be saved or collected of server
@@ -23,79 +26,6 @@ Songs1 = ["","",""]
 Palette = "WHITE"
 Texture = "METAL"
 
-
-def LoggedComprobation():
-    global LOGGED,Member, PLAY, name, password, username, picture, picpassword
-    if LOGGED and Member:
-        PLAY = True
-        name = "xd"
-        #password =
-        #username =
-        #picture =
-        #picpassword =
-
-    elif LOGGED:
-        PLAY = True
-        name = "Guest" + str(random.randint(1000,1500))
-        password = "NONE"
-        username = "NONE"
-        picture = "NONE"
-        picpassword = "NONE"
-
-    else:
-        PLAY = False
-    return 0
-
-
-def RegisterComprobationGuest():
-    global LOGGED,Member, PLAY, name,lastname,age,mail,password, username
-
-    if  Member:
-        return 0
-    elif name == "NONE":
-        return 0
-    elif lastname == "NONE":
-        return 0
-    elif age == "NONE":
-        return 0
-    elif mail == "NONE":
-        return 0
-    elif password == "NONE":
-        return 0
-    elif username == "NONE":
-        return 0
-    else:
-        return 1
-
-def RegisterComprobationGold():
-    global LOGGED,Member, PLAY, name,lastname,age,mail,password, username, picture, picpassword,Songs1,Palette
-    if not Member:
-        return 0
-    elif name == "NONE":
-        return 0
-    elif lastname == "NONE":
-        return 0
-    elif age == "NONE":
-        return 0
-    elif mail == "NONE":
-        return 0
-    elif password == "NONE":
-        return 0
-    elif username == "NONE":
-        return 0
-    elif picture == "NONE":
-        return 0
-    elif picpassword == "NONE":
-        return 0
-    elif Songs1[0] == "" or Songs1[1] == "" or Songs1[2] == "":
-        return 0
-    elif Palette == "":
-        return 0
-    else:
-        return 1
-        
-
-
 def selecPalett(Color):
     global Palette
     if isinstance(Color, str):
@@ -113,8 +43,32 @@ def selectTexture(TEXTURE):
         return 1
     else:
         return 0
-    
-def UsernameCheck(Username):
+
+
+
+def validar_tarjeta(numero, fecha_vencimiento, cvc, nombre_titular):
+    # Validar el número de tarjeta (16 dígitos)
+    if not re.match(r'^\d{16}$', numero):
+        return False, "Número de tarjeta inválido"
+
+    # Validar la fecha de vencimiento (formato MM/YY)
+    try:
+        fecha_vencimiento = datetime.strptime(fecha_vencimiento, '%m/%y')
+        if fecha_vencimiento < datetime.now():
+            return False, "Tarjeta vencida"
+    except ValueError:
+        return False, "Formato de fecha de vencimiento inválido"
+
+    # Validar el código de seguridad (3 o 4 dígitos)
+    if not re.match(r'^\d{3,4}$', cvc):
+        return False, "Código de seguridad inválido"
+
+    # Validar el nombre del titular (solo caracteres alfabéticos y espacios)
+    if not re.match(r'^[a-zA-Z\s]+$', nombre_titular):
+        return False, "Nombre del titular inválido"
+    return True, "Tarjeta válida"
+
+"""def UsernameCheck(Username):
     global username
     if isinstance(username,str):
         if 8<= len(Username) <16:
@@ -123,48 +77,47 @@ def UsernameCheck(Username):
         else:
             return 0
     else:
-        return 0
+        return 0"""
 
 
 def LastNameCheck(last_name):
-    global lastname
+
     if isinstance(last_name, str):
         if 2 <= len(last_name) <= 30:
-            lastname = last_name
-            return 1  # Apellido válido
+            return last_name # Apellido válido
         else:
             return 0  # Longitud del apellido no válida
     else:
         return 0  # Tipo de dato no válido
 
 def FirstNameCheck(first_name):
-    global name
     if isinstance(first_name, str):
         if 2 <= len(first_name) <= 20:
-            name = first_name
-            return 1  # Nombre válido
+            return first_name # Nombre válido
         else:
             return 0  # Longitud del nombre no válida
     else:
         return 0  # Tipo de dato no válido
 
 def MailCheck(Mail):
-    global mail
-    
-    if isinstance(Mail, str):
-        if re.search(r'@', Mail):
-            MailSplit = Mail.split("@")
-            if MailSplit[1] == "gmail.com" or MailSplit[1] == "hotmail.com" or MailSplit[1]=="outlook.com" or MailSplit[1]=="yahoo.com" or MailSplit[1]=="icloud.com" or MailSplit[1]=="live.com":
-                mail = Mail
-                return 1
-            else:
-                return 0
-        else:
-            return 0
-    else:
-        return 0  # Tipo de dato no válido
 
-def PasswordCheck(Password):
+    if isinstance(Mail, str):
+        #if DBL.is_email_registered(Mail):
+            if re.search(r'@', Mail):
+                MailSplit = Mail.split("@")
+                if MailSplit[1] == "gmail.com" or MailSplit[1] == "hotmail.com" or MailSplit[1]=="outlook.com" or MailSplit[1]=="yahoo.com" or MailSplit[1]=="icloud.com" or MailSplit[1]=="live.com" or MailSplit[1]=="estudiantec.cr" or MailSplit[1]=="hotmail.es":
+                    return Mail
+
+                else:
+                    return 0, "Dominio no válido"
+            else:
+                return 0, "Falta @ en el correo"
+        #else:
+           # return 0, "Correo ya registrado"
+    else:
+        return 0 , "Correo no válido"
+
+"""def PasswordCheck(Password):
     global password
     if isinstance(Password, str):
         # Verifica la longitud de la contraseña
@@ -178,19 +131,19 @@ def PasswordCheck(Password):
                         password = Password
                         return 1  # Contraseña válida
                     else:
-                        return 0  # Falta caracter especial
+                        return  "Falta caracter especial"
                 else:
-                    return 0  # Falta dígito
+                    return "Falta dígito"
             else:
-                return 0  # Falta letra mayúscula
+                return "Falta letra mayúscula"
         else:
-            return 0  # Longitud de contraseña no válida
+            return "Longitud de contraseña no válida"
     else:
-        return 0  # Tipo de dato no válido
+        return 0  # Tipo de dato no válido"""
     
 
 def SelectDate(datese):
-    global age
+
     if isinstance(datese, str):
         date_part = datese.split("/")
         month = int(date_part[0])
@@ -201,10 +154,54 @@ def SelectDate(datese):
             year = int("19" + date_part[2])
         dateborn = date.datetime(year, month, day)
         Age = date.datetime.today().year-dateborn.year
-        age = Age
-        return 1
+        return Age
     else:
         return 0
-            
 
 
+def validar_usuario(username):
+    """
+    Valida que el nombre de usuario no contenga obscenidades.
+    """
+    palabras_prohibidas = ["Caca", "Shit", "Sexo, Sex,Bullshit, Malparido,SEX,sex,SEXO,sexo"]  # Añade las palabras que desees prohibir
+    if not isinstance(username, str):
+        return False
+
+    if DBL.is_username_registered(username):
+        return False, "Usuario en uso"
+
+    if len(username) < 8 or len(username) > 16:
+        return False, "El usuario debe ser mayor 8 caracteres y menor que 16"
+    for palabra in palabras_prohibidas:
+        if palabra.lower() in username.lower():
+            return False, "Palabra inapropiada: "+ palabra.lower()
+    return True, ""
+
+
+
+def verificar_contrasenas(password, password_check):
+    if password == password_check:
+         return password_check
+    else:
+        return 0
+
+def validar_contrasena(password):
+        """
+        Valida que la contraseña cumpla con los siguientes requisitos:
+        - Mínimo 8 caracteres
+        - Máximo 16 caracteres
+        - Al menos una letra mayúscula
+        - Al menos una letra minúscula
+        - Al menos un número
+        - Al menos un carácter especial
+        """
+        if (8 <= len(password) <= 16 and
+                re.search("[a-z]", password) and
+                re.search("[A-Z]", password) and
+                re.search("[0-9]", password) and
+                re.search("[@#$%^&+=.,!/*()-<>]", password)):
+            return True
+        return False
+
+
+print(validar_tarjeta("1478963214789632","12/24","121","Samuel Xd"))

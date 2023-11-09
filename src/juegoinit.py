@@ -1,4 +1,5 @@
 from juegoclase import Juego
+import DataBaseLocal as dbl
 
 def iniciar(jugador1, jugador2):
     jugador1_puntos = 0
@@ -48,6 +49,14 @@ def iniciar(jugador1, jugador2):
     print("chequeando si fin")
     # chequea si ocupamos match 3
     if abs(jugador1_puntos - jugador2_puntos) >= 1000:
+
+        print("actualizando base de datos con puntajes")
+
+        if jugador1_puntos > dbl.get_puntaje(jugador1.Username):
+            dbl.update_puntaje(jugador1.Username, jugador1_puntos)
+        if jugador2_puntos > dbl.get_puntaje(jugador2.Username):
+            dbl.update_puntaje(jugador2.Username, jugador2_puntos)
+            
         juego.fin(jugador1_puntos, jugador2_puntos)
 
     else:
@@ -73,5 +82,11 @@ def iniciar(jugador1, jugador2):
         jugador2_puntos += juego.puntos_defensa
 
         print("fin, al fin")
+        print("actualizando base de datos con puntajes")
+
+        if jugador1_puntos > dbl.get_puntaje(jugador1.Username):
+            dbl.update_puntaje(jugador1.Username, jugador1_puntos)
+        if jugador2_puntos > dbl.get_puntaje(jugador2.Username):
+            dbl.update_puntaje(jugador2.Username, jugador2_puntos)
 
         juego.fin(jugador1_puntos, jugador2_puntos)

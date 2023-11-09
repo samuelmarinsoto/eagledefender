@@ -22,7 +22,7 @@ def SearchSong(Song):
      if not isinstance(Song,str):
          return 0
      elif result['tracks']['items']:
-        Song1 = result['tracks']['items'][0]['uri']
+        Song1 = result['tracks']['items'][0]['uri'] # uri de la cancion
         Song1All = result['tracks']['items'][0]
         return 1
      else:
@@ -45,8 +45,9 @@ def UserSpotSelect(UserSpot):
      userSpot = UserSpot
      print(userSpot)
     
-
-
+def getFeatures(track_uri):
+    return sp.audio_features([track_uri])[0]
+    
 def PauseMusic():
     sp.pause_playback()
 
@@ -62,8 +63,3 @@ def GetSongDuration(Duration):
 
 
 # GetSongDuration(Song1All['duration_ms'])
-
-
-
-
-

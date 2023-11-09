@@ -1,6 +1,8 @@
 import time
 import math
+import numpy
 import pygame
+import spot
 from disparoclase import Bala
 
 class Jugador:
@@ -16,6 +18,9 @@ class Jugador:
         self.balasB = 10
         self.balasC = 10
         self.balasX = 1
+
+        self.tiempo_regen = 0
+        self.tiempo_ultimo_regen = time.time()
 
         # rol es 0 o 1,
         # 0 == defensor, 1 == atacante
@@ -187,6 +192,53 @@ class Jugador:
     def check_termturno(self):
         tecla = pygame.key.get_pressed()
         return tecla[self.termturno]
+
+    def cocinero(self, cancion):
+        # tempo, tonos, valencia, energia, bailabilidad, intrumentabilidad, acustica, duracion (ms)
+        # 
+        # cantidad de ms para regenerar poderes/bloques 
+        # 
+        # bloques:
+        # si valencia > 0.7, valencia = 2, si valencia < 0.7, valencia = 1
+        # si bailabilidad > 0.7, bailabilidad = numpy.random.Generator.poisson(bailabilidad), si bailabilidad < 0.7, numpy.random.Generator.exponential(bailabilidad)
+        # 
+        # normalizado(0,1000)((tempo + tonos + valencia*valencia_new + energia + bailabilidad*bailabilidad_new + (1 - instrumentabilidad) + acustica)*duracion)
+        # 
+        # al regenerar: balamax = balamax + 1, resto de balas = balamax 
+        # 
+        # atacante:
+        # normalizado(0,1000)((tempo + tonos + valencia/valencia_new + energia + bailabilidad/bailabilidad_new + (1 - instrumentabilidad) + acustica)/duracion)
+        spot.SearchSong(cancion)
+        f = spot.getFeatures(spot.Song1) # f de factores
+
+        if f['valence'] > 0.7:
+            nueva_valencia = 2
+        else:
+            nueva_valencia = 1
+
+        if f['danceability'] > 0.7:
+            nueva_baila = numpy.random.default_rng().poisson(f['danceability'])
+        else:
+            nueva_baila = numpy.random.default_rng().exponential(f['danceability'])
+
+        if not nueva_baila:
+            nueva_baila = 0.0000000000000000000001
+            
+        if self.rol:
+            self.tiempo_regen = (f['tempo'] + f['key'] + f['valence']/nueva_valencia + f['energy'] + f['danceability']/nueva_baila + (1 - f['instrumentalness']) + f['acousticness'])/f['duration_ms']*1000000
+        else:
+            self.tiempo_regen = (f['tempo'] + f['key'] + f['valence']*nueva_valencia + f['energy'] + f['danceability']*nueva_baila + (1 - f['instrumentalness']) + f['acousticness'])*f['duration_ms']/10000
+
+    def regen(self):
+        if time.time() - self.tiempo_ultimo_regen > self.tiempo_regen/500:
+            maximo = max(self.balasA, self.balasB, self.balasC)
+            if 10 > self.balasA or 10 > self.balasB or 10 > self.balasC:
+                self.balasA = self.balasB = self.balasC = maximo + 1
+            self.tiempo_ultimo_regen = time.time()
+            print(self.balasA)
+            print(self.balasB)
+            print(self.balasC)
+        
             
     def moverse(self, dt):
         tecla = pygame.key.get_pressed()
@@ -251,3 +303,10 @@ class Jugador:
                 if self.rol == 0:
                     bala = Bala(self.rol, 'X', self.pantalla, self.posx + self.sup.get_width()//2, self.posy + self.sup.get_height()//2, self.angulo)
                     return bala
+
+    def forzar_aguila(self):
+        self.balasX -= 1
+        self.fecha_ultima_bala = time.time()
+        if self.rol == 0:
+            bala = Bala(self.rol, 'X', self.pantalla, self.pantalla.get_width()//4, self.pantalla.get_height()//2, self.angulo)
+            return bala

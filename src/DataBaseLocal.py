@@ -116,7 +116,8 @@ def create_tables():
                 FechaDeVencimiento DATE,
                 CVC INTEGER,
                 Texturas TEXT,
-                Paletas TEXT
+                Paletas TEXT,
+                Puntaje INTEGER DEFAULT 0
             )
         """)
 
@@ -170,29 +171,36 @@ def insert_user(username, password, first_name, last_name, email, age, photo,mem
     """
     username = username.lower()
     if age < 13:
-        tkinter.messagebox.showerror("Error", "The user must be at least 13 years old to register.")
-        return False
+	    tkinter.messagebox.showerror("Error", "The user must be at least 13 years old to register.")
+	    return False
 
+	    # Hash the password
     hashed_pass = hash_password(password)
 
+
+
+    # Connect to the database and insert the user
     try:
-        conn = connect()
-        cursor = conn.cursor()
-        cursor.execute("""
-            INSERT INTO Users (Username, Password, FirstName, LastName, Email, Age, Photo, Membresía, SpotifyUser, Song1, Song2, Song3, NúmeroDeTarjeta, FechaDeVencimiento, CVC, Texturas, Paletas)
-            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
-        """, (username, hashed_pass, first_name, last_name, email, age, photo, membresia, spotify_user, song1, song2, song3,
-              card_number, expiry_date, cvc,texturas, paletas))
-        conn.commit()
-        return True
-    except sqlite3.IntegrityError:
-        print("The email or username is already registered.")
+	    conn = connect()
+	    cursor = conn.cursor()
+	    cursor.execute("""
+                INSERT INTO Users (Username, Password, FirstName, LastName, Email, Age, Photo, Membresía, SpotifyUser, Song1, Song2, Song3, NúmeroDeTarjeta, FechaDeVencimiento, CVC, Texturas, Paletas, Puntaje)
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+            """, (
+	    username, hashed_pass, first_name, last_name, email, age, photo, membresia, spotify_user, song1, song2,
+	    song3, card_number, expiry_date, cvc, texturas, paletas, 0))
+	    conn.commit()
+	    return True
+    except sqlite3.IntegrityError as e:
+	    print(f"The email or username is already registered: {e}")
+	    return False
     except Exception as e:
-        print(f"An error occurred while inserting the user: {e}")
+	    print(f"An error occurred while inserting the user: {e}")
+	    return False
     finally:
-        cursor.close()
-        conn.close()
-    return False
+	    if conn:
+		    cursor.close()
+		    conn.close()
 
 #insert_user("admin","Cucaracha123&","admin","admin","jifsentreprise@gmail.com",18,"","No","ANGELOCEL","Yes","Toto","One","123145123","14/24","213","Textura 1","Red")
 def insert_personalization_option(username, paleta_de_colores, textura):
@@ -285,13 +293,58 @@ def get_user_by_username(username):
         conn = connect()
         cursor = conn.cursor()
         cursor.execute(
-            'SELECT UserID, Username, Password, FirstName, LastName, Email, Age, Photo, SpotifyUser, Song1, Song2, Song3, NúmeroDeTarjeta, FechaDeVencimiento, CVC, Texturas,Paletas FROM '
+            'SELECT UserID, Username, Password, FirstName, LastName, Email, Age, Photo, SpotifyUser, Song1, Song2, Song3, NúmeroDeTarjeta, FechaDeVencimiento, CVC, Texturas,Paletas, Puntaje FROM '
             'Users WHERE Username = ?', (username,))
         usuario = cursor.fetchone()
         return usuario
     except Exception as e:
         print(f"Ocurrió un error al obtener el usuario por nombre de usuario: {e}")
         return None
+def get_top_10_scores():
+    """Returns the top 10 scores from the database.
+
+    Returns:
+        list: List of tuples containing the top 10 scores or an empty list if an error occurred.
+    """
+    try:
+        conn = connect()  # Asume que tienes una función 'connect' que devuelve una conexión a la base de datos
+        cursor = conn.cursor()
+        cursor.execute(
+            'SELECT Username, Puntaje, Photo FROM Users ORDER BY Puntaje DESC LIMIT 10'
+        )
+        top_10_scores = cursor.fetchall()
+        return top_10_scores
+    except Exception as e:
+        print(f"Ocurrió un error al obtener los 10 puntajes más altos: {e}")
+        return []
+
+# Llama a la función para obtener los 10 puntajes más altos
+
+
+
+
+def get_user_by_id(id):
+    """Returns the details of a user based on their id.
+
+    Args:
+        id (str): The id of the user.
+
+    Returns:
+        tuple: User details retrieved from the database, or None if an error occurred.
+    """
+    try:
+        conn = connect()
+        cursor = conn.cursor()
+        cursor.execute(
+            'SELECT UserID, Username, Password, FirstName, LastName, Email, Age, Photo, SpotifyUser, Song1, Song2, Song3, NúmeroDeTarjeta, FechaDeVencimiento, CVC, Texturas,Paletas, Puntaje FROM '
+            'Users WHERE UserID = ?', (id,))
+        usuario = cursor.fetchone()
+        return usuario
+    except Exception as e:
+        print(f"Ocurrió un error al obtener el usuario por id: {e}")
+        return None
+
+
 
 
 # def confirm_email(email, entered_code):
@@ -503,6 +556,65 @@ def update_songs(Song1, Song2,Song3):
         conn.close()
     return False
 
+def update_puntaje(username, puntaje):
+    """
+    Updates the puntaje of a user in the database.
+
+    Args:
+        puntaje (int): The puntaje of the user.
+
+    Returns:
+        bool: True if the update was successful, False otherwise.
+    """
+    try:
+        conn = connect()
+        cursor = conn.cursor()
+        cursor.execute("""
+            UPDATE Users 
+            SET Puntaje = ?
+            WHERE Username = ?
+        """, (puntaje, username))
+        conn.commit()
+        return True
+    except Exception as e:
+        print(f"An error occurred while updating puntaje: {e}")
+    finally:
+        cursor.close()
+        conn.close()
+    return False
+
+def get_puntaje(username):
+    """
+    Retrieves the puntaje of a user from the database.
+
+    Args:
+        username (str): The username of the user to find the puntaje for.
+
+    Returns:
+        int: The puntaje of the user or None if not found or an error occurred.
+    """
+    try:
+        conn = connect()
+        cursor = conn.cursor()
+        cursor.execute("""
+            SELECT Puntaje 
+            FROM Users 
+            WHERE Username = ?
+        """, (username,))
+        result = cursor.fetchone()
+        if result:
+            return result[0]  # Return the puntaje value
+        else:
+            return None  # Return None if no such user exists
+    except Exception as e:
+        print(f"An error occurred while retrieving puntaje: {e}")
+        return None
+    finally:
+        # Ensure the cursor and connection are closed properly
+        if cursor:
+            cursor.close()
+        if conn:
+            conn.close()
 
 def update_membership_status(username, membership_status):
 	"""
