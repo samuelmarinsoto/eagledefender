@@ -1,47 +1,64 @@
-from machine import Pin, ADC
+import machine
 import utime
-import keyboard
 
-# Configuración de pines para el joystick
-pin_x = 26
-pin_y = 27
-button_pin = 15
+# Configuración de pines
+joystick_x_pin = 26
+joystick_y_pin = 27
+buttons_pin = [2,3,4,5,6,7,8,9]
 
-# Configuración de pines para las teclas emuladas
-key_a = 'a'
-key_w = 'w'
-key_s = 's'
-key_d = 'd'
+# Configuración de ADC
+adc_x = machine.ADC(joystick_x_pin)
+adc_y = machine.ADC(joystick_y_pin)
 
-# Configuración de umbrales para la posición del joystick
-threshold_low = 500
-threshold_high = 6000
+# Configuración de botones
+buttons = [machine.Pin(pin, machine.Pin.IN, machine.Pin.PULL_DOWN) for pin in buttons_pin]
 
-# Inicialización de pines
-x_pin = ADC(Pin(pin_x))
-y_pin = ADC(Pin(pin_y))
-button = Pin(button_pin, Pin.IN, Pin.PULL_UP)
+# Mapa de letras para cada botón
+button_letters = {
+    9: "Q",
+    8: "E",
+    7: "R",
+    6: "T",
+    5: "Y",
+    4: "U",
+    3: "I",
+    2: "O",
+}
 
-# Función para emular las teclas
-def emulate_keys(x, y):
-    if x < threshold_low:
-        keyboard.press_and_release(key_a)
-    elif x > threshold_high:
-        keyboard.press_and_release(key_d)
+# Variable para almacenar el estado anterior de los botones
+prev_button_states = [0] * len(buttons)
 
-    if y < threshold_low:
-        keyboard.press_and_release(key_w)
-    elif y > threshold_high:
-        keyboard.press_and_release(key_s)
+# Función para leer el joystick y los botones
+def read_input():
+    x_value = adc_x.read_u16()
+    y_value = adc_y.read_u16()
+    button_states = [button.value() for button in buttons]
+
+    return x_value, y_value, button_states
 
 # Bucle principal
 while True:
-    x = x_pin.read_u16()
-    y = y_pin.read_u16()
-    button_state = button.value()
+    x, y, button_states = read_input()
 
-    # Emular teclas solo si el botón del joystick está presionado
-    if button_state == 0:
-        emulate_keys(x, y)
+    # Determinar la dirección del joystick
+    if x < 2000:
+        print("A")
+    elif x > 60000:
+        print("D")
 
-    utime.sleep(0.1)  # Ajusta según sea necesario para evitar la repetición rápida de teclas
+    if y < 2000:
+        print("W")
+    elif y > 60000:
+        print("S")
+
+    # Verificar el estado de los botones e imprimir letras correspondientes
+    for pin, state, prev_state in zip(buttons_pin, button_states, prev_button_states):
+        if state == 1 and prev_state == 0:
+            if pin in button_letters:
+                print(button_letters[pin])
+
+    # Actualizar el estado anterior de los botones
+    prev_button_states = button_states.copy()
+
+    # Esperar un breve período de tiempo para evitar lecturas rápidas
+    utime.sleep_ms(100)
