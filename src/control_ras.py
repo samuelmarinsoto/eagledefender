@@ -1,6 +1,10 @@
 import machine
 import utime
 
+
+
+uart = machine.UART(0, baudrate=9600, tx=0, rx=1)  # Pines TX y RX dependen de tu conexión física
+
 # Configuración de pines
 joystick_x_pin = 26
 joystick_y_pin = 27
@@ -42,19 +46,24 @@ while True:
 
     # Determinar la dirección del joystick
     if x < 2000:
+        uart.write("A")
         print("A")
     elif x > 60000:
+        uart.write("D")
         print("D")
 
     if y < 2000:
+        uart.write("W")
         print("W")
     elif y > 60000:
+        uart.write("S")
         print("S")
 
     # Verificar el estado de los botones e imprimir letras correspondientes
     for pin, state, prev_state in zip(buttons_pin, button_states, prev_button_states):
         if state == 1 and prev_state == 0:
             if pin in button_letters:
+                uart.write(button_letters[pin])
                 print(button_letters[pin])
 
     # Actualizar el estado anterior de los botones
