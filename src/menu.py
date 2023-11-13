@@ -157,7 +157,8 @@ class Menu_principal(customtkinter.CTk):
         self.languageSelector = customtkinter.CTkComboBox(self, values=["English", "Español", "Français"])
         self.languageSelector.place(relx=0.02,rely=0.05)
 
-        self.ApplyChanges= customtkinter.CTkButton(self, text="ApplyChanges",command=lambda: [dic.changeLanguage(self.languageSelector.get()), self.ejecutar_principal()],width=5,fg_color=green)
+
+        self.ApplyChanges= customtkinter.CTkButton(self, text="ApplyChanges",command=lambda: [dic.changeLanguage(self.languageSelector.get()),Lg.changeLanguage(self.languageSelector.get()), self.ejecutar_principal()],width=5,fg_color=green)
         self.ApplyChanges.place(relx=0.02, rely=0.19)#, anchor=customtkinter.CENTER)
 
         self.sidebar_button_3 = customtkinter.CTkButton(self, text=dic.Login[dic.language],fg_color=green_light,hover_color=green, command= self.ejecutar_login, width=250, height=50)
@@ -971,19 +972,24 @@ class Menu_principal(customtkinter.CTk):
             self.ConcludeRegister()
 
     def continue_Pay(self,UserSpot):
-        if UserSpot:
-            self.UserSpot = self.MusicWindow.UserSpot.get()
-            Song1 = self.MusicWindow.Song1.get()
-            Song2 = self.MusicWindow.Song2.get()
-            Song3 = self.MusicWindow.Song3.get()
-            self.confirm_Songs(Song1, Song2, Song3)
-            self.Song1 = Song1
-            self.Song2 = Song2
-            self.Song3 = Song3
-            self.ejecutar_Member()
+        Song1 = self.MusicWindow.Song1.get()
+        Song2 = self.MusicWindow.Song2.get()
+        Song3 = self.MusicWindow.Song3.get()
+        Songs = [Song1, Song2, Song3]
+        if Songs[0] != "" and Songs[1] != "" and Songs[2] != "":
+            #self.UserSpot = self.MusicWindow.UserSpot.get()
+            if UserSpot == "":
+                self.confirm_Songs(Song1, Song2, Song3)
+                self.Song1 = Song1
+                self.Song2 = Song2
+                self.Song3 = Song3
+                self.ejecutar_Member()
+            else:
+                self.UserSpot = ""
+                self.ejecutar_Member()
+                return 0
         else:
-            self.UserSpot = ""
-            self.ejecutar_Member()
+            tkinter.messagebox.showerror("Error", "Faltan canciones")
             return 0
 
     def ejecutar_Member(self):
@@ -1062,7 +1068,7 @@ class Menu_principal(customtkinter.CTk):
         self.RegisterWindow.calendario_button.configure(text="Fecha de nacimiento")
         self.Paleta = "Green"
         self.Texture = "Block1"
-        self.MusicWindow.UserSpot.delete(0, 'end')
+        
         self.MusicWindow.Song1.delete(0, 'end')
         self.MusicWindow.Song2.delete(0, 'end')
         self.MusicWindow.Song3.delete(0, 'end')
