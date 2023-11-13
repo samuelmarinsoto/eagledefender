@@ -76,10 +76,10 @@ class Jugador:
 
             if partida%2:
                 # atacante se mueve con las flechas
-                self.arriba = pygame.K_UP
-                self.izquierda = pygame.K_LEFT
-                self.abajo = pygame.K_DOWN
-                self.derecha = pygame.K_RIGHT
+                self.arriba = pygame.K_i
+                self.izquierda = pygame.K_j
+                self.abajo = pygame.K_k
+                self.derecha = pygame.K_l
 
                 # dispara con 7890
                 self.disparoA = pygame.K_8 # agua
@@ -138,10 +138,10 @@ class Jugador:
 
             else:
                 # defensor se mueve con las flechas
-                self.arriba = pygame.K_UP
-                self.izquierda = pygame.K_LEFT
-                self.abajo = pygame.K_DOWN
-                self.derecha = pygame.K_RIGHT
+                self.arriba = pygame.K_i
+                self.izquierda = pygame.K_j
+                self.abajo = pygame.K_k
+                self.derecha = pygame.K_l
 
                 # pone bloques con 7890
                 self.disparoA = pygame.K_8 # madera
