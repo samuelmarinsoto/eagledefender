@@ -8,7 +8,7 @@ uart = machine.UART(0, baudrate=9600, tx=0, rx=1)  # Pines TX y RX dependen de t
 # Configuración de pines
 joystick_x_pin = 26
 joystick_y_pin = 27
-buttons_pin = [2,3,4,5,6,7,8,9]
+buttons_pin = [2,3,4,5,6,7,8,9,16,17,18,21,13,12,11,10]
 
 # Configuración de ADC
 adc_x = machine.ADC(joystick_x_pin)
@@ -19,14 +19,22 @@ buttons = [machine.Pin(pin, machine.Pin.IN, machine.Pin.PULL_DOWN) for pin in bu
 
 # Mapa de letras para cada botón
 button_letters = {
-    9: "Q",
-    8: "E",
-    7: "R",
-    6: "T",
-    5: "Y",
-    4: "U",
-    3: "I",
-    2: "O",
+    9: "1",
+    8: "2",
+    7: "3",
+    6: "4",
+    5: "w",
+    4: "a",
+    3: "s",
+    2: "d",
+    16: "l",
+    17: "i",
+    18: "k",
+    21: "j",
+    13: "9",
+    12: "8",
+    11: "7",
+    10: "o",
 }
 
 # Variable para almacenar el estado anterior de los botones
@@ -46,18 +54,13 @@ while True:
 
     # Determinar la dirección del joystick
     if x < 2000:
-        uart.write("A")
-        print("A")
+        uart.write("q")
+        print("q")
     elif x > 60000:
-        uart.write("D")
-        print("D")
+        uart.write("e")
+        print("e")
 
-    if y < 2000:
-        uart.write("W")
-        print("W")
-    elif y > 60000:
-        uart.write("S")
-        print("S")
+
 
     # Verificar el estado de los botones e imprimir letras correspondientes
     for pin, state, prev_state in zip(buttons_pin, button_states, prev_button_states):
