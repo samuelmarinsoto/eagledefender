@@ -57,8 +57,10 @@ class Menu_principal(customtkinter.CTk):
         pink = "#E49393"
         grey = "#000000"
         super().__init__()
+        screen_width = self.winfo_screenwidth()-300
+        screen_height = self.winfo_screenheight()-300
 
-        ScreenRes = f"{1024}x{720}"
+        ScreenRes = f"{screen_width}x{screen_height}"
         # Here create the other windows
         self.LoginWindow = customtkinter.CTkToplevel(self)
         self.LoginWindow.withdraw()
@@ -97,6 +99,18 @@ class Menu_principal(customtkinter.CTk):
         self.PersonalizeWindow2.protocol("WM_DELETE_WINDOW", self.back_menu)
         self.MusicWindow.protocol("WM_DELETE_WINDOW", self.back_menu)
         self.InstructionWindow.protocol("WM_DELETE_WINDOW", self.back_menu)
+
+        self.InstructionWindow.tabview = customtkinter.CTkTabview(self.InstructionWindow, width=screen_width , height=screen_height)
+        self.InstructionWindow.tabview.place(relx=0.5, rely=0.5, anchor=customtkinter.CENTER)
+
+        self.InstructionWindow.tabview.add("Objetivo")
+        self.InstructionWindow.tabview.add("Controles")
+        self.InstructionWindow.tabview.add("Como ganar")
+
+        self.InstructionWindow.tabview.tab("Objetivo").configure(bg_color="transparent",fg_color="transparent")
+        self.InstructionWindow.tabview.tab("Como ganar").configure(bg_color="transparent",fg_color="transparent")
+        self.InstructionWindow.tabview.tab("Controles").configure(bg_color="transparent",fg_color="transparent")
+
         """__________________________________________________________________________________________________________"""
         # # configure window
         # self.attributes("-fullscreen",True)
@@ -143,7 +157,8 @@ class Menu_principal(customtkinter.CTk):
         self.languageSelector = customtkinter.CTkComboBox(self, values=["English", "Español", "Français"])
         self.languageSelector.place(relx=0.02,rely=0.05)
 
-        self.ApplyChanges= customtkinter.CTkButton(self, text="ApplyChanges",command=lambda: [dic.changeLanguage(self.languageSelector.get()), self.ejecutar_principal()],width=5,fg_color=green)
+
+        self.ApplyChanges= customtkinter.CTkButton(self, text="ApplyChanges",command=lambda: [dic.changeLanguage(self.languageSelector.get()),Lg.changeLanguage(self.languageSelector.get()), self.ejecutar_principal()],width=5,fg_color=green)
         self.ApplyChanges.place(relx=0.02, rely=0.19)#, anchor=customtkinter.CENTER)
 
         self.sidebar_button_3 = customtkinter.CTkButton(self, text=dic.Login[dic.language],fg_color=green_light,hover_color=green, command= self.ejecutar_login, width=250, height=50)
@@ -204,7 +219,7 @@ class Menu_principal(customtkinter.CTk):
 
 
         imagenTwo = Image.open("../assets/Windows aux/TwoPlayer.png")
-        imagenTwo_resized =  imagenTwo.resize((400,400), Image.LANCZOS)
+        imagenTwo_resized =  imagenTwo.resize((220,220), Image.LANCZOS)
         phTwo = ImageTk.PhotoImage(imagenTwo_resized)
 
 
@@ -733,74 +748,74 @@ class Menu_principal(customtkinter.CTk):
         self.InstructionWindow.back = customtkinter.CTkButton(self.InstructionWindow, text="←", fg_color=green_light, hover_color=green,command=self.ejecutar_playWindow, width=30, height=30)
         self.InstructionWindow.back.place(relx=0.001, rely=0.001, anchor=customtkinter.NW)
 
-        self.InstructionWindow.Instruction = customtkinter.CTkLabel(self.InstructionWindow, text=Lg.dic["Instructions"][Lg.language], font=customtkinter.CTkFont(size=20, weight="bold"))
+        self.InstructionWindow.Instruction = customtkinter.CTkLabel(self.InstructionWindow.tabview.tab("Controles"), text=Lg.dic["InstructionsControl"][Lg.language], font=customtkinter.CTkFont(size=20, weight="bold"))
         self.InstructionWindow.Instruction.place(relx=0.5, rely=0.1, anchor=customtkinter.CENTER)
 
-        self.InstructionWindow.Identify = customtkinter.CTkLabel(self.InstructionWindow, text=Lg.dic["Identify"][Lg.language], font=customtkinter.CTkFont(size=13, weight="bold"))
+        self.InstructionWindow.Identify = customtkinter.CTkLabel(self.InstructionWindow.tabview.tab("Controles"), text=Lg.dic["Identify"][Lg.language], font=customtkinter.CTkFont(size=13, weight="bold"))
         self.InstructionWindow.Identify.place(relx=0.5, rely=0.25, anchor=customtkinter.CENTER)
         ##
-        self.InstructionWindow.Attack1 = customtkinter.CTkLabel(self.InstructionWindow, text=Lg.dic["Attack"][Lg.language], font=customtkinter.CTkFont(size=13, weight="bold"))
+        self.InstructionWindow.Attack1 = customtkinter.CTkLabel(self.InstructionWindow.tabview.tab("Controles"), text=Lg.dic["Attack"][Lg.language], font=customtkinter.CTkFont(size=13, weight="bold"))
         self.InstructionWindow.Attack1.place(relx=0.1, rely=0.35, anchor=customtkinter.CENTER)
-        self.InstructionWindow.Attack1Ins = customtkinter.CTkLabel(self.InstructionWindow, text=Lg.Ins["Attack"][Lg.language], font=customtkinter.CTkFont(size=13, weight="bold"))
+        self.InstructionWindow.Attack1Ins = customtkinter.CTkLabel(self.InstructionWindow.tabview.tab("Controles"), text=Lg.Ins["Attack"][Lg.language], font=customtkinter.CTkFont(size=13, weight="bold"))
         self.InstructionWindow.Attack1Ins.place(relx=0.1, rely=0.45, anchor=customtkinter.CENTER)
 
-        self.InstructionWindow.Rotate1Ins = customtkinter.CTkLabel(self.InstructionWindow, text=Lg.Ins["Rotate"][Lg.language], font=customtkinter.CTkFont(size=13, weight="bold"))
+        self.InstructionWindow.Rotate1Ins = customtkinter.CTkLabel(self.InstructionWindow.tabview.tab("Controles"), text=Lg.Ins["Rotate"][Lg.language], font=customtkinter.CTkFont(size=13, weight="bold"))
         self.InstructionWindow.Rotate1Ins.place(relx=0.1, rely=0.55, anchor=customtkinter.CENTER)
 
-        self.InstructionWindow.Joy1Ins = customtkinter.CTkLabel(self.InstructionWindow, text=Lg.Ins["Joy"][Lg.language], font=customtkinter.CTkFont(size=13, weight="bold"))
+        self.InstructionWindow.Joy1Ins = customtkinter.CTkLabel(self.InstructionWindow.tabview.tab("Controles"), text=Lg.Ins["Joy"][Lg.language], font=customtkinter.CTkFont(size=13, weight="bold"))
         self.InstructionWindow.Joy1Ins.place(relx=0.1, rely=0.65, anchor=customtkinter.CENTER)
         #
-        self.InstructionWindow.Defend1 = customtkinter.CTkLabel(self.InstructionWindow, text=Lg.dic["Defense"][Lg.language], font=customtkinter.CTkFont(size=13, weight="bold"))
+        self.InstructionWindow.Defend1 = customtkinter.CTkLabel(self.InstructionWindow.tabview.tab("Controles"), text=Lg.dic["Defense"][Lg.language], font=customtkinter.CTkFont(size=13, weight="bold"))
         self.InstructionWindow.Defend1.place(relx=0.4, rely=0.35, anchor=customtkinter.CENTER)
 
-        self.InstructionWindow.Defend1Ins = customtkinter.CTkLabel(self.InstructionWindow, text=Lg.Ins["Block"][Lg.language], font=customtkinter.CTkFont(size=13, weight="bold"))
+        self.InstructionWindow.Defend1Ins = customtkinter.CTkLabel(self.InstructionWindow.tabview.tab("Controles"), text=Lg.Ins["Block"][Lg.language], font=customtkinter.CTkFont(size=13, weight="bold"))
         self.InstructionWindow.Defend1Ins.place(relx=0.4, rely=0.45, anchor=customtkinter.CENTER)
 
-        self.InstructionWindow.RotateBlock1Ins = customtkinter.CTkLabel(self.InstructionWindow, text=Lg.Ins["Rote Block"][Lg.language], font=customtkinter.CTkFont(size=13, weight="bold"))
+        self.InstructionWindow.RotateBlock1Ins = customtkinter.CTkLabel(self.InstructionWindow.tabview.tab("Controles"), text=Lg.Ins["Rote Block"][Lg.language], font=customtkinter.CTkFont(size=13, weight="bold"))
         self.InstructionWindow.RotateBlock1Ins.place(relx=0.4, rely=0.55, anchor=customtkinter.CENTER)
 
-        self.InstructionWindow.JoyBlock1Ins = customtkinter.CTkLabel(self.InstructionWindow, text=Lg.Ins["Joy Block"][Lg.language], font=customtkinter.CTkFont(size=13, weight="bold"))
+        self.InstructionWindow.JoyBlock1Ins = customtkinter.CTkLabel(self.InstructionWindow.tabview.tab("Controles"), text=Lg.Ins["Joy Block"][Lg.language], font=customtkinter.CTkFont(size=13, weight="bold"))
         self.InstructionWindow.JoyBlock1Ins.place(relx=0.4, rely=0.65, anchor=customtkinter.CENTER)
         #
-        self.InstructionWindow.Defend2 = customtkinter.CTkLabel(self.InstructionWindow,
+        self.InstructionWindow.Defend2 = customtkinter.CTkLabel(self.InstructionWindow.tabview.tab("Controles"),
                                                                 text=Lg.dic["Defense"][Lg.language],
                                                                 font=customtkinter.CTkFont(size=13, weight="bold"))
         self.InstructionWindow.Defend2.place(relx=0.6, rely=0.35, anchor=customtkinter.CENTER)
 
-        self.InstructionWindow.Defend2Ins = customtkinter.CTkLabel(self.InstructionWindow,
+        self.InstructionWindow.Defend2Ins = customtkinter.CTkLabel(self.InstructionWindow.tabview.tab("Controles"),
                                                                    text=Lg.Ins["Block"][Lg.language],
                                                                    font=customtkinter.CTkFont(size=13, weight="bold"))
         self.InstructionWindow.Defend2Ins.place(relx=0.6, rely=0.45, anchor=customtkinter.CENTER)
 
-        self.InstructionWindow.RotateBlock2Ins = customtkinter.CTkLabel(self.InstructionWindow,
+        self.InstructionWindow.RotateBlock2Ins = customtkinter.CTkLabel(self.InstructionWindow.tabview.tab("Controles"),
                                                                         text=Lg.Ins["Rote Block"][Lg.language],
                                                                         font=customtkinter.CTkFont(size=13,
                                                                                                    weight="bold"))
         self.InstructionWindow.RotateBlock2Ins.place(relx=0.6, rely=0.55, anchor=customtkinter.CENTER)
 
-        self.InstructionWindow.JoyBlock2Ins = customtkinter.CTkLabel(self.InstructionWindow,
+        self.InstructionWindow.JoyBlock2Ins = customtkinter.CTkLabel(self.InstructionWindow.tabview.tab("Controles"),
                                                                      text=Lg.Ins["Joy Block"][Lg.language],
                                                                      font=customtkinter.CTkFont(size=13, weight="bold"))
         self.InstructionWindow.JoyBlock2Ins.place(relx=0.6, rely=0.65, anchor=customtkinter.CENTER)
 
         ##
-        self.InstructionWindow.Attack2 = customtkinter.CTkLabel(self.InstructionWindow, text=Lg.dic["Attack"][Lg.language], font=customtkinter.CTkFont(size=13, weight="bold"))
+        self.InstructionWindow.Attack2 = customtkinter.CTkLabel(self.InstructionWindow.tabview.tab("Controles"), text=Lg.dic["Attack"][Lg.language], font=customtkinter.CTkFont(size=13, weight="bold"))
         self.InstructionWindow.Attack2.place(relx=0.9, rely=0.35, anchor=customtkinter.CENTER)
-        self.InstructionWindow.Attack2 = customtkinter.CTkLabel(self.InstructionWindow,
+        self.InstructionWindow.Attack2 = customtkinter.CTkLabel(self.InstructionWindow.tabview.tab("Controles"),
                                                                 text=Lg.dic["Attack"][Lg.language],
                                                                 font=customtkinter.CTkFont(size=13, weight="bold"))
         self.InstructionWindow.Attack2.place(relx=0.9, rely=0.35, anchor=customtkinter.CENTER)
-        self.InstructionWindow.Attack2Ins = customtkinter.CTkLabel(self.InstructionWindow,
+        self.InstructionWindow.Attack2Ins = customtkinter.CTkLabel(self.InstructionWindow.tabview.tab("Controles"),
                                                                    text=Lg.Ins["Attack"][Lg.language],
                                                                    font=customtkinter.CTkFont(size=13, weight="bold"))
         self.InstructionWindow.Attack2Ins.place(relx=0.9, rely=0.45, anchor=customtkinter.CENTER)
 
-        self.InstructionWindow.Rotate2Ins = customtkinter.CTkLabel(self.InstructionWindow,
+        self.InstructionWindow.Rotate2Ins = customtkinter.CTkLabel(self.InstructionWindow.tabview.tab("Controles"),
                                                                    text=Lg.Ins["Rotate"][Lg.language],
                                                                    font=customtkinter.CTkFont(size=13, weight="bold"))
         self.InstructionWindow.Rotate2Ins.place(relx=0.9, rely=0.55, anchor=customtkinter.CENTER)
 
-        self.InstructionWindow.Joy2Ins = customtkinter.CTkLabel(self.InstructionWindow, text=Lg.Ins["Joy"][Lg.language],
+        self.InstructionWindow.Joy2Ins = customtkinter.CTkLabel(self.InstructionWindow.tabview.tab("Controles"), text=Lg.Ins["Joy"][Lg.language],
                                                                 font=customtkinter.CTkFont(size=13, weight="bold"))
         self.InstructionWindow.Joy2Ins.place(relx=0.9, rely=0.65, anchor=customtkinter.CENTER)
 
@@ -810,36 +825,127 @@ class Menu_principal(customtkinter.CTk):
         ledGreen = PhotoImage(file="../assets/Windows aux/led green.png").subsample(5, 5)
         ledRed = PhotoImage(file="../assets/Windows aux/led red.png").subsample(5, 5)
 
-        self.InstructionWindow.Player1 = customtkinter.CTkLabel(self.InstructionWindow, text=Lg.dic["Player 1"][Lg.language], font=customtkinter.CTkFont(size=15, weight="bold"))
+        self.InstructionWindow.Player1 = customtkinter.CTkLabel(self.InstructionWindow.tabview.tab("Controles"), text=Lg.dic["Player 1"][Lg.language], font=customtkinter.CTkFont(size=15, weight="bold"))
         self.InstructionWindow.Player1.place(relx=0.25, rely=0.2, anchor=customtkinter.CENTER)
 
-        self.InstructionWindow.RedLed = customtkinter.CTkLabel(self.InstructionWindow, image=ledRed, corner_radius=60, text="")
+        self.InstructionWindow.RedLed = customtkinter.CTkLabel(self.InstructionWindow.tabview.tab("Controles"), image=ledRed, corner_radius=60, text="")
         self.InstructionWindow.RedLed.place(relx=0.25, rely=0.3, anchor=customtkinter.CENTER)
 
-        self.InstructionWindow.Cruceta1 = customtkinter.CTkLabel(self.InstructionWindow, image=cruceta, corner_radius=60, text="")
+        self.InstructionWindow.Cruceta1 = customtkinter.CTkLabel(self.InstructionWindow.tabview.tab("Controles"), image=cruceta, corner_radius=60, text="")
         self.InstructionWindow.Cruceta1.place(relx=0.25, rely=0.45, anchor=customtkinter.CENTER)
 
-        self.InstructionWindow.buttons1 = customtkinter.CTkLabel(self.InstructionWindow, image=buttons, corner_radius=60, text="")
+        self.InstructionWindow.buttons1 = customtkinter.CTkLabel(self.InstructionWindow.tabview.tab("Controles"), image=buttons, corner_radius=60, text="")
         self.InstructionWindow.buttons1.place(relx=0.25, rely=0.55, anchor=customtkinter.CENTER)
 
-        self.InstructionWindow.joystick1 = customtkinter.CTkLabel(self.InstructionWindow, image=joystick, corner_radius=60, text="")
+        self.InstructionWindow.joystick1 = customtkinter.CTkLabel(self.InstructionWindow.tabview.tab("Controles"), image=joystick, corner_radius=60, text="")
         self.InstructionWindow.joystick1.place(relx=0.25, rely=0.65, anchor=customtkinter.CENTER)
-
         ##
-        self.InstructionWindow.Player2 = customtkinter.CTkLabel(self.InstructionWindow, text=Lg.dic["Player 2"][Lg.language], font=customtkinter.CTkFont(size=15, weight="bold"))
+        self.InstructionWindow.Player2 = customtkinter.CTkLabel(self.InstructionWindow.tabview.tab("Controles"), text=Lg.dic["Player 2"][Lg.language], font=customtkinter.CTkFont(size=15, weight="bold"))
         self.InstructionWindow.Player2.place(relx=0.75, rely=0.2, anchor=customtkinter.CENTER)
 
-        self.InstructionWindow.GreenLed = customtkinter.CTkLabel(self.InstructionWindow, image=ledGreen, corner_radius=60, text="")
+        self.InstructionWindow.GreenLed = customtkinter.CTkLabel(self.InstructionWindow.tabview.tab("Controles"), image=ledGreen, corner_radius=60, text="")
         self.InstructionWindow.GreenLed.place(relx=0.75, rely=0.3, anchor=customtkinter.CENTER)
 
-        self.InstructionWindow.Cruceta2 = customtkinter.CTkLabel(self.InstructionWindow, image=cruceta, corner_radius=60, text="")
+        self.InstructionWindow.Cruceta2 = customtkinter.CTkLabel(self.InstructionWindow.tabview.tab("Controles"), image=cruceta, corner_radius=60, text="")
         self.InstructionWindow.Cruceta2.place(relx=0.75, rely=0.45, anchor=customtkinter.CENTER)
 
-        self.InstructionWindow.buttons2 = customtkinter.CTkLabel(self.InstructionWindow, image=buttons, corner_radius=60, text="")
+        self.InstructionWindow.buttons2 = customtkinter.CTkLabel(self.InstructionWindow.tabview.tab("Controles"), image=buttons, corner_radius=60, text="")
         self.InstructionWindow.buttons2.place(relx=0.75, rely=0.55, anchor=customtkinter.CENTER)
 
-        self.InstructionWindow.joystick2 = customtkinter.CTkLabel(self.InstructionWindow, image=joystick, corner_radius=60, text="")
+        self.InstructionWindow.joystick2 = customtkinter.CTkLabel(self.InstructionWindow.tabview.tab("Controles"), image=joystick, corner_radius=60, text="")
         self.InstructionWindow.joystick2.place(relx=0.75, rely=0.65, anchor=customtkinter.CENTER)
+
+        #---Tab Objetivo
+        eagle = PhotoImage(file="../assets/Blocks/aguila.png").subsample(14, 14)
+        #Defensa
+        self.InstructionWindow.DefeOjt = customtkinter.CTkLabel(self.InstructionWindow.tabview.tab("Objetivo"), text= Lg.dic["Defense"][Lg.language], font=customtkinter.CTkFont(size=15, weight="bold"))
+        self.InstructionWindow.DefeOjt.place(relx=0.25, rely=0.1, anchor=customtkinter.CENTER)
+
+        self.InstructionWindow.DeIns = customtkinter.CTkLabel(self.InstructionWindow.tabview.tab("Objetivo"), text= Lg.Ins["Objetive.0"][Lg.language], font=customtkinter.CTkFont(size=13, weight="bold"))
+        self.InstructionWindow.DeIns.place(relx=0.25, rely=0.2, anchor=customtkinter.CENTER)
+
+        self.InstructionWindow.EagleIns = customtkinter.CTkLabel(self.InstructionWindow.tabview.tab("Objetivo"), image=eagle, corner_radius=60, text="")
+        self.InstructionWindow.EagleIns.place(relx=0.25, rely=0.3, anchor=customtkinter.CENTER)
+
+        #self.InstructionWindow.DeIns2 = customtkinter.CTkLabel(self.InstructionWindow.tabview.tab("Objetivo"), text= Lg.Ins["Objetive.2"][Lg.language], font=customtkinter.CTkFont(size=13, weight="bold"))
+        #self.InstructionWindow.DeIns2.place(relx=0.25, rely=0.35, anchor=customtkinter.CENTER)
+
+        self.InstructionWindow.DeIns3 = customtkinter.CTkLabel(self.InstructionWindow.tabview.tab("Objetivo"), text= Lg.Ins["Objetive.3"][Lg.language], font=customtkinter.CTkFont(size=13, weight="bold"))
+        self.InstructionWindow.DeIns3.place(relx=0.25, rely=0.35, anchor=customtkinter.CENTER)
+
+        self.InstructionWindow.DeIns4 = customtkinter.CTkLabel(self.InstructionWindow.tabview.tab("Objetivo"), text= Lg.Ins["Objetive.4"][Lg.language], font=customtkinter.CTkFont(size=13, weight="bold"))
+        self.InstructionWindow.DeIns4.place(relx=0.25, rely=0.45, anchor=customtkinter.CENTER)
+
+        self.InstructionWindow.Block1 = customtkinter.CTkLabel(self.InstructionWindow.tabview.tab("Objetivo"), image=block1Metal, corner_radius=60, text="")
+        self.InstructionWindow.Block1.place(relx=0.25, rely=0.55, anchor=customtkinter.CENTER)
+
+        self.InstructionWindow.Block2 = customtkinter.CTkLabel(self.InstructionWindow.tabview.tab("Objetivo"), image=block1Wood, corner_radius=60, text="")
+        self.InstructionWindow.Block2.place(relx=0.3, rely=0.55, anchor=customtkinter.CENTER)
+
+        self.InstructionWindow.Block3 = customtkinter.CTkLabel(self.InstructionWindow.tabview.tab("Objetivo"), image=block1Cement, corner_radius=60, text="")
+        self.InstructionWindow.Block3.place(relx=0.2, rely=0.55, anchor=customtkinter.CENTER)
+
+        self.InstructionWindow.LifeBlock = customtkinter.CTkLabel(self.InstructionWindow.tabview.tab("Objetivo"), text= Lg.Ins["LifeBlock"][Lg.language], font=customtkinter.CTkFont(size=13, weight="bold"))
+        self.InstructionWindow.LifeBlock.place(relx=0.25, rely=0.65, anchor=customtkinter.CENTER)
+
+        #Ataque
+        bomb = PhotoImage(file="../assets/balas/bomba.png").subsample(12, 12)
+        fire = PhotoImage(file="../assets/balas/fuego.png").subsample(14, 14)
+        water = PhotoImage(file="../assets/balas/agua.png").subsample(14, 14)
+
+        self.InstructionWindow.AttacObj = customtkinter.CTkLabel(self.InstructionWindow.tabview.tab("Objetivo"), text= Lg.dic["Attack"][Lg.language], font=customtkinter.CTkFont(size=15, weight="bold"))
+        self.InstructionWindow.AttacObj.place(relx=0.75, rely=0.1, anchor=customtkinter.CENTER)
+
+        self.InstructionWindow.AtIns = customtkinter.CTkLabel(self.InstructionWindow.tabview.tab("Objetivo"), text= Lg.Ins["Objetive"][Lg.language], font=customtkinter.CTkFont(size=13, weight="bold"))
+        self.InstructionWindow.AtIns.place(relx=0.75, rely=0.2, anchor=customtkinter.CENTER)
+
+        self.InstructionWindow.EagleIns2 = customtkinter.CTkLabel(self.InstructionWindow.tabview.tab("Objetivo"),image=eagle, corner_radius=60, text="")
+        self.InstructionWindow.EagleIns2.place(relx=0.75, rely=0.3, anchor=customtkinter.CENTER)
+
+        self.InstructionWindow.AtIns2 = customtkinter.CTkLabel(self.InstructionWindow.tabview.tab("Objetivo"), text= Lg.Ins["Objetive2"][Lg.language], font=customtkinter.CTkFont(size=13, weight="bold"))
+        self.InstructionWindow.AtIns2.place(relx=0.75, rely=0.35, anchor=customtkinter.CENTER)
+
+        #self.InstructionWindow.AtIns3 = customtkinter.CTkLabel(self.InstructionWindow.tabview.tab("Objetivo"), text= Lg.Ins["Objetive3"][Lg.language], font=customtkinter.CTkFont(size=13, weight="bold"))
+        #self.InstructionWindow.AtIns3.place(relx=0.75, rely=0.4, anchor=customtkinter.CENTER)
+
+        self.InstructionWindow.AtIns4 = customtkinter.CTkLabel(self.InstructionWindow.tabview.tab("Objetivo"), text= Lg.Ins["Objetive4"][Lg.language], font=customtkinter.CTkFont(size=13, weight="bold"))
+        self.InstructionWindow.AtIns4.place(relx=0.75, rely=0.45, anchor=customtkinter.CENTER)
+
+        self.InstructionWindow.Bomb = customtkinter.CTkLabel(self.InstructionWindow.tabview.tab("Objetivo"), image=bomb, corner_radius=60, text="")
+        self.InstructionWindow.Bomb.place(relx=0.7, rely=0.55, anchor=customtkinter.CENTER)
+
+        self.InstructionWindow.Fire = customtkinter.CTkLabel(self.InstructionWindow.tabview.tab("Objetivo"), image=fire, corner_radius=60, text="")
+        self.InstructionWindow.Fire.place(relx=0.75, rely=0.55, anchor=customtkinter.CENTER)
+
+        self.InstructionWindow.Water = customtkinter.CTkLabel(self.InstructionWindow.tabview.tab("Objetivo"), image=water, corner_radius=60, text="")
+        self.InstructionWindow.Water.place(relx=0.8, rely=0.55, anchor=customtkinter.CENTER)
+
+        self.InstructionWindow.LifeProjectile = customtkinter.CTkLabel(self.InstructionWindow.tabview.tab("Objetivo"), text= Lg.Ins["LifeProjectile"][Lg.language], font=customtkinter.CTkFont(size=13, weight="bold"))
+        self.InstructionWindow.LifeProjectile.place(relx=0.75, rely=0.65, anchor=customtkinter.CENTER)
+
+        #---Tab how to win
+
+        self.InstructionWindow.HowPlay = customtkinter.CTkLabel(self.InstructionWindow.tabview.tab("Como ganar"), text= Lg.dic[ "How to play"][Lg.language], font=customtkinter.CTkFont(size=20, weight="bold"))
+        self.InstructionWindow.HowPlay.place(relx=0.25, rely=0.1, anchor=customtkinter.CENTER)
+
+
+        self.InstructionWindow.HP1 = customtkinter.CTkLabel(self.InstructionWindow.tabview.tab("Como ganar"), text= Lg.Ins["Play1"][Lg.language], font=customtkinter.CTkFont(size=13, weight="bold"))
+        self.InstructionWindow.HP1.place(relx=0.25, rely=0.2, anchor=customtkinter.CENTER)
+
+        self.InstructionWindow.HP2 = customtkinter.CTkLabel(self.InstructionWindow.tabview.tab("Como ganar"), text= Lg.Ins["Play2"][Lg.language], font=customtkinter.CTkFont(size=13, weight="bold"))
+        self.InstructionWindow.HP2.place(relx=0.25, rely=0.3, anchor=customtkinter.CENTER)
+
+        self.InstructionWindow.HowWin = customtkinter.CTkLabel(self.InstructionWindow.tabview.tab("Como ganar"), text= Lg.Ins["How to Win?"][Lg.language], font=customtkinter.CTkFont(size=20, weight="bold"))
+        self.InstructionWindow.HowWin.place(relx=0.75, rely=0.1, anchor=customtkinter.CENTER)
+
+        self.InstructionWindow.HP3 = customtkinter.CTkLabel(self.InstructionWindow.tabview.tab("Como ganar"), text= Lg.Ins["Play3"][Lg.language], font=customtkinter.CTkFont(size=13, weight="bold"))
+        self.InstructionWindow.HP3.place(relx=0.75, rely=0.2, anchor=customtkinter.CENTER)
+
+        self.InstructionWindow.HP4 = customtkinter.CTkLabel(self.InstructionWindow.tabview.tab("Como ganar"), text= Lg.Ins["PointsAttack"][Lg.language], font=customtkinter.CTkFont(size=13, weight="bold"))
+        self.InstructionWindow.HP4.place(relx=0.75, rely=0.3, anchor=customtkinter.CENTER)
+
+        self.InstructionWindow.HP5 = customtkinter.CTkLabel(self.InstructionWindow.tabview.tab("Como ganar"), text= Lg.Ins["PointsDefender"][Lg.language], font=customtkinter.CTkFont(size=13, weight="bold"))
+        self.InstructionWindow.HP5.place(relx=0.75, rely=0.4, anchor=customtkinter.CENTER)
 
 
 
@@ -866,19 +972,24 @@ class Menu_principal(customtkinter.CTk):
             self.ConcludeRegister()
 
     def continue_Pay(self,UserSpot):
-        if UserSpot:
-            self.UserSpot = self.MusicWindow.UserSpot.get()
-            Song1 = self.MusicWindow.Song1.get()
-            Song2 = self.MusicWindow.Song2.get()
-            Song3 = self.MusicWindow.Song3.get()
-            self.confirm_Songs(Song1, Song2, Song3)
-            self.Song1 = Song1
-            self.Song2 = Song2
-            self.Song3 = Song3
-            self.ejecutar_Member()
+        Song1 = self.MusicWindow.Song1.get()
+        Song2 = self.MusicWindow.Song2.get()
+        Song3 = self.MusicWindow.Song3.get()
+        Songs = [Song1, Song2, Song3]
+        if Songs[0] != "" and Songs[1] != "" and Songs[2] != "":
+            #self.UserSpot = self.MusicWindow.UserSpot.get()
+            if UserSpot == "":
+                self.confirm_Songs(Song1, Song2, Song3)
+                self.Song1 = Song1
+                self.Song2 = Song2
+                self.Song3 = Song3
+                self.ejecutar_Member()
+            else:
+                self.UserSpot = ""
+                self.ejecutar_Member()
+                return 0
         else:
-            self.UserSpot = ""
-            self.ejecutar_Member()
+            tkinter.messagebox.showerror("Error", "Faltan canciones")
             return 0
 
     def ejecutar_Member(self):
@@ -957,7 +1068,7 @@ class Menu_principal(customtkinter.CTk):
         self.RegisterWindow.calendario_button.configure(text="Fecha de nacimiento")
         self.Paleta = "Green"
         self.Texture = "Block1"
-        self.MusicWindow.UserSpot.delete(0, 'end')
+        
         self.MusicWindow.Song1.delete(0, 'end')
         self.MusicWindow.Song2.delete(0, 'end')
         self.MusicWindow.Song3.delete(0, 'end')

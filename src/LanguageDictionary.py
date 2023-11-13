@@ -44,11 +44,14 @@ dic = {
     "Card CVV": Translation(en="Card CVV", es="CVV de tarjeta", fr="CVV de la carte"),
     "Card Name": Translation(en="Card Name", es="Nombre de tarjeta", fr="Nom de la carte"),
     "Instructions": Translation(en="Instructions to play", es="Instrucciones para jugar", fr="Instructions joueur"),
+    "Objective": Translation(en="Objective", es="Objetivo", fr="Objectif"),
+    "How to play": Translation(en="How to play", es="Como jugar", fr="Comment jouer"),
     "Player 1": Translation(en="Player 1", es="Jugador 1", fr="Joueur 1"),
     "Player 2": Translation(en="Player 2", es="Jugador 2", fr="Joueur 2"),
     "Attack": Translation(en="Atack", es="Atacar", fr="Attaque"),
     "Defense": Translation(en="Defense", es="Defender", fr="Défense"),
     "Identify":Translation(en="Is identify by the led:", es="Se identifica por el led:", fr="Il est identifié par la lumière:"),
+    "InstructionsControl":Translation(en="Instructions to control", es="Instrucciones para el mando", fr="Instructions de contrôle"),
 
 
 }
@@ -62,6 +65,29 @@ Ins = {
     "Block":Translation(en="B Metal\n A Wood\n Y Concrete \n Put the eagle",es="B Metal\n A Madera\n Y Concreto \n Poner el aguila",fr="B Métal\n A Bois\n Y Béton \n Mettre l'aigle"),
     "Rote Block":Translation(en="→ ← Rotate block \n > Pause",es="→ ← Rotar bloque \n > Pausa",fr="→ ← Tourner bloc \n > Pause "),
     "Joy Block":Translation(en="Move block \n ↑ ↓\n ← → ",es="Mueve el blcque \n ↑ ↓\n ← → ",fr="Déplacer le bloc \n ↑ ↓\n ← → "),
+
+    "Objetive":Translation(en="The objective of the game is to destroy the enemy's eagle",es="El objetivo del juego es destruir el aguila enemiga",fr="L'objectif du jeu est de détruire l'aigle ennemi"),
+    "Objetive2":Translation(en="To do this, you must destroy the blocks that protect it, \n you cand do with some projectiles that you have",es="Para ello deberas destruir los bloques que lo protegen, \n podras hacerlo con algunos de los proyectiles que tienes",fr="Pour ce faire, vous devez détruire les blocs qui le protègent, \n vous pouvez le faire avec certains des projectiles que vous avez"),
+    "Objetive3":Translation(en="You can do with some of projectiles that you have",es="Podras hacerlo con algunos de los proyectiles que tienes",fr="Vous pouvez le faire avec certains des projectiles que vous avez"),
+    "Objetive4":Translation(en="You can choose between: \nbomb      fire      water",es="Podras elegir entre \nbomba      fuego      agua",fr="Vous pouvez choisir entre \nbombe      feu      eau"),
+
+    #defensa
+    "Objetive.0":Translation(en="The objective of the game is to protect your eagle",es="El objetivo del juego es proteger tu aguila",fr="L'objectif du jeu est de protéger votre aigle"),
+    "Objetive.2":Translation(en="To do this you must place blocks to protect it",es="Para ello deberas colocar bloques para protegerlo",fr="Pour ce faire, vous devez placer des blocs pour le protéger"),
+    "Objetive.3":Translation(en="You can defend the eagle place blocks",es="Podras defender el aguila colocando bloques",fr="Vous pouvez défendre l'aigle en plaçant des blocs"),
+    "Objetive.4":Translation(en="You can can choose between: \nconcrete     metal     wood",es="Podras elegir entre \nconcreto     metal     madera",fr="Vous pouvez choisir entre \nbéton     métal     bois"),
+    "LifeBlock":Translation(en=" The block have durability, so they could be destroy by the projetiles \nConcrete 10 pts     Acero 5 pts     Madera 3 pts",es="Los bloques tienen durabilidad, por lo que podran ser destruidos por los proyectiles \nConcreto 10 pts     Acero 5 pts     Madera 3 pts",fr="Les blocs ont une durabilité, ils doivent donc être détruits par les projectiles \nBéton 10 pts     Acier 5 pts     Bois 3 pts"),
+    "LifeProjectile":Translation(en="The projectiles have points of attack \n Bomb 10 pts     Fire 5 pts     Water 3 pts",es="Los proyectiles tienen puntos de ataque \n Bomba 10 pts     Fuego 5 pts     Agua 3 pts",fr="Les projectiles ont des points d'attaque \n Bombe 10 pts     Feu 5 pts     Eau 3 pts"),
+
+
+    #como jugar
+    "How to play":Translation(en="How to play",es="Como jugar",fr="Comment jouer"),
+    "Play1":Translation(en="The game have two rounds and have two games by round, \nin the change of game the players change of role",es="El juego tiene dos rondas y tiene dos juegos por ronda,\n en el cambio de partida los jugadores cambian de rol",fr="Le jeu a deux tours et a deux jeux par tour,\n dans le changement de jeu les joueurs changent de rôle"),
+    "Play2":Translation(en="If the players are matched in all rounds \n the game will do other round",es="Si los jugadores quedan empatados en todas las rondas \n el juego hara otra ronda",fr="Si les joueurs sont assortis dans tous les tours \n le jeu fera un autre tour"),
+    "Play3":Translation(en="The player that have more points in the end of game win",es="El jugador que tenga mas puntos al final del juego gana",fr="Le joueur qui a le plus de points à la fin du jeu gagne"),
+    "How to Win?":Translation(en="How Win",es="Como ganar",fr="Comment gagner"),
+    "PointsAttack":Translation(en="The attacker that destroy the enemy's eagle gains 10 points, \n also gains 1 point for each block that destroy",es="El atacante que destruya el aguila enemiga gana 10 puntos, \n tambien gana 1 punto por cada bloque que destruya",fr="L'attaquant qui détruit l'aigle ennemi gagne 10 points, \n gagne également 1 point pour chaque bloc qu'il détruit"),
+    "PointsDefender":Translation(en="The defender whose eagle is not destroyed gains 10 points,\n also gains 1 point for each block that is not destroyed.",es="El defensor cuyo aguila no sea destruida gana 10 puntos, \n tambien gana 1 punto por cada bloque que no sea destruido",fr="Le défenseur dont l'aigle n'est pas détruit gagne 10 points, \n gagne également 1 point pour chaque bloc qui n'est pas détruit"),
 
 }
 
