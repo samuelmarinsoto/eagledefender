@@ -158,7 +158,7 @@ class Menu_principal(customtkinter.CTk):
         self.languageSelector.place(relx=0.02,rely=0.05)
 
 
-        self.ApplyChanges= customtkinter.CTkButton(self, text="ApplyChanges",command=lambda: [dic.changeLanguage(self.languageSelector.get()),Lg.changeLanguage(self.languageSelector.get()), self.ejecutar_principal()],width=5,fg_color=green)
+        self.ApplyChanges= customtkinter.CTkButton(self, text=Lg.dic["Apply Changes"][Lg.language],command=lambda: [dic.changeLanguage(self.languageSelector.get()),Lg.changeLanguage(self.languageSelector.get()), self.ejecutar_principal()],width=5,fg_color=green)
         self.ApplyChanges.place(relx=0.02, rely=0.19)#, anchor=customtkinter.CENTER)
 
         self.sidebar_button_3 = customtkinter.CTkButton(self, text=dic.Login[dic.language],fg_color=green_light,hover_color=green, command= self.ejecutar_login, width=250, height=50)
@@ -193,7 +193,7 @@ class Menu_principal(customtkinter.CTk):
                                             command=self.back_menu,width=30, height=30)
         self.LoginWindow.back.place(relx=0.001, rely=0.001, anchor=customtkinter.NW)
 
-        self.LoginWindow.incio_facial = customtkinter.CTkButton(self.LoginWindow, text="Inicio facial",
+        self.LoginWindow.incio_facial = customtkinter.CTkButton(self.LoginWindow, text=Lg.dic["Start Face"][Lg.language],
                                                                 fg_color=green_light,
                                                                 hover_color=green, command=self.start_facial_login)
         self.LoginWindow.incio_facial.place(relx=0.5, rely=0.53, anchor=customtkinter.CENTER)
@@ -248,11 +248,11 @@ class Menu_principal(customtkinter.CTk):
 
         self.PlayWindow.Player2Pic = customtkinter.CTkLabel(self.PlayWindow, image=self.default_imageop, corner_radius=60,text="")
         self.PlayWindow.Player2Pic.place(relx=0.9, rely=0.2, anchor=customtkinter.CENTER)
-        self.BtnFame = customtkinter.CTkButton(self.PlayWindow, text="hall of fame",
+        self.BtnFame = customtkinter.CTkButton(self.PlayWindow, text=Lg.dic["Hall Fame"][Lg.language],
                                                   fg_color=green_light, hover_color=green, command= lambda:  [self.update_hall_of_fame(),self.update_hall_of_fame_scores() ,self.HallOfFame_select()])
         self.BtnFame.place(relx=0.1, rely=0.95, anchor=customtkinter.CENTER)
 
-        self.PlayWindow.Instruction = customtkinter.CTkButton(self.PlayWindow, text="Instructions",fg_color=green_light, hover_color=green, command=self.ejecutar_instrucciones)
+        self.PlayWindow.Instruction = customtkinter.CTkButton(self.PlayWindow, text=Lg.dic["Instruction"][Lg.language],fg_color=green_light, hover_color=green, command=self.ejecutar_instrucciones)
         self.PlayWindow.Instruction.place(relx=0.999, rely=0.011, anchor=customtkinter.NE)
         #-------------------------------------------------------------------------------------------------------------
         self.selected_photo_path = "../assets/flags/Avatar-Profile.png"
@@ -273,7 +273,7 @@ class Menu_principal(customtkinter.CTk):
                                                        command=self.ejecutar_play, width=30, height=30)
         self.HallOfFame.back.place(relx=0.001, rely=0.001, anchor=customtkinter.NW)
 
-        self.HallOfFame.logo_label = customtkinter.CTkLabel(self.HallOfFame, text="Hall of Fame", font=customtkinter.CTkFont(size=20, weight="bold"))
+        self.HallOfFame.logo_label = customtkinter.CTkLabel(self.HallOfFame, text=Lg.dic[ "Hall Fame"][dic.language], font=customtkinter.CTkFont(size=20, weight="bold"))
 
 
 
@@ -288,15 +288,15 @@ class Menu_principal(customtkinter.CTk):
         self.backgroundTopTile = customtkinter.CTkLabel(self.HallOfFame, text="", fg_color="#181824",bg_color="#303044" , width = 450, height= 40, corner_radius= 60)
         self.backgroundTopTile.place(relx=0.75, rely=0.14, anchor=customtkinter.CENTER)
 
-        self.rank = customtkinter.CTkLabel(self.HallOfFame, text="Rank",  width = 55, height= 35, corner_radius= 60, font=customtkinter.CTkFont(size=16, weight="bold"), bg_color="#181824", fg_color="#303044")
+        self.rank = customtkinter.CTkLabel(self.HallOfFame, text=Lg.dic["Ranking"][Lg.language],  width = 55, height= 35, corner_radius= 60, font=customtkinter.CTkFont(size=16, weight="bold"), bg_color="#181824", fg_color="#303044")
         self.rank.place(relx=0.65, rely=0.14, anchor=customtkinter.CENTER)
 
-        self.username = customtkinter.CTkLabel(self.HallOfFame, text="Username", width=55, height=35, corner_radius=60,
+        self.username = customtkinter.CTkLabel(self.HallOfFame, text=Lg.dic["Player"][Lg.language], width=55, height=35, corner_radius=60,
                                            font=customtkinter.CTkFont(size=16, weight="bold"), bg_color="#181824",
                                            fg_color="#303044")
         self.username.place(relx=0.775, rely=0.14, anchor=customtkinter.CENTER)
 
-        self.score = customtkinter.CTkLabel(self.HallOfFame, text="Score", width=55, height=35, corner_radius=60,
+        self.score = customtkinter.CTkLabel(self.HallOfFame, text=Lg.dic["Score"][Lg.language], width=55, height=35, corner_radius=60,
                                                font=customtkinter.CTkFont(size=16, weight="bold"), bg_color="#181824",
                                                fg_color="#303044")
         self.score.place(relx=0.9, rely=0.14, anchor=customtkinter.CENTER)
@@ -545,9 +545,9 @@ class Menu_principal(customtkinter.CTk):
         self.age = 0
         self.RegisterWindow.calendario = Calendar(self.RegisterWindow, mindate=date(1930, 1, 1), maxdate=date.today())
         self.RegisterWindow.calendario.place_forget()
-        self.RegisterWindow.edad_button = customtkinter.CTkButton(self.RegisterWindow, text="Confirmar fecha",fg_color=green_light, hover_color=green,command=lambda: [self.data_select(), self.toggle_calendar()])
+        self.RegisterWindow.edad_button = customtkinter.CTkButton(self.RegisterWindow, text=Lg.dic[ "Confirm Age"][Lg.language],fg_color=green_light, hover_color=green,command=lambda: [self.data_select(), self.toggle_calendar()])
 
-        self.RegisterWindow.calendario_button = customtkinter.CTkButton(self.RegisterWindow, text="Whats your birthday?", fg_color=green_light, hover_color=green, command=self.toggle_calendar)
+        self.RegisterWindow.calendario_button = customtkinter.CTkButton(self.RegisterWindow, text=Lg.dic["What your birthday?"][Lg.language], fg_color=green_light, hover_color=green, command=self.toggle_calendar)
         self.RegisterWindow.calendario_button.place(relx=0.5, rely=0.4, anchor=customtkinter.CENTER)
         self.RegisterWindow.entry_Username = customtkinter.CTkEntry(self.RegisterWindow,placeholder_text=dic.Username[dic.language])
         self.RegisterWindow.entry_Username.place(relx=0.5, rely=0.45, anchor=customtkinter.CENTER)
@@ -580,7 +580,7 @@ class Menu_principal(customtkinter.CTk):
         )
         self.camera_button.place(relx=0.52, rely=0.8, anchor=customtkinter.CENTER)
 
-        self.RegisterWindow.Continue = customtkinter.CTkButton(self.RegisterWindow, text="Continuar",fg_color=green_light, hover_color=green, command=self.ejecutar_perzonalizar)
+        self.RegisterWindow.Continue = customtkinter.CTkButton(self.RegisterWindow, text=Lg.dic["Continue"][Lg.language],fg_color=green_light, hover_color=green, command=self.ejecutar_perzonalizar)
         self.RegisterWindow.Continue.place(relx=0.5, rely=0.9, anchor=customtkinter.CENTER)
         #-------------------------------------------------------------------------------------------------------------
         self.Member = False
@@ -590,7 +590,7 @@ class Menu_principal(customtkinter.CTk):
         self.PersonalizeWindow.logo_label = customtkinter.CTkLabel(self.PersonalizeWindow,  text=Lg.dic["Costumes in Game"][Lg.language], font=customtkinter.CTkFont(size=20, weight="bold"))
         self.PersonalizeWindow.logo_label.place(relx=0.5, rely=0.1, anchor=customtkinter.CENTER)
 
-        self.PersonalizeWindow.skip = customtkinter.CTkButton(self.PersonalizeWindow, text="Skip",fg_color=green_light, hover_color=green, command=self.ConcludeRegisterSkip)
+        self.PersonalizeWindow.skip = customtkinter.CTkButton(self.PersonalizeWindow, text=Lg.dic["Skip"][Lg.language],fg_color=green_light, hover_color=green, command=self.ConcludeRegisterSkip)
         self.PersonalizeWindow.skip.place(relx=0.1, rely=0.9, anchor=customtkinter.CENTER)
 
         self.PersonalizeWindow.next = customtkinter.CTkButton(self.PersonalizeWindow ,  text="→",fg_color=green_light, hover_color=green, command=self.ejecutar_perzonalizar2)
@@ -694,7 +694,7 @@ class Menu_principal(customtkinter.CTk):
 
         self.MusicWindow.back = customtkinter.CTkButton(self.MusicWindow, text="←", fg_color=green_light, hover_color=green,command=self.ejecutar_perzonalizar2, width=30, height=30)
         self.MusicWindow.back.place(relx=0.001, rely=0.001, anchor=customtkinter.NW)
-        self.MusicWindow.logo_label = customtkinter.CTkLabel(self.MusicWindow, text="Music", font=customtkinter.CTkFont(size=20, weight="bold"))
+        self.MusicWindow.logo_label = customtkinter.CTkLabel(self.MusicWindow, text=Lg.dic["Select your music"][Lg.language], font=customtkinter.CTkFont(size=20, weight="bold"))
         self.MusicWindow.logo_label.place(relx=0.5, rely=0.1, anchor=customtkinter.CENTER)
 
         self.MusicWindow.Advice = customtkinter.CTkLabel(self.MusicWindow, text=Lg.dic["Music Spotify Advise"][Lg.language], font=customtkinter.CTkFont(size=10, weight="bold"))
@@ -967,13 +967,13 @@ class Menu_principal(customtkinter.CTk):
         card_date = self.MembersWindow.CardDate.get()
         card_code = self.MembersWindow.CardCode.get()
         if card_number == "" or card_name == "" or card_date == "" or card_code == "":
-            tkinter.messagebox.showerror("Error", "Faltan datos")
+            tkinter.messagebox.showerror("Error", Lg.Er["ERfaltandatos"][Lg.language])
             return 0
         if not dt.validar_tarjeta(card_number, card_date, card_code, card_name)[0]:
             tkinter.messagebox.showerror("Error", dt.validar_tarjeta(card_number, card_date, card_code, card_name)[1])
             return 0
         else:
-            tkinter.messagebox.showinfo("Info", "Pago realizado con éxito")
+            tkinter.messagebox.showinfo("Info", Lg.Er["Inpagoconexito"][Lg.language])
             self.Member = True
             self.ConcludeRegister()
 
@@ -995,7 +995,7 @@ class Menu_principal(customtkinter.CTk):
                 self.ejecutar_Member()
                 return 0
         else:
-            tkinter.messagebox.showerror("Error", "Faltan canciones")
+            tkinter.messagebox.showerror("Error", Lg.Er["ERfaltancanciones"][Lg.language])
             return 0
 
     def ejecutar_Member(self):
@@ -1009,12 +1009,12 @@ class Menu_principal(customtkinter.CTk):
         Songs = [song1, song2, song3]
         for song in Songs:
             if song == "":
-                tkinter.messagebox.showerror("Error", "Falta alguna canción")
+                tkinter.messagebox.showerror("Error", Lg.Er["ERfaltacancion"][Lg.language])
                 return 0
             elif not spot.SearchSong(song):
-                tkinter.messagebox.showerror("Error", "Alguna canción no existe")
+                tkinter.messagebox.showerror("Error", Lg.Er["ERcancionnoencontrada"][Lg.language])
                 return 0
-        tkinter.messagebox.showinfo("Info", "Canciones confirmadas")
+        tkinter.messagebox.showinfo("Info", Lg.Er["IFcancionesconfirmadas"][Lg.language])
 
 
     def selecPalett(self, color):
@@ -1094,7 +1094,7 @@ class Menu_principal(customtkinter.CTk):
 
 
     def ConcludeRegisterSkip(self):
-        question = tkinter.messagebox.askyesno("Info", "Si salta la personalizacion perdera la seleccion pero se registrara como usuario normal, Continuar?")
+        question = tkinter.messagebox.askyesno("Info", Lg.Er["IFskip"][Lg.language])
         if question:
             self.Member = False
             self.ConcludeRegister()
@@ -1121,17 +1121,17 @@ class Menu_principal(customtkinter.CTk):
             DataBase.insert_user(username, password,name, last_name,  mail, self.age, self.selected_photo_path,"No","NONE","Reggaeton Champagne","Instant Crush","Instant Crush","NONE","NONE","NONE","Block1","Green")
             self.Save_imapic(username)
             self.clean_AllRegister()
-            tkinter.messagebox.showinfo("Info", "Usuario registrado con éxito")
+            tkinter.messagebox.showinfo("Info", Lg.Er["IFUsuario registrado con éxito"][Lg.language])
             self.back_menu()
 
         elif self.Member == True:
             DataBase.insert_user(username, password,name, last_name, mail, self.age, self.selected_photo_path,"Yes",self.UserSpot,self.Song1,self.Song2,self.Song3,"NONE","NONE","NONE",self.Texture,self.Paleta)
             self.Save_imapic(username)
             self.clean_AllRegister()
-            tkinter.messagebox.showinfo("Info", "Usuario Gold registrado con éxito")
+            tkinter.messagebox.showinfo("Info", Lg.Er["IFUsuario Gold registrado con éxito"][Lg.language])
             self.back_menu()
         else:
-            tkinter.messagebox.showerror("Error", "No se pudo registrar el usuario")
+            tkinter.messagebox.showerror("Error", Lg.Er["ERNo se pudo registrar el usuario"][Lg.language])
             return 0
 
     def VerifyRegister(self):

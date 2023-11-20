@@ -53,7 +53,21 @@ dic = {
     "Identify":Translation(en="Is identify by the led:", es="Se identifica por el led:", fr="Il est identifié par la lumière:"),
     "InstructionsControl":Translation(en="Instructions to control", es="Instrucciones para el mando", fr="Instructions de contrôle"),
     "No register":Translation(en="No register", es="No registrado", fr="Non enregistré"),
-
+    "Apply Changes":Translation(en="Apply Changes", es="Aplicar cambios", fr="Appliquer les modifications"),
+    "Continue":Translation(en="Continue", es="Continuar", fr="Continuer"),
+    "Skip":Translation(en="Skip", es="Saltar", fr="Sauter"),
+    "What your birthday?":Translation(en="Whats your birthday?", es="Cual es tu cumpleaños?", fr="Quel est ton anniversaire?"),
+    "Confirm Age":Translation(en="Confirm Age", es="Confirmar edad", fr="Confirmer l'âge"),
+    "Start with Face Authentication":Translation(en="Start with Face Authentication", es="Iniciar con autenticacion facial", fr="Commencez par l'authentification faciale"),
+    "Start Face":Translation(en="Start Face", es="Iniciar Facial", fr="Commencer Face"),
+    "Hall Fame":Translation(en="Hall Fame", es="Salon de la fama", fr="Hall de la renommée"),
+    "Ranking":Translation(en="Ranking", es="Ranking", fr="Classement"),
+    "Player":Translation(en="Player", es="Jugador", fr="Joueur"),
+    "Score":Translation(en="Score", es="Puntuacion", fr="Score"),
+    "Instruction":Translation(en="Instructions", es="Instrucciones", fr="Instructions"),
+    "Objective":Translation(en="Objective", es="Objetivo", fr="Objectif"),
+    "Controls":Translation(en="Controls", es="Controles", fr="Contrôles"),
+    "How to play":Translation(en="How to play", es="Como jugar", fr="Comment jouer"),
 }
 
 Ins = {
@@ -89,6 +103,22 @@ Ins = {
     "PointsAttack":Translation(en="The attacker that destroy the enemy's eagle gains 10 points, \n also gains 1 point for each block that destroy",es="El atacante que destruya el aguila enemiga gana 10 puntos, \n tambien gana 1 punto por cada bloque que destruya",fr="L'attaquant qui détruit l'aigle ennemi gagne 10 points, \n gagne également 1 point pour chaque bloc qu'il détruit"),
     "PointsDefender":Translation(en="The defender whose eagle is not destroyed gains 10 points,\n also gains 1 point for each block that is not destroyed.",es="El defensor cuyo aguila no sea destruida gana 10 puntos, \n tambien gana 1 punto por cada bloque que no sea destruido",fr="Le défenseur dont l'aigle n'est pas détruit gagne 10 points, \n gagne également 1 point pour chaque bloc qui n'est pas détruit"),
 
+}
+Er = {
+    "Error":Translation(en="Error",es="Error",fr="Erreur"),
+    "ERfaltandatos":Translation(en="Missing data",es="Faltan datos",fr="Données manquantes"),
+    "Inpagoconexito":Translation(en="Payment successful",es="Pago con exito",fr="Paiement réussi"),
+
+
+    "ERfaltancanciones":Translation(en="Missing songs",es="Faltan canciones",fr="Chansons manquantes"),
+    "ERfaltacancion":Translation(en="Missing song",es="Falta alguna cancion",fr="Chanson manquante"),
+    "ERcancionnoencontrada":Translation(en="Song not found",es="Cancion no encontrada",fr="Chanson non trouvée"),
+    "IFcancionesconfirmadas":Translation(en="Confirmed songs",es="Canciones confirmadas",fr="Chansons confirmées"),
+    "IFskip":Translation(en="If you skip the customization you will lose the selection but it will be registered as a normal user, Continue",es="Si salta la personalizacion perdera la seleccion pero se registrara como usuario normal, Continuar",fr="Si vous sautez la personnalisation, vous perdrez la sélection mais vous serez enregistré en tant qu'utilisateur normal, Continuer"),
+
+    "IFUsuario registrado con éxito":Translation(en="User registered successfully",es="Usuario registrado con exito",fr="Utilisateur enregistré avec succès"),
+    "IFUsuario Gold registrado con éxito":Translation(en="Gold user registered successfully",es="Usuario Gold registrado con exito",fr="Utilisateur Gold enregistré avec succès"),
+    "ERNo se pudo registrar el usuario":Translation(en="The user could not be registered",es="No se pudo registrar el usuario",fr="L'utilisateur n'a pas pu être enregistré"),
 }
 
 #EXAMPLE Lg.dic["Login"][Lg.language]
