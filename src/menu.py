@@ -165,7 +165,7 @@ class Menu_principal(customtkinter.CTk):
         self.sidebar_button_3.place(relx=0.5, rely=0.8, anchor=customtkinter.CENTER)
 
         self.QUIT = customtkinter.CTkButton(self, text="X",fg_color=green_light,hover_color=green, command=self.quit, width=30, height=30)
-        self.QUIT.place(relx=0.001, rely=0.001, anchor=customtkinter.NW)
+        self.QUIT.place(relx=0.999, rely=0.001, anchor=customtkinter.NE)
         # self.foto_label = customtkinter.CTkLabel(self, corner_radius=60)
         # self.foto_label.place(relx=1, rely=0.009, anchor=customtkinter.NE)
         # self.foto_label.configure(image=self.imagen_thumbnail_tk)
@@ -228,9 +228,15 @@ class Menu_principal(customtkinter.CTk):
 
         self.PlayWindow.Oneplayer = customtkinter.CTkButton( self.PlayWindow, text=dic.OnePlayer[dic.language],image=phOne,fg_color=green_light,hover_color=green,command=self.ejecutar_Game_OnePlayer)
         self.PlayWindow.Oneplayer.place(relx=0.25, rely=0.5, anchor=customtkinter.CENTER)
+
+        self.PlayWindow.OneUsername = customtkinter.CTkLabel(self.PlayWindow, text=Lg.dic["No register"][Lg.language], anchor="w")
+        self.PlayWindow.OneUsername.place(relx=0.1, rely=0.3, anchor=customtkinter.CENTER)
         
         self.PlayWindow.Twoplayer = customtkinter.CTkButton( self.PlayWindow, text=dic.MultiplayerLocal[dic.language],image=phTwo,fg_color=green_light,hover_color=green,command=self.ejecutar_Game_Multiplayer)
         self.PlayWindow.Twoplayer.place(relx=0.75, rely=0.5, anchor=customtkinter.CENTER)
+
+        self.PlayWindow.TwoUsername = customtkinter.CTkLabel(self.PlayWindow, text=Lg.dic["No register"][Lg.language], anchor="w")
+        self.PlayWindow.TwoUsername.place(relx=0.9, rely=0.3, anchor=customtkinter.CENTER)
 
         self.selected_photo_path = "../assets/flags/Avatar-Profile.png"
         default_image = Image.open(self.selected_photo_path)
@@ -700,7 +706,7 @@ class Menu_principal(customtkinter.CTk):
         # self.MusicWindow.PayContinueWt = customtkinter.CTkButton(self.MusicWindow, text=Lg.dic["Press here"][Lg.language],fg_color=green_light, hover_color=green, command=lambda: self.continue_Pay(False))
         # self.MusicWindow.PayContinueWt.place(relx=0.5, rely=0.35, anchor=customtkinter.CENTER)
 
-        self.MusicWindow.PayContinue = customtkinter.CTkButton(self.MusicWindow, text="→",fg_color=green_light, hover_color=green, command=lambda: self.continue_Pay(True))
+        self.MusicWindow.PayContinue = customtkinter.CTkButton(self.MusicWindow, text="→",fg_color=green_light, hover_color=green, command=lambda: self.continue_Pay(""))
         self.MusicWindow.PayContinue.place(relx=0.9, rely=0.5, anchor=customtkinter.CENTER)
 
         # self.MusicWindow.UserSpot = customtkinter.CTkEntry(self.MusicWindow, placeholder_text=Lg.dic["Spotify User"][Lg.language])
@@ -1258,12 +1264,36 @@ class Menu_principal(customtkinter.CTk):
             return 0
 
     def start_facial_login(self):
-        username = self.LoginWindow.entry_Username.get()
+
+        global username
+        username = self.LoginWindow.entry_Username.get()  # Obtiene el nombre de usuario del widget de entrada
+        if username == "":
+            tkinter.messagebox.showerror("Error", "Falta el nombre de usuario")
+            return 0
         login_instance = Login()  # crea una instancia de la clase Login
         success = login_instance.login_f(username)
         if success:
-            # Aquí puedes agregar el código que quieres ejecutar si el inicio facial es exitoso.
-            # Por ejemplo, puedes mostrar la ventana principal o mostrar un mensaje de éxito.
+            USERname = DataBase.get_user_by_username(username)[1]
+            Pic = DataBase.get_user_by_username(username)[7]
+            Merbership = DataBase.get_user_by_username(username)[8]
+            Song1 = DataBase.get_user_by_username(username)[9]
+            Song2 = DataBase.get_user_by_username(username)[10]
+            Song3 = DataBase.get_user_by_username(username)[11]
+            Texture = DataBase.get_user_by_username(username)[15]
+            Palette = DataBase.get_user_by_username(username)[16]
+            """self.set_picperfil(1,Pic,USERname)
+            users.player1.update_All(USERname,Pic,Merbership,Song1,Song2,Song3,Texture,Palette)"""
+            if not users.player1.verify_log(users.player1.texture, users.player1.palette_color):
+                self.set_picperfil(1,Pic,USERname)
+                users.player1.update_All(USERname,Pic,Merbership,Song1,Song2,Song3,Texture,Palette)
+                print("Doit",Pic)
+            elif not users.player1.Username == USERname:
+                self.set_picperfil(2,Pic,USERname)
+                users.player2.update_All(USERname,Pic,Merbership,Song1,Song2,Song3,Texture,Palette)
+                print("Doit2")
+            else:
+                tkinter.messagebox.showerror("Error", "No se puede logear con el mismo usuario")
+                return 0
             self.PlayWindow.deiconify()
             self.LoginWindow.withdraw()
             tkinter.messagebox.showinfo(title='Inicio facial exitoso', message='Inicio facial exitoso')
@@ -1279,7 +1309,7 @@ class Menu_principal(customtkinter.CTk):
 
         if DataBase.validate_user(username, password):
             # Si el inicio de sesión es exitoso
-            USERname = DataBase.get_user_by_username(username)[2]
+            USERname = DataBase.get_user_by_username(username)[1]
             Pic = DataBase.get_user_by_username(username)[7]
             Merbership = DataBase.get_user_by_username(username)[8]
             Song1 = DataBase.get_user_by_username(username)[9]
@@ -1288,27 +1318,12 @@ class Menu_principal(customtkinter.CTk):
             Texture = DataBase.get_user_by_username(username)[15]
             Palette = DataBase.get_user_by_username(username)[16]
             if not users.player1.verify_log(users.player1.texture, users.player1.palette_color):
-                self.set_picperfil(1,Pic)
-                users.player1.update_Username(USERname)
-                users.player1.update_pathimage(Pic)
-                users.player1.update_membership(Merbership)
-                users.player1.update_song1(Song1)
-                users.player1.update_song2(Song2)
-                users.player1.update_song3(Song3)
-                users.player1.update_texture(Texture)
-                users.player1.update_palette_color(Palette)
+                self.set_picperfil(1,Pic,USERname)
+                users.player1.update_All(USERname,Pic,Merbership,Song1,Song2,Song3,Texture,Palette)
                 print("Doit",Pic)
             elif not users.player1.Username == USERname:
-                self.set_picperfil(2,Pic)
-                users.player2.update_Username(USERname)
-                users.player2.update_pathimage(Pic)
-                users.player2.update_membership(Merbership)
-                users.player2.update_song1(Song1)
-                users.player2.update_song2(Song2)
-                users.player2.update_song3(Song3)
-                users.player2.update_texture(Texture)
-                users.player2.update_palette_color(Palette)
-                users.player2.display_customization()
+                self.set_picperfil(2,Pic,USERname)
+                users.player2.update_All(USERname,Pic,Merbership,Song1,Song2,Song3,Texture,Palette)
                 print("Doit2")
             else:
                 tkinter.messagebox.showerror("Error", "No se puede logear con el mismo usuario")
@@ -1408,55 +1423,22 @@ class Menu_principal(customtkinter.CTk):
         self.LoginWindow.withdraw()
         self.HallOfFame.withdraw()
         self.PlayWindow.deiconify()
-        #else:
-            #self.PlayWindow.withdraw()
-            #self.LoginWindow.deiconify()
-
 
     def ejecutar_Game_Multiplayer(self):
-
-
         if users.player1.verify_log(users.player1.texture, users.player1.palette_color) and users.player2.verify_log(users.player2.texture, users.player2.palette_color):
             juegoinit.iniciar(users.player1, users.player2)
         else:
             tkinter.messagebox.showerror("Error", "No hay suficientes jugadores logeados")
             self.PlayWindow.withdraw()
             self.LoginWindow.deiconify()
-        
-        
-    def ejecutar_Game_OnePlayer(self):
 
+    def ejecutar_Game_OnePlayer(self):
 
         if users.player1.verify_log(users.player1.texture, users.player1.palette_color):
             juegoAI.iniciar()
         else:
             self.PlayWindow.withdraw()
             self.LoginWindow.deiconify()
-        """
-        Example
-        if Logged1(Player):
-            self.destroy()
-            pygame.init()
-        else:
-            self.PlayWindow.withdraw()
-            self.LoginWindow.deiconify()
-            
-       """
-
-
-    # def abrir_archivo(self,archivo):
-    #     #archivo = filedialog.askopenfilename(filetypes=[(dic.Photo[dic.language], "*.png *.jpg *.jpeg *.gif *.bmp")])
-    #     if archivo:
-    #         #self.selected_photo_path = archivo
-    #             # Cargar la imagen
-    #         imagen = Image.open(archivo)
-    #         imagen = imagen.resize((100, 100), Image.LANCZOS)
-    #         circular = self.make_circle_image(imagen)
-    #         #Imagentk = ImageTk.PhotoImage(circular)
-    #         return ImageTk.PhotoImage(circular)
-    #     else:
-    #         tkinter.messagebox.showerror("Error", "No se selecciono una imagen")
-    #         return 0
 
     def abrir_archivo(self, relative_path):
         try:
@@ -1487,13 +1469,15 @@ class Menu_principal(customtkinter.CTk):
             Imagetk = self.abrir_archivo(archivo)
             self.RegisterWindow.avatar_label.configure(image=Imagetk)
             self.RegisterWindow.avatar_label.image = Imagetk
-    def set_picperfil(self,player,archivo):
+    def set_picperfil(self,player,archivo,username):
         Imagetk = self.abrir_archivo(archivo)
         if player == 1:
+            self.PlayWindow.OneUsername.configure(text=username)
             self.PlayWindow.Player1Pic.configure(image=Imagetk)
             self.PlayWindow.Player1Pic.image = Imagetk
 
         elif player == 2:
+            self.PlayWindow.TwoUsername.configure(text=username)
             self.PlayWindow.Player2Pic.configure(image=Imagetk)
             self.PlayWindow.Player2Pic.image = Imagetk
         else:
@@ -1635,6 +1619,10 @@ class Menu_principal(customtkinter.CTk):
             if cv2.waitKey(1) == 27:  # Cuando oprimamos "Escape" rompe el video
                 break
         usuario_img = self.RegisterWindow.entry_Username.get()
+        if usuario_img == "":
+            tkinter.messagebox.showerror("Error", "Falta el nombre de usuario")
+            return 0
+
         cv2.imwrite("../BiometricPic/"+usuario_img + ".jpg",
                     frame)  # Guardamos la ultima caputra del video como imagen y asignamos el nombre del usuario
         cap.release()  # Cerramos

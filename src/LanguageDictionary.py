@@ -52,7 +52,7 @@ dic = {
     "Defense": Translation(en="Defense", es="Defender", fr="Défense"),
     "Identify":Translation(en="Is identify by the led:", es="Se identifica por el led:", fr="Il est identifié par la lumière:"),
     "InstructionsControl":Translation(en="Instructions to control", es="Instrucciones para el mando", fr="Instructions de contrôle"),
-
+    "No register":Translation(en="No register", es="No registrado", fr="Non enregistré"),
 
 }
 
