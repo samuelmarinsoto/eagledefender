@@ -12,7 +12,6 @@ import DataBaseLocal as DataBase
 import users as users
 import juegoinit
 import juegoAI
-import HallFame
 import datauser as dt
 from tkcalendar import Calendar
 from datetime import date
@@ -59,6 +58,7 @@ class Menu_principal(customtkinter.CTk):
         super().__init__()
         screen_width = self.winfo_screenwidth()-300
         screen_height = self.winfo_screenheight()-300
+        self.configure(fg_color="black")
 
         ScreenRes = f"{screen_width}x{screen_height}"
         # Here create the other windows
@@ -107,9 +107,18 @@ class Menu_principal(customtkinter.CTk):
         self.InstructionWindow.tabview.add("Controles")
         self.InstructionWindow.tabview.add("Como ganar")
 
-        self.InstructionWindow.tabview.tab("Objetivo").configure(bg_color="transparent",fg_color="transparent")
-        self.InstructionWindow.tabview.tab("Como ganar").configure(bg_color="transparent",fg_color="transparent")
-        self.InstructionWindow.tabview.tab("Controles").configure(bg_color="transparent",fg_color="transparent")
+        self.InstructionWindow.tabview.tab("Objetivo").configure(bg_color="black",fg_color="black")
+        self.InstructionWindow.tabview.tab("Como ganar").configure(bg_color="black",fg_color="black")
+        self.InstructionWindow.tabview.tab("Controles").configure(bg_color="black",fg_color="black")
+
+        self.LoginWindow.configure(fg_color="black")
+        self.PlayWindow.configure(fg_color="black")
+        self.HallOfFame.configure(fg_color="black")
+        self.RegisterWindow.configure(fg_color="black")
+        self.PersonalizeWindow.configure(fg_color="black")
+        self.PersonalizeWindow2.configure(fg_color="black")
+        self.MusicWindow.configure(fg_color="black")
+        self.InstructionWindow.configure(fg_color="black")
 
         """__________________________________________________________________________________________________________"""
         # # configure window
