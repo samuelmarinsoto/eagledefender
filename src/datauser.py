@@ -102,7 +102,7 @@ def FirstNameCheck(first_name):
 def MailCheck(Mail):
 
     if isinstance(Mail, str):
-        #if DBL.is_email_registered(Mail):
+        if not DBL.emailregistered(Mail):
             if re.search(r'@', Mail):
                 MailSplit = Mail.split("@")
                 if MailSplit[1] == "gmail.com" or MailSplit[1] == "hotmail.com" or MailSplit[1]=="outlook.com" or MailSplit[1]=="yahoo.com" or MailSplit[1]=="icloud.com" or MailSplit[1]=="live.com" or MailSplit[1]=="estudiantec.cr" or MailSplit[1]=="hotmail.es":
@@ -112,10 +112,11 @@ def MailCheck(Mail):
                     return 0, Lg.Dt["Dominio no valido"][Lg.language]
             else:
                 return 0, Lg.Dt["Falta @ en el correo"][Lg.language]
-        #else:
-           # return 0, "Correo ya registrado"
+        else:
+            return 0, Lg.Dt["Correo ya registrado"][Lg.language]
     else:
         return 0 , Lg.Dt["Correo no valido"][Lg.language]
+
 
 """def PasswordCheck(Password):
     global password

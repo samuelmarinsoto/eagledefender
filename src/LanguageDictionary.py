@@ -156,6 +156,7 @@ Dt = {
     "Dominio no valido":Translation(en="Invalid domain",es="Dominio no valido",fr="Domaine invalide"),
     "Falta @ en el correo":Translation(en="Missing @ in email",es="Falta @ en el correo",fr="Manquant @ dans l'e-mail"),
     "Correo no valido":Translation(en="Invalid email",es="Correo no valido",fr="Email invalide"),
+    "Correo ya registrado":Translation(en="Email already registered",es="Correo ya registrado",fr="Email déjà enregistré"),
 
     "Usuario en uso":Translation(en="User in use",es="Usuario en uso",fr="Utilisateur en cours d'utilisation"),
     "El usuario debe ser mayor 8 caracteres y menor que 16":Translation(en="The user must be greater than 8 characters and less than 16",es="El usuario debe ser mayor 8 caracteres y menor que 16",fr="L'utilisateur doit être supérieur à 8 caractères et inférieur à 16"),
