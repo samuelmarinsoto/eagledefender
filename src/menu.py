@@ -584,7 +584,7 @@ class Menu_principal(customtkinter.CTk):
         self.RegisterWindow.Continue.place(relx=0.5, rely=0.9, anchor=customtkinter.CENTER)
         #-------------------------------------------------------------------------------------------------------------
         self.Member = False
-        self.PersonalizeWindow.back = customtkinter.CTkButton(self.PersonalizeWindow, text="←", fg_color=green_light, hover_color=green,command=self.ejecutar_backperzonalizar, width=30, height=30)
+        self.PersonalizeWindow.back = customtkinter.CTkButton(self.PersonalizeWindow, text="←", fg_color=green_light, hover_color=green,command=self.ejecutar_register, width=30, height=30)
         self.PersonalizeWindow.back.place(relx=0.001, rely=0.001, anchor=customtkinter.NW)
 
         self.PersonalizeWindow.logo_label = customtkinter.CTkLabel(self.PersonalizeWindow,  text=Lg.dic["Costumes in Game"][Lg.language], font=customtkinter.CTkFont(size=20, weight="bold"))
@@ -640,7 +640,7 @@ class Menu_principal(customtkinter.CTk):
         self.PersonalizeWindow.Scenario.place(relx=0.5, rely=0.8, anchor=customtkinter.CENTER)
         #----------------------------------------------------------------------------
         self.Texture = "Block1"
-        self.PersonalizeWindow2.back = customtkinter.CTkButton(self.PersonalizeWindow2, text="←", fg_color=green_light, hover_color=green, command=self.ejecutar_register,width=30, height=30)
+        self.PersonalizeWindow2.back = customtkinter.CTkButton(self.PersonalizeWindow2, text="←", fg_color=green_light, hover_color=green, command=self.ejecutar_backperzonalizar,width=30, height=30)
         self.PersonalizeWindow2.back.place(relx=0.001, rely=0.001, anchor=customtkinter.NW)
         self.PersonalizeWindow2.logo_label = customtkinter.CTkLabel(self.PersonalizeWindow2,text=Lg.dic["Costumes in Game"][Lg.language],font=customtkinter.CTkFont(size=20, weight="bold"))
         self.PersonalizeWindow2.logo_label.place(relx=0.5, rely=0.1, anchor=customtkinter.CENTER)
@@ -1077,7 +1077,7 @@ class Menu_principal(customtkinter.CTk):
         self.RegisterWindow.avatar_label.configure(image=self.default_imageop)
         self.age = 0
         self.selected_photo_path = "../assets/flags/Avatar-Profile.png"
-        self.RegisterWindow.calendario_button.configure(text="Fecha de nacimiento")
+        self.RegisterWindow.calendario_button.configure(text=Lg.Er["Born date"][Lg.language])
         self.Paleta = "Green"
         self.Texture = "Block1"
         
@@ -1149,28 +1149,28 @@ class Menu_principal(customtkinter.CTk):
         mail = self.RegisterWindow.entry_Correo.get()
 
         if not self.check_missing_data()==[]:
-                tkinter.messagebox.showerror("Error", "Rellenar"+str(self.check_missing_data()))
+                tkinter.messagebox.showerror("Error", Lg.Er["ERFill"][Lg.language]+str(self.check_missing_data()))
                 return 0
         if not dt.FirstNameCheck(name):
-                tkinter.messagebox.showerror("Error", "Nombre no válido")
+                tkinter.messagebox.showerror("Error", Lg.Er["ERInvalid name"][Lg.language])
                 return 0
         if not dt.LastNameCheck(last_name):
-                tkinter.messagebox.showerror("Error", "Apellido no válido")
+                tkinter.messagebox.showerror("Error", Lg.Er["ERInvalid surname"][Lg.language])
                 return 0
         if not dt.validar_usuario(username)[0]:
-                tkinter.messagebox.showerror("Error", "Nombre de usuario no válido"+dt.validar_usuario(username)[1])
+                tkinter.messagebox.showerror("Error", Lg.Er["ERInvalid username"][Lg.language]+dt.validar_usuario(username)[1])
                 return 0
         if not dt.verificar_contrasenas(password, password_check):
-                tkinter.messagebox.showerror("Error", "Las contraseñas no coinciden")
+                tkinter.messagebox.showerror("Error", Lg.Er["ERPassword are not the same"][Lg.language])
                 return 0
         if not dt.validar_contrasena (password_check):
-                tkinter.messagebox.showerror("Error", "Contraseña no válida")
+                tkinter.messagebox.showerror("Error", Lg.Er["ERInvalid password"][Lg.language])
                 return 0
         if not dt.MailCheck(mail)== mail:
                 tkinter.messagebox.showerror("Error", str(dt.MailCheck(mail)[1]))
                 return 0
         if self.age < 14:
-                tkinter.messagebox.showerror("Error", "No se puede registrar un usuario menor de 14 años")
+                tkinter.messagebox.showerror("Error", Lg.Er["ERCannot register users under 14 years of age"][Lg.language])
                 return 0
         if self.selected_photo_path == "../assets/flags/Avatar-Profile.png":
                 message = tkinter.messagebox.askyesno("?", Lg.dic[ "Do you want a profile picture?"][Lg.language])
@@ -1204,10 +1204,10 @@ class Menu_principal(customtkinter.CTk):
         auxage = self.RegisterWindow.calendario.get_date()
         age = dt.SelectDate(auxage)
         if age == 0:
-            tkinter.messagebox.showerror("Error", "No se selecciono una fecha")
+            tkinter.messagebox.showerror("Error", Lg.Er["ERNo select date"][Lg.language])
             return 0
         if age < 14:
-            tkinter.messagebox.showerror("Error", "No se puede registrar un usuario menor de 14 años")
+            tkinter.messagebox.showerror("Error", Lg.Er["ERCannot register users under 14 years of age"][Lg.language])
             return 0
         self.age = age
         self.RegisterWindow.edad_label.configure(text=dic.Age[dic.language] + ": " + str(self.age))
@@ -1275,7 +1275,7 @@ class Menu_principal(customtkinter.CTk):
         global username
         username = self.LoginWindow.entry_Username.get()  # Obtiene el nombre de usuario del widget de entrada
         if username == "":
-            tkinter.messagebox.showerror("Error", "Falta el nombre de usuario")
+            tkinter.messagebox.showerror("Error", Lg.Er["ERFalta nombre de usuario"][Lg.language])
             return 0
         login_instance = Login()  # crea una instancia de la clase Login
         success = login_instance.login_f(username)
@@ -1299,14 +1299,14 @@ class Menu_principal(customtkinter.CTk):
                 users.player2.update_All(USERname,Pic,Merbership,Song1,Song2,Song3,Texture,Palette)
                 print("Doit2")
             else:
-                tkinter.messagebox.showerror("Error", "No se puede logear con el mismo usuario")
+                tkinter.messagebox.showerror("Error", Lg.Er["ERNo se puede logear con el mismo usuario"][Lg.language])
                 return 0
             self.PlayWindow.deiconify()
             self.LoginWindow.withdraw()
-            tkinter.messagebox.showinfo(title='Inicio facial exitoso', message='Inicio facial exitoso')
+            tkinter.messagebox.showinfo(title='Facial', message=Lg.Er["IFInicio facial exitoso"][Lg.language])
         else:
             # Aquí puedes agregar el código que quieres ejecutar si el inicio facial falla.
-            tkinter.messagebox.showerror(title='Error', message='Inicio facial fallido. Por favor, inténtalo de nuevo.')
+            tkinter.messagebox.showerror(title='Error', message=Lg.Er["ERInicio facial fallido. Por favor, inténtalo de nuevo."][Lg.language])
 
 
     def login_with_username_and_password(self):
@@ -1333,14 +1333,14 @@ class Menu_principal(customtkinter.CTk):
                 users.player2.update_All(USERname,Pic,Merbership,Song1,Song2,Song3,Texture,Palette)
                 print("Doit2")
             else:
-                tkinter.messagebox.showerror("Error", "No se puede logear con el mismo usuario")
+                tkinter.messagebox.showerror("Error",  Lg.Er["ERNo se puede logear con el mismo usuario"][Lg.language])
                 return 0
                 
             self.PlayWindow.deiconify()
             self.LoginWindow.withdraw()
         else:
             # Si el inicio de sesión falla
-            tkinter.messagebox.showerror("Error", "Nombre de usuario o contraseña incorrectos")
+            tkinter.messagebox.showerror("Error", Lg.Er["ERUsername or password incorrect"][Lg.language])
 
     def ejecutar_principal(self):
         """Handle the 'Ejecutar Principal' button click event.
@@ -1436,7 +1436,7 @@ class Menu_principal(customtkinter.CTk):
         if users.player1.verify_log(users.player1.texture, users.player1.palette_color) and users.player2.verify_log(users.player2.texture, users.player2.palette_color):
             juegoinit.iniciar(users.player1, users.player2)
         else:
-            tkinter.messagebox.showerror("Error", "No hay suficientes jugadores logeados")
+            tkinter.messagebox.showerror("Error", Lg.Er["ERNo hay suficiente jugadores logeados"][Lg.language])
             self.PlayWindow.withdraw()
             self.LoginWindow.deiconify()
 
@@ -1455,7 +1455,7 @@ class Menu_principal(customtkinter.CTk):
 
             # Check if the file exists
             if not os.path.exists(normalized_path):
-                tkinter.messagebox.showerror("Error", f"Archivo no encontrado: {normalized_path}")
+                tkinter.messagebox.showerror("Error", Lg.Er["ERArchivo no encontrado"][Lg.language]+ f": {normalized_path}")
                 return None
 
             # Open and process the image
@@ -1465,7 +1465,7 @@ class Menu_principal(customtkinter.CTk):
                 circular = self.make_circle_image(img)
                 return ImageTk.PhotoImage(circular)
         except FileNotFoundError:
-            tkinter.messagebox.showerror("Error", f"Archivo no encontrado: {relative_path}")
+            tkinter.messagebox.showerror("Error", Lg.Er["ERArchivo no encontrado"][Lg.language]+ f": {normalized_path}")
             return None
         except Exception as e:  # Catch other possible errors
             tkinter.messagebox.showerror("Error", str(e))
@@ -1489,7 +1489,7 @@ class Menu_principal(customtkinter.CTk):
             self.PlayWindow.Player2Pic.configure(image=Imagetk)
             self.PlayWindow.Player2Pic.image = Imagetk
         else:
-            tkinter.messagebox.showerror("Error", "No se actualizo la imagen de perfil")
+            tkinter.messagebox.showerror("Error", Lg.Er["ERNo se actualizo la imagen de perfil"][Lg.language])
             return 0
     def set_picHallfame(self,player,archivo):
         Imagetk = self.abrir_archivo(archivo)
@@ -1544,7 +1544,7 @@ class Menu_principal(customtkinter.CTk):
 
         # Check if the top players' data is available
         if not top_ten_players:
-            tkinter.messagebox.showerror("Error", "No se pudo obtener los puntajes del Hall of Fame.")
+            tkinter.messagebox.showerror("Error", Lg.Er["ERNo se pudo obtener los puntajes del salon de la fama"][Lg.language])
             return
 
         # Update each player's display
@@ -1579,7 +1579,7 @@ class Menu_principal(customtkinter.CTk):
         # Assuming 'get_top_10_scores()' returns a list of tuples in the format (username, score, photo_blob)
         top_ten_players_scores = DataBase.get_top_10_scores()
         if not top_ten_players_scores:
-            tkinter.messagebox.showerror("Error", "No se pudo obtener los puntajes del Hall of Fame.")
+            tkinter.messagebox.showerror("Error", Lg.Er["ERNo se pudo obtener los puntajes del salon de la fama"][Lg.language])
             return
 
         # A dictionary to map the player rank to the corresponding label
@@ -1628,7 +1628,7 @@ class Menu_principal(customtkinter.CTk):
                 break
         usuario_img = self.RegisterWindow.entry_Username.get()
         if usuario_img == "":
-            tkinter.messagebox.showerror("Error", "Falta el nombre de usuario")
+            tkinter.messagebox.showerror("Error", Lg.Er["ERFalta nombre de usuario"][Lg.language])
             return 0
 
         cv2.imwrite("../BiometricPic/"+usuario_img + ".jpg",

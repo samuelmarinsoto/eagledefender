@@ -119,6 +119,48 @@ Er = {
     "IFUsuario registrado con éxito":Translation(en="User registered successfully",es="Usuario registrado con exito",fr="Utilisateur enregistré avec succès"),
     "IFUsuario Gold registrado con éxito":Translation(en="Gold user registered successfully",es="Usuario Gold registrado con exito",fr="Utilisateur Gold enregistré avec succès"),
     "ERNo se pudo registrar el usuario":Translation(en="The user could not be registered",es="No se pudo registrar el usuario",fr="L'utilisateur n'a pas pu être enregistré"),
+
+    "ERFill":Translation(en="Fill",es="Rellene",fr="Remplir"),
+    "ERInvalid name":Translation(en="Invalid name",es="Nombre invalido",fr="Nom invalide"),
+    "ERInvalid surname":Translation(en="Invalid surname",es="Apellido invalido",fr="Nom invalide"),
+    "ERInvalid username":Translation(en="Invalid username",es="Nombre de usuario invalido",fr="Nom d'utilisateur invalide"),
+    "ERPassword are not the same":Translation(en="Password are not the same",es="Las contraseñas no son iguales",fr="Les mots de passe ne sont pas les mêmes"),
+    "ERInvalid password":Translation(en="Invalid password",es="Contraseña invalida",fr="Mot de passe invalide"),
+    "ERCannot register users under 14 years of age":Translation(en="Cannot register users under 14 years of age",es="No se pueden registrar usuarios menores de 14 años",fr="Impossible d'enregistrer des utilisateurs de moins de 14 ans"),
+    "ERNo select date":Translation(en="No select date",es="No selecciono fecha",fr="Aucune date de sélection"),
+    "Born date":Translation(en="Born date",es="Fecha de nacimiento",fr="Date de naissance"),
+
+    "ERFalta nombre de usuario":Translation(en="Missing username",es="Falta nombre de usuario",fr="Nom d'utilisateur manquant"),
+    "ERNo se puede logear con el mismo usuario":Translation(en="You cannot log in with the same user",es="No se puede logear con el mismo usuario",fr="Vous ne pouvez pas vous connecter avec le même utilisateur"),
+    "IFInicio facial exitoso":Translation(en="Successful facial start",es="Inicio facial exitoso",fr="Démarrage facial réussi"),
+    "ERInicio facial fallido. Por favor, inténtalo de nuevo.":Translation(en="Facial start failed. Please try again.",es="Inicio facial fallido. Por favor, inténtalo de nuevo.",fr="Démarrage facial échoué. Veuillez réessayer."),
+    "ERUsername or password incorrect":Translation(en="Username or password incorrect",es="Usuario o contraseña incorrectos",fr="Nom d'utilisateur ou mot de passe incorrect"),
+    "ERNo hay suficiente jugadores logeados":Translation(en="There are not enough players logged in",es="No hay suficiente jugadores logeados",fr="Il n'y a pas assez de joueurs connectés"),
+    "ERArchivo no encontrado":Translation(en="File not found",es="Archivo no encontrado",fr="Fichier non trouvé"),
+    "ERNo se actualizo la imagen de perfil":Translation(en="Profile image was not updated",es="No se actualizo la imagen de perfil",fr="L'image de profil n'a pas été mise à jour"),
+
+    "ERNo se pudo obtener los puntajes del salon de la fama":Translation(en="Could not get the scores from the hall of fame",es="No se pudo obtener los puntajes del salon de la fama",fr="Impossible d'obtenir les scores du hall of la renommée"),
+
+}
+
+
+Dt = {
+
+    "Numero de tarjeta invalido":Translation(en="Invalid card number",es="Numero de tarjeta invalido",fr="Numéro de carte invalide"),
+    "Tarjeta vencida":Translation(en="Expired card",es="Tarjeta vencida",fr="Carte expirée"),
+    "Formato de fecha incorrecto":Translation(en="Incorrect date format",es="Formato de fecha incorrecto",fr="Format de date incorrect"),
+    "Codigo de seguridad invalido":Translation(en="Incorrect security code",es="Codigo de seguridad incorrecto",fr="Code de sécurité incorrect"),
+    "Nombre del titular invalido":Translation(en="Invalid cardholder name",es="Nombre del titular invalido",fr="Nom du titulaire de la carte invalide"),
+    "Tarjeta Valida":Translation(en="Valid card",es="Tarjeta Valida",fr="Carte valide"),
+
+    "Dominio no valido":Translation(en="Invalid domain",es="Dominio no valido",fr="Domaine invalide"),
+    "Falta @ en el correo":Translation(en="Missing @ in email",es="Falta @ en el correo",fr="Manquant @ dans l'e-mail"),
+    "Correo no valido":Translation(en="Invalid email",es="Correo no valido",fr="Email invalide"),
+    "Correo ya registrado":Translation(en="Email already registered",es="Correo ya registrado",fr="Email déjà enregistré"),
+
+    "Usuario en uso":Translation(en="User in use",es="Usuario en uso",fr="Utilisateur en cours d'utilisation"),
+    "El usuario debe ser mayor 8 caracteres y menor que 16":Translation(en="The user must be greater than 8 characters and less than 16",es="El usuario debe ser mayor 8 caracteres y menor que 16",fr="L'utilisateur doit être supérieur à 8 caractères et inférieur à 16"),
+    "Palabra inapropiada: ":Translation(en="Inappropriate word: ",es="Palabra inapropiada: ",fr="Mot inapproprié: "),
 }
 
 #EXAMPLE Lg.dic["Login"][Lg.language]

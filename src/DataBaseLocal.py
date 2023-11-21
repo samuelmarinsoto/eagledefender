@@ -273,6 +273,25 @@ def is_username_registered(username):
     except Exception as e:
         print(f"Ocurrió un error al verificar el username: {e}")
         return False
+def emailregistered(email):
+    """Checks if a email is already registered in the database.
+
+    Args:
+        email (str): The email to check.
+
+    Returns:
+        bool: True if the email is registered, False otherwise.
+    """
+
+    try:
+        conn = connect()
+        cursor = conn.cursor()
+        cursor.execute('SELECT Email FROM Users WHERE Email = ?', (email,))
+        usuario = cursor.fetchone()
+        return usuario is not None
+    except Exception as e:
+        print(f"Ocurrió un error al verificar el email: {e}")
+        return False
 
 
 def is_username_registered2(username):
