@@ -71,7 +71,7 @@ class Jugador:
             # atacante solo puede estar en lado derecho
             self.limitexmin = self.pantalla.get_width()//2
             self.limitexmax = self.pantalla.get_width()
-            self.limiteymin = 0
+            self.limiteymin = self.pantalla.get_height()*(4/16)
             self.limiteymax = self.pantalla.get_height()
 
             if partida%2:
@@ -117,7 +117,7 @@ class Jugador:
             # defensor solo puede estar en lado izquierdo
             self.limitexmin = 0
             self.limitexmax = self.pantalla.get_width()//2
-            self.limiteymin = 0
+            self.limiteymin = self.pantalla.get_height()*(5/16)
             self.limiteymax = self.pantalla.get_height()
 
             if partida%2:
