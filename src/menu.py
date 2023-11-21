@@ -644,7 +644,7 @@ class Menu_principal(customtkinter.CTk):
         self.PersonalizeWindow2.back.place(relx=0.001, rely=0.001, anchor=customtkinter.NW)
         self.PersonalizeWindow2.logo_label = customtkinter.CTkLabel(self.PersonalizeWindow2,text=Lg.dic["Costumes in Game"][Lg.language],font=customtkinter.CTkFont(size=20, weight="bold"))
         self.PersonalizeWindow2.logo_label.place(relx=0.5, rely=0.1, anchor=customtkinter.CENTER)
-        self.PersonalizeWindow2.skip = customtkinter.CTkButton(self.PersonalizeWindow2, text="Skip", fg_color=green_light,hover_color=green, command=self.ConcludeRegisterSkip)
+        self.PersonalizeWindow2.skip = customtkinter.CTkButton(self.PersonalizeWindow2, text=Lg.dic["Skip"][Lg.language], fg_color=green_light,hover_color=green, command=self.ConcludeRegisterSkip)
         self.PersonalizeWindow2.skip.place(relx=0.1, rely=0.9, anchor=customtkinter.CENTER)
 
         self.PersonalizeWindow2.next = customtkinter.CTkButton(self.PersonalizeWindow2, text="→",fg_color=green_light, hover_color=green, command=self.ejecutar_musicWindow)
@@ -721,6 +721,9 @@ class Menu_principal(customtkinter.CTk):
         self.MusicWindow.Song3 = customtkinter.CTkEntry(self.MusicWindow, placeholder_text= Lg.dic["Song"][Lg.language]+" 3")
         self.MusicWindow.Song3.place(relx=0.5, rely=0.7, anchor=customtkinter.CENTER)
 
+        self.MusicWindow.back = customtkinter.CTkButton(self.MusicWindow, text=Lg.dic["Skip"][Lg.language], fg_color=green_light,hover_color=green,  command=self.ConcludeRegisterSkip,width=30, height=30)
+        self.MusicWindow.back.place(relx=0.1, rely=0.9, anchor=customtkinter.NW)
+
         #--------------------------------------------------------------------------------------------------------
 
         self.MembersWindow.Member = customtkinter.CTkLabel(self.MembersWindow, text=Lg.dic["Member"][Lg.language], font=customtkinter.CTkFont(size=20, weight="bold"))
@@ -747,8 +750,11 @@ class Menu_principal(customtkinter.CTk):
         self.MembersWindow.back = customtkinter.CTkButton(self.MembersWindow, text="←", fg_color=green_light, hover_color=green,command=self.ejecutar_perzonalizar2, width=30, height=30)
         self.MembersWindow.back.place(relx=0.001, rely=0.001, anchor=customtkinter.NW)
 
-        #self.MembersWindow.skip = customtkinter.CTkButton(self.MembersWindow, text="Skip",fg_color=green_light, hover_color=green, command=self.continue_PayValidate)
-        #self.MembersWindow.skip.place(relx=0.1, rely=0.9, anchor=customtkinter.CENTER)
+        #self.PersonalizeWindow2.skip = customtkinter.CTkButton(self.PersonalizeWindow2, text="Skip",fg_color=green_light, hover_color=green,command=self.ConcludeRegisterSkip)
+        #self.PersonalizeWindow2.skip.place(relx=0.1, rely=0.9, anchor=customtkinter.CENTER)
+
+        self.MembersWindow.skip = customtkinter.CTkButton(self.MembersWindow, text=Lg.dic["Skip"][Lg.language],fg_color=green_light, hover_color=green, command=self.ConcludeRegisterSkip)
+        self.MembersWindow.skip.place(relx=0.1, rely=0.9, anchor=customtkinter.CENTER)
         #--------------------------------------------------------------------------------------------------------
 
         self.InstructionWindow.back = customtkinter.CTkButton(self.InstructionWindow, text="←", fg_color=green_light, hover_color=green,command=self.ejecutar_playWindow, width=30, height=30)
@@ -1118,7 +1124,7 @@ class Menu_principal(customtkinter.CTk):
         password_check = self.RegisterWindow.entry_Contra_check.get()
         mail = self.RegisterWindow.entry_Correo.get()
         if self.Member == False:
-            DataBase.insert_user(username, password,name, last_name,  mail, self.age, self.selected_photo_path,"No","NONE","Reggaeton Champagne","Instant Crush","Instant Crush","NONE","NONE","NONE","Block1","Green")
+            DataBase.insert_user(username, password,name, last_name,  mail, self.age, self.selected_photo_path,"No","NONE","Megadeth","Black Sabbath","Instant Crush","NONE","NONE","NONE","Block1","Green")
             self.Save_imapic(username)
             self.clean_AllRegister()
             tkinter.messagebox.showinfo("Info", Lg.Er["IFUsuario registrado con éxito"][Lg.language])
@@ -1236,6 +1242,7 @@ class Menu_principal(customtkinter.CTk):
                Returns:
                    None
                """
+        self.MusicWindow.withdraw()
         self.RegisterWindow.withdraw()
         self.PlayWindow.withdraw()
         self.withdraw()
@@ -1348,6 +1355,7 @@ class Menu_principal(customtkinter.CTk):
         menu.mainloop()
 
     def back_menu(self):
+        self.MusicWindow.withdraw()
         self.PersonalizeWindow2.withdraw()
         self.PersonalizeWindow.withdraw()
         self.RegisterWindow.withdraw()
