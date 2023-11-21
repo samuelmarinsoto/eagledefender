@@ -1,4 +1,5 @@
 
+PLAYER = 1
 
 
 class CustomizationData:
@@ -39,7 +40,15 @@ class CustomizationData:
             return False
         else:
             return True
-
+    def update_All(self,Username,pathimage,membership, song1, song2, song3, palette_color, texture):
+        self.Username = Username
+        self.pathimage = pathimage
+        self.membership = membership
+        self.song1 = song1
+        self.song2 = song2
+        self.song3 = song3
+        self.palette_color = palette_color
+        self.texture = texture
     def display_customization(self):
         print(f"Song1: {self.song1}")
         print(f"Song2: {self.song2}")
