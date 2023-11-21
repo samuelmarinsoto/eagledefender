@@ -86,6 +86,18 @@ class Juego:
                             
                         break
                         
+    def barrera_sobrelapa(self, pared):
+        pared_rect = pared.sup.get_rect(topleft=(pared.posx, pared.posy))
+
+        for barrera in self.barreras.copy():
+            barrera_rect = barrera.sup.get_rect(topleft=(barrera.posx, barrera.posy))
+
+            if barrera_rect.colliderect(pared_rect):
+                return True
+                
+        return False
+            
+                        
     def moverbalas(self, dt):
         for bala in self.balas:
             bala.moverse(dt)
@@ -283,7 +295,17 @@ class Juego:
             nueva_pared = defensor.disparar()
 
             if nueva_pared:
-                self.barreras.append(nueva_pared)
+                if not self.barrera_sobrelapa(nueva_pared):
+                    self.barreras.append(nueva_pared)
+                else:
+                    if nueva_pared.tipo == 'A':
+                        defensor.balasA += 1
+                    elif nueva_pared.tipo == 'B':
+                        defensor.balasB += 1
+                    elif nueva_pared.tipo == 'C':
+                        defensor.balasC += 1
+                    elif nueva_pared.tipo == 'X':
+                        defensor.balasX += 1
                 
             self.blittodo()
             self.pantalla.blit(defensor.sup, (defensor.posx, defensor.posy))
@@ -296,6 +318,8 @@ class Juego:
             self.cron -= dt*1000
 
             if defensor.check_termturno():
+                self.cron = 0
+            if not self.aguila_viva:
                 self.cron = 0
         
         self.cancionycron(self.cancion_atq)
@@ -332,8 +356,8 @@ class Juego:
                 primerdisparo = 0
 
             if regenstart:
-                atacante.regen()
-                defensor.regen()
+                atacante.regen() # regenerar balas con algoritmo de cocinero
+                defensor.regen() # regenerar barreras con algoritmo de cocinero
                     
             dt = time.time() - ultimo_tiempo
             ultimo_tiempo = time.time()
@@ -367,13 +391,23 @@ class Juego:
             self.colision()
 
             defensor.moverse(dt)
-            # defensor.regenerar() # regenerar barreras con algoritmo de cocinero
+
             nueva_pared = defensor.disparar()
             if nueva_pared:
-                self.barreras.append(nueva_pared)
+                if not self.barrera_sobrelapa(nueva_pared):
+                    self.barreras.append(nueva_pared)
+                else:
+                    if nueva_pared.tipo == 'A':
+                        defensor.balasA += 1
+                    elif nueva_pared.tipo == 'B':
+                        defensor.balasB += 1
+                    elif nueva_pared.tipo == 'C':
+                        defensor.balasC += 1
+                    elif nueva_pared.tipo == 'X':
+                        defensor.balasX += 1
 
             atacante.moverse(dt)
-            # atacante.regenerar() # regenerar balas con algoritmo de cocinero
+
             nueva_bala = atacante.disparar()
             atacante.cambiar_sup()
             if nueva_bala:
@@ -384,14 +418,14 @@ class Juego:
             self.pantalla.blit(atacante.sup, (atacante.posx, atacante.posy))
             atacante.dibujar_mira()
 
-
-
             self.clock.tick()
             pygame.display.update()
 
             self.cron -= dt*1000
 
             if atacante.check_termturno():
+                self.cron = 0
+            if not self.aguila_viva:
                 self.cron = 0
 
         if self.aguila_viva:
