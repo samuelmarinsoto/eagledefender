@@ -195,6 +195,8 @@ def validar_contrasena(password):
         - Al menos un número
         - Al menos un carácter especial
         """
+        if not isinstance(password, str):
+            return False
         if (8 <= len(password) <= 16 and
                 re.search("[a-z]", password) and
                 re.search("[A-Z]", password) and
