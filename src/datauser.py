@@ -3,7 +3,7 @@ from tkinter import PhotoImage
 import re
 import datetime as date
 from datetime import datetime
-
+import LanguageDictionary as Lg
 import DataBaseLocal as DBL
 """
 
@@ -49,24 +49,24 @@ def selectTexture(TEXTURE):
 def validar_tarjeta(numero, fecha_vencimiento, cvc, nombre_titular):
     # Validar el número de tarjeta (16 dígitos)
     if not re.match(r'^\d{16}$', numero):
-        return False, "Número de tarjeta inválido"
+        return False, Lg.Dt["Numero de tarjeta invalido"][Lg.language]
 
     # Validar la fecha de vencimiento (formato MM/YY)
     try:
         fecha_vencimiento = datetime.strptime(fecha_vencimiento, '%m/%y')
         if fecha_vencimiento < datetime.now():
-            return False, "Tarjeta vencida"
+            return False, Lg.Dt["Tarjeta vencida"][Lg.language]
     except ValueError:
-        return False, "Formato de fecha de vencimiento inválido"
+        return False, Lg.Dt["Formato de fecha incorrecto"][Lg.language]
 
     # Validar el código de seguridad (3 o 4 dígitos)
     if not re.match(r'^\d{3,4}$', cvc):
-        return False, "Código de seguridad inválido"
+        return False, Lg.Dt["Codigo de seguridad invalido"][Lg.language]
 
     # Validar el nombre del titular (solo caracteres alfabéticos y espacios)
     if not re.match(r'^[a-zA-Z\s]+$', nombre_titular):
-        return False, "Nombre del titular inválido"
-    return True, "Tarjeta válida"
+        return False, Lg.Dt["Nombre del titular invalido"][Lg.language]
+    return True, Lg.Dt["Tarjeta Valida"][Lg.language]
 
 """def UsernameCheck(Username):
     global username
@@ -109,13 +109,13 @@ def MailCheck(Mail):
                     return Mail
 
                 else:
-                    return 0, "Dominio no válido"
+                    return 0, Lg.Dt["Dominio no valido"][Lg.language]
             else:
-                return 0, "Falta @ en el correo"
+                return 0, Lg.Dt["Falta @ en el correo"][Lg.language]
         #else:
            # return 0, "Correo ya registrado"
     else:
-        return 0 , "Correo no válido"
+        return 0 , Lg.Dt["Correo no valido"][Lg.language]
 
 """def PasswordCheck(Password):
     global password
@@ -168,13 +168,13 @@ def validar_usuario(username):
         return False
 
     if DBL.is_username_registered(username):
-        return False, "Usuario en uso"
+        return False, Lg.Dt["Usuario en uso"][Lg.language]
 
     if len(username) < 8 or len(username) > 16:
-        return False, "El usuario debe ser mayor 8 caracteres y menor que 16"
+        return False, Lg.Dt["El usuario debe ser mayor 8 caracteres y menor que 16"][Lg.language]
     for palabra in palabras_prohibidas:
         if palabra.lower() in username.lower():
-            return False, "Palabra inapropiada: "+ palabra.lower()
+            return False, Lg.Dt["Palabra inapropiada: "][Lg.language]+ palabra.lower()
     return True, ""
 
 
