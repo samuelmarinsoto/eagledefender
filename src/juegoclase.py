@@ -356,8 +356,8 @@ class Juego:
                 primerdisparo = 0
 
             if regenstart:
-                atacante.regen()
-                defensor.regen()
+                atacante.regen() # regenerar balas con algoritmo de cocinero
+                defensor.regen() # regenerar barreras con algoritmo de cocinero
                     
             dt = time.time() - ultimo_tiempo
             ultimo_tiempo = time.time()
@@ -391,7 +391,7 @@ class Juego:
             self.colision()
 
             defensor.moverse(dt)
-            # defensor.regenerar() # regenerar barreras con algoritmo de cocinero
+
             nueva_pared = defensor.disparar()
             if nueva_pared:
                 if not self.barrera_sobrelapa(nueva_pared):
@@ -407,7 +407,7 @@ class Juego:
                         defensor.balasX += 1
 
             atacante.moverse(dt)
-            # atacante.regenerar() # regenerar balas con algoritmo de cocinero
+
             nueva_bala = atacante.disparar()
             atacante.cambiar_sup()
             if nueva_bala:
